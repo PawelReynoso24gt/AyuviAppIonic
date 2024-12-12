@@ -1,0 +1,7 @@
+{
+  "name": "myAppAyuvi",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
