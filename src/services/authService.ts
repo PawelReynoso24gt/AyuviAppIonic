@@ -15,14 +15,18 @@ export async function loginUser(usuario: string, contrasenia: string) {
 
         //console.log('Respuesta completa del backend:', response);
 
-        const { token, usuario: userData } = response.data;
+        // ! PERO PRIMERO DEBEN CREAR LA CONSTANTE
+        const { token } = response.data;
+        const userId = response.data.usuario.idUsuario;
 
         //console.log('Token recibido:', token);
         //console.log('Datos de usuario:', userData);
 
         // Guardar el token y datos en almacenamiento seguro
         localStorage.setItem('authToken', token);
-        localStorage.setItem('userData', JSON.stringify(userData));
+
+        // ! AQUI PUEDEN AGREGAR TODOS LOS DATOS QUE VAYAN A NECESITAR EN EL LOCALSTORAGE
+        localStorage.setItem('userId', userId);
 
         return response.data;
     } catch (error) {
