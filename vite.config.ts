@@ -10,6 +10,9 @@ export default defineConfig({
     react(),
     legacy()
   ],
+  define: {
+    'process.env': process.env, // Asegura compatibilidad con `process.env`
+  },
   test: {
     globals: true,
     environment: 'jsdom',
