@@ -9,3 +9,7 @@ npm install @ionic/storage
 ```bash
 npm install axios
 ```
+
+```bash
+npm install jwt-decode
+```

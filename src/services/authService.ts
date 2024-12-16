@@ -1,5 +1,6 @@
 import api from './axios'; // Instancia de Axios
 import { Storage } from '@ionic/storage'; // Si usas Ionic Storage
+import { jwtDecode } from 'jwt-decode'; // Usar la named export
 
 const storage = new Storage(); // Instancia del almacenamiento
 
@@ -8,27 +9,20 @@ export async function loginUser(usuario: string, contrasenia: string) {
     try {
         //console.log('Datos enviados al backend:', { usuario, contrasenia });
 
-        const response = await api.post('/usuarios/login', {
-            usuario,
-            contrasenia,
-        });
-
-        //console.log('Respuesta completa del backend:', response);
-
-        // ! PERO PRIMERO DEBEN CREAR LA CONSTANTE
+        const response = await api.post('/usuarios/login', { usuario, contrasenia });
         const { token } = response.data;
-        const userId = response.data.usuario.idUsuario;
 
-        //console.log('Token recibido:', token);
-        //console.log('Datos de usuario:', userData);
-
-        // Guardar el token y datos en almacenamiento seguro
+        // Guardar el token en el localStorage
         localStorage.setItem('authToken', token);
 
-        // ! AQUI PUEDEN AGREGAR TODOS LOS DATOS QUE VAYAN A NECESITAR EN EL LOCALSTORAGE
-        localStorage.setItem('userId', userId);
+        // Decodificar el token para obtener el userId
+        const decodedToken: any = jwtDecode(token); // Ahora usa jwtDecode
+        const userId = decodedToken.idUsuario;
 
-        return response.data;
+        //console.log('Token decodificado:', decodedToken); // Para depuración
+        //console.log('ID del usuario:', userId);
+
+        return { token, userId }; // Retorna el token y el userId si lo necesitas
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
 
@@ -76,5 +70,18 @@ export async function isAuthenticated(): Promise<boolean> {
     } catch (error) {
         console.error('Error al verificar autenticación:', error);
         return false;
+    }
+}
+
+export function getInfoFromToken(): string | null {
+    const token = localStorage.getItem('authToken'); // Recuperar el token del localStorage
+    if (!token) return null; // Si no hay token, retorna null
+
+    try {
+        const decodedToken: any = jwtDecode(token);
+        return decodedToken.idUsuario; // Extrae el userId desde el payload
+    } catch (error) {
+        console.error('Error al decodificar el token:', error);
+        return null;
     }
 }
