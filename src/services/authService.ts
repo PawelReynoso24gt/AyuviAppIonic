@@ -73,13 +73,16 @@ export async function isAuthenticated(): Promise<boolean> {
     }
 }
 
-export function getInfoFromToken(): string | null {
+export function getInfoFromToken(): { idUsuario?: string; usuario?: string } | null {
     const token = localStorage.getItem('authToken'); // Recuperar el token del localStorage
     if (!token) return null; // Si no hay token, retorna null
 
     try {
         const decodedToken: any = jwtDecode(token);
-        return decodedToken.idUsuario; // Extrae el userId desde el payload
+        return {
+            idUsuario: decodedToken.idUsuario, // Extraer el ID del usuario
+            usuario: decodedToken.usuario,     // Extraer el nombre del usuario
+        };
     } catch (error) {
         console.error('Error al decodificar el token:', error);
         return null;

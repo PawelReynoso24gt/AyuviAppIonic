@@ -1,26 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { getInfoFromToken } from '../services/authService'; // Ajusta la ruta según tu proyecto
+import { getInfoFromToken } from '../services/authService';
 import './ExploreContainer.css';
 
 interface ContainerProps {}
 
 const ExploreContainer: React.FC<ContainerProps> = () => {
-  const [userId, setUserId] = useState<string | null>(null);
+  const [username, setUsername] = useState<string | null>(null);
 
   useEffect(() => {
-    // Obtener el ID del usuario del token
-    const id = getInfoFromToken();
-    setUserId(id);
+    // Obtener solo el nombre del usuario
+    const info = getInfoFromToken();
+    if (info?.usuario) {
+      setUsername(info.usuario); // Guardar solo el nombre del usuario
+    }
   }, []);
 
   return (
     <div id="container">
-      {userId ? (
+      {username ? (
         <p>
-          HOLA USUARIO CON ID: <strong>{userId}</strong>
+          Bienvenido <strong>{username}</strong>
         </p>
       ) : (
-        <p>No se pudo obtener el ID del usuario.</p>
+        <p>No se pudo obtener el nombre del usuario.</p>
       )}
       <p>
         Start with Ionic{' '}
