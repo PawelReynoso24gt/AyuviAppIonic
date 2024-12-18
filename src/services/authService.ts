@@ -73,7 +73,7 @@ export async function isAuthenticated(): Promise<boolean> {
     }
 }
 
-export function getInfoFromToken(): { idUsuario?: string; usuario?: string } | null {
+export function getInfoFromToken(): { idUsuario?: string; usuario?: string; idVoluntario?: string; } | null {
     const token = localStorage.getItem('authToken'); // Recuperar el token del localStorage
     if (!token) return null; // Si no hay token, retorna null
 
@@ -82,6 +82,7 @@ export function getInfoFromToken(): { idUsuario?: string; usuario?: string } | n
         return {
             idUsuario: decodedToken.idUsuario, // Extraer el ID del usuario
             usuario: decodedToken.usuario,     // Extraer el nombre del usuario
+            idVoluntario: decodedToken.idVoluntario, // Extraer el ID del voluntario
         };
     } catch (error) {
         console.error('Error al decodificar el token:', error);
