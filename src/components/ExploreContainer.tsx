@@ -24,16 +24,6 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
       ) : (
         <p>No se pudo obtener el nombre del usuario.</p>
       )}
-      <p>
-        Start with Ionic{' '}
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://ionicframework.com/docs/components"
-        >
-          UI Components
-        </a>
-      </p>
     </div>
   );
 };

@@ -4,6 +4,8 @@ import { IonApp, IonMenu, IonContent, IonHeader, IonToolbar, IonTitle, IonList, 
 import Home from './pages/Home';
 import About from './pages/About';
 import Login from './pages/Login';
+import Profile from './pages/PerfilUsuario';
+import ChangePassword from './pages/ChangePassword';
 import PrivateRoute from '../src/components/PrivateRoute';
 
 /* Core CSS required for Ionic components to work properly */
@@ -42,6 +44,7 @@ const App: React.FC = () => {
           <IonList>
             <IonItem routerLink="/home">Inicio</IonItem>
             <IonItem routerLink="/about">Acerca de</IonItem>
+            <IonItem routerLink="/profile">Perfil</IonItem>
             <IonItem button onClick={handleLogout}>Cerrar sesión</IonItem>
           </IonList>
         </IonContent>
@@ -52,6 +55,8 @@ const App: React.FC = () => {
             <Route exact path="/login" component={Login} />
             <PrivateRoute exact path="/home" component={Home} />
             <PrivateRoute exact path="/about" component={About} />
+            <PrivateRoute exact path="/profile" component={Profile} />
+            <PrivateRoute exact path="/change-password" component={ChangePassword} />
             <Route exact path="/">
               <Redirect to="/login" />
             </Route>
