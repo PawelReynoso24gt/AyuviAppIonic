@@ -79,12 +79,11 @@ const Sede: React.FC = () => {
 
             {/* Información */}
             <IonTitle style={{ textAlign: 'center', marginTop: '20px', fontSize: '25px', marginBottom: '20px', }}>Información</IonTitle>
-            <IonText
+              <IonText
               style={{
-                textAlign: 'justify',
-                margin: '10px 20px',
-                fontSize: '15px'
-                
+                textAlign: 'center',
+                marginTop: '20px',
+                display: 'block',
               }}
             >
               {sedeData.informacion}
