@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import Profile from './pages/PerfilUsuario';
 import ChangePassword from './pages/ChangePassword';
 import PrivateRoute from '../src/components/PrivateRoute';
+import Sede from '../src/pages/Sede';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -45,6 +46,7 @@ const App: React.FC = () => {
             <IonItem routerLink="/home">Inicio</IonItem>
             <IonItem routerLink="/about">Acerca de</IonItem>
             <IonItem routerLink="/profile">Perfil</IonItem>
+            <IonItem routerLink="/sede">Sede</IonItem>
             <IonItem button onClick={handleLogout}>Cerrar sesión</IonItem>
           </IonList>
         </IonContent>
@@ -55,6 +57,7 @@ const App: React.FC = () => {
             <Route exact path="/login" component={Login} />
             <PrivateRoute exact path="/home" component={Home} />
             <PrivateRoute exact path="/about" component={About} />
+            <PrivateRoute exact path="/sede" component={Sede} />
             <PrivateRoute exact path="/profile" component={Profile} />
             <PrivateRoute exact path="/change-password" component={ChangePassword} />
             <Route exact path="/">
