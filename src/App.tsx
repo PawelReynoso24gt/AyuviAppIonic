@@ -24,12 +24,28 @@ import '@ionic/react/css/display.css';
 import '@ionic/react/css/palettes/dark.system.css';
 import './theme/variables.css';
 
+//  Importar funcion para extraer idUsuario del token
+import { getInfoFromToken } from './services/authService';
+import axios from './services/axios';
+
 setupIonicReact();
 
 const App: React.FC = () => {
   const handleLogout = () => {
     // Borra el localStorage
-    localStorage.clear();
+    //localStorage.clear();
+    try {
+      // Obtener el userId desde el token
+      const tokenInfo = getInfoFromToken();
+      if (!tokenInfo || !tokenInfo.idUsuario) {
+        throw new Error('No se pudo obtener la información del usuario.');
+      }
+      // Enviar la solicitud al backend
+      axios.put(`/usuarios/logout/${tokenInfo.idUsuario}`);
+      localStorage.clear();
+    } catch (err: any) {
+      console.error(err.message);
+    }
     // Redirige al usuario a la página de login
     window.location.href = '/login'; // Redirige a la página de login
   };
