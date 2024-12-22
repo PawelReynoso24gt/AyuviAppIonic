@@ -43,12 +43,13 @@ npx cap sync
 ```
 
 - Finalmente, usar el siguiente comando para lanzar la aplicación en el dispositivo **(Si lo usará en Android debe tener instalado Android Studio y si lo usará en iOS debe tener instalado XCode que solo está disponible para Mac)**
-Android:
+
+**Android:**
 ```bash
 npx cap open android
 ```
 
-iOS:
+**iOS:**
 ```bash
 npx cap open ios
 ```
