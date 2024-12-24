@@ -13,39 +13,35 @@ import {
   IonSpinner,
   IonModal,
 } from "@ionic/react";
-import { useHistory } from "react-router-dom";
 import axios from "../services/axios";
 import { getInfoFromToken } from "../services/authService";
 
-interface Evento {
-  idEvento: number;
-  nombreEvento: string;
+interface Comision {
+  idComision: number;
+  comision: string;
   descripcion: string;
-  fechaHoraInicio: string;
-  fechaHoraFin: string;
   estado: number; // 1 para activo, 0 para inactivo
   isInscrito: boolean; // Indica si el voluntario ya está inscrito
 }
 
-const InscripcionesEventos: React.FC = () => {
-  const [eventos, setEventos] = useState<Evento[]>([]);
+const InscripcionesComisiones: React.FC = () => {
+  const [comisiones, setComisiones] = useState<Comision[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
-  const [selectedEvento, setSelectedEvento] = useState<number | null>(null);
+  const [selectedComision, setSelectedComision] = useState<number | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
   const userInfo = getInfoFromToken();
   const idVoluntario = userInfo?.idVoluntario; // Obtener el ID del voluntario
-  const history = useHistory();
 
-  // Cargar eventos disponibles
-  const fetchEventos = async () => {
+  // Cargar comisiones disponibles
+  const fetchComisiones = async () => {
     setLoading(true);
     try {
-      const response = await axios.get<Evento[]>("http://localhost:5000/eventos/activas");
-      setEventos(response.data);
+      const response = await axios.get<Comision[]>("http://localhost:5000/comisiones/activos");
+      setComisiones(response.data);
     } catch (error: any) {
       const errorMessage =
-        error.response?.data?.message || error.message || "Error desconocido al cargar eventos.";
+        error.response?.data?.message || error.message || "Error desconocido al cargar comisiones.";
       console.error("Detalles del error:", error.response || error);
       setToastMessage(errorMessage);
     } finally {
@@ -54,37 +50,35 @@ const InscripcionesEventos: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchEventos();
+    fetchComisiones();
   }, []);
 
-  // Manejar inscripción a un evento
+  // Manejar inscripción a una comisión
   const handleInscripcion = async () => {
-    if (!idVoluntario || !selectedEvento) {
+    if (!idVoluntario || !selectedComision) {
       setToastMessage("Faltan datos para completar la inscripción.");
       return;
     }
 
-    const fechaHoraInscripcion = new Date().toISOString();
-
     try {
-      const response = await axios.post("http://localhost:5000/inscripcion_eventos/create", {
-        fechaHoraInscripcion,
+      const response = await axios.post("http://localhost:5000/inscripcion_comisiones/create", {
+        idComision: selectedComision,
         idVoluntario,
-        idEvento: selectedEvento,
+        estado: 1, // Por defecto activo
       });
 
-      // Actualizar lista de eventos para reflejar inscripción
-      setEventos((prevEventos) =>
-        prevEventos.map((evento) =>
-          evento.idEvento === selectedEvento
-            ? { ...evento, isInscrito: true }
-            : evento
+      // Actualizar lista de comisiones para reflejar inscripción
+      setComisiones((prevComisiones) =>
+        prevComisiones.map((comision) =>
+          comision.idComision === selectedComision
+            ? { ...comision, isInscrito: true }
+            : comision
         )
       );
 
       setToastMessage(response.data.message || "¡Inscripción registrada con éxito!");
       setShowModal(false); // Cerrar modal
-      setSelectedEvento(null);
+      setSelectedComision(null);
     } catch (error: any) {
       const errorMessage =
         error.response?.data?.message || error.message || "Error desconocido al registrar inscripción.";
@@ -93,15 +87,11 @@ const InscripcionesEventos: React.FC = () => {
     }
   };
 
-  const handleIrAComision = (idEvento: number) => {
-    history.push(`/registroComisiones?eventoId=${idEvento}`);
-  };
-
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar style={{ backgroundColor: "#4B0082" }}>
-          <IonTitle style={{ color: "#FFFFFF" }}>Inscripción a Eventos</IonTitle>
+          <IonTitle style={{ color: "#FFFFFF" }}>Inscripción a Comisiones</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent style={{ backgroundColor: "#F0F8FF" }}>
@@ -115,8 +105,8 @@ const InscripcionesEventos: React.FC = () => {
             color: "white",
           }}
         >
-          <h2>Eventos Disponibles</h2>
-          <p>Selecciona un evento para inscribirte.</p>
+          <h2>Comisiones Disponibles</h2>
+          <p>Selecciona una comisión para inscribirte.</p>
         </div>
 
         {loading ? (
@@ -132,11 +122,11 @@ const InscripcionesEventos: React.FC = () => {
           </div>
         ) : (
           <IonList>
-            {eventos.map((evento) => (
+            {comisiones.map((comision) => (
               <IonItem
-                key={evento.idEvento}
+                key={comision.idComision}
                 style={{
-                  backgroundColor: evento.estado === 1 ? "#D6EAF8" : "#FADBD8",
+                  backgroundColor: comision.estado === 1 ? "#D6EAF8" : "#FADBD8",
                   margin: "10px",
                   borderRadius: "10px",
                   boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
@@ -150,67 +140,42 @@ const InscripcionesEventos: React.FC = () => {
                       marginBottom: "5px",
                     }}
                   >
-                    Evento: {evento.nombreEvento}
+                    Comisión: {comision.comision}
                   </h3>
                   <p style={{ color: "#000080", marginBottom: "5px" }}>
-                    Descripción: {evento.descripcion}
-                  </p>
-                  <p style={{ color: "#000080" }}>
-                    Fecha Inicio: {new Date(evento.fechaHoraInicio).toLocaleDateString()}
-                  </p>
-                  <p style={{ color: "#000080" }}>
-                    Fecha Finalización: {new Date(evento.fechaHoraFin).toLocaleDateString()}
+                    Descripción: {comision.descripcion}
                   </p>
                   <p
                     style={{
-                      color: evento.estado === 1 ? "green" : "red",
+                      color: comision.estado === 1 ? "green" : "red",
                       fontWeight: "bold",
                       marginBottom: "5px",
                     }}
                   >
-                    Estado del evento: {evento.estado === 1 ? "Activo" : "Inactivo"}
+                    Estado de la comisión: {comision.estado === 1 ? "Activo" : "Inactivo"}
                   </p>
                 </IonLabel>
-                <div>
-                  <IonButton
-                    slot="end"
-                    color="tertiary"
-                    shape="round"
-                    size="small"
-                    onClick={() => {
-                      setSelectedEvento(evento.idEvento);
-                      setShowModal(true);
-                    }}
-                    disabled={evento.isInscrito}
-                    style={{
-                      background: evento.isInscrito
-                        ? "#A9A9A9"
-                        : "linear-gradient(45deg, #6A5ACD, #7B68EE)",
-                      color: "white",
-                      fontWeight: "bold",
-                      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3)",
-                      marginBottom: "10px",
-                    }}
-                  >
-                    {evento.isInscrito ? "Ya inscrito" : "Inscribirse"}
-                  </IonButton>
-                  {evento.isInscrito && (
-                    <IonButton
-                      slot="end"
-                      color="success"
-                      shape="round"
-                      size="small"
-                      onClick={() => handleIrAComision(evento.idEvento)}
-                      style={{
-                        background: "linear-gradient(45deg, #28a745, #218838)",
-                        color: "white",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      Ir a Comisión
-                    </IonButton>
-                  )}
-                </div>
+                <IonButton
+                  slot="end"
+                  color="tertiary"
+                  shape="round"
+                  size="small"
+                  onClick={() => {
+                    setSelectedComision(comision.idComision);
+                    setShowModal(true);
+                  }}
+                  disabled={comision.isInscrito}
+                  style={{
+                    background: comision.isInscrito
+                      ? "#A9A9A9"
+                      : "linear-gradient(45deg, #6A5ACD, #7B68EE)",
+                    color: "white",
+                    fontWeight: "bold",
+                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3)",
+                  }}
+                >
+                  {comision.isInscrito ? "Ya inscrito" : "Inscribirse"}
+                </IonButton>
               </IonItem>
             ))}
           </IonList>
@@ -221,13 +186,13 @@ const InscripcionesEventos: React.FC = () => {
           onDidDismiss={() => setShowModal(false)}
           style={{
             "--width": "500px",
-            "--height": "200px",
+            "--height": "250px",
             "--border-radius": "15px",
           }}
         >
           <div style={{ padding: "20px", borderRadius: "30px" }}>
             <h3>Confirmar Inscripción</h3>
-            <p>¿Estás seguro de que deseas inscribirte al evento seleccionado?</p>
+            <p>¿Estás seguro de que deseas inscribirte a la comisión seleccionada?</p>
             <IonButton
               expand="block"
               onClick={handleInscripcion}
@@ -263,4 +228,4 @@ const InscripcionesEventos: React.FC = () => {
   );
 };
 
-export default InscripcionesEventos;
+export default InscripcionesComisiones;
