@@ -39,17 +39,20 @@ const DetalleInscripcionMaterial: React.FC = () => {
   const [selectedMaterial, setSelectedMaterial] = useState<number | null>(null);
 
   // Obtener información del voluntario autenticado
-  const userInfo = getInfoFromToken();
-  const idVoluntario = userInfo?.idVoluntario;
+  // Obtener información del voluntario autenticado
+const userInfo = getInfoFromToken();
+const idVoluntario = userInfo?.idVoluntario ? Number(userInfo.idVoluntario) : null;
 
-  useEffect(() => {
-    if (idVoluntario) {
-      fetchInscripciones(idVoluntario); // Obtener los IDs de inscripción
-      fetchMateriales(); // Obtener lista de materiales
-    } else {
-      setToastMessage("No se encontró información del voluntario.");
-    }
-  }, [idVoluntario]);
+
+useEffect(() => {
+  if (idVoluntario) {
+    fetchInscripciones(idVoluntario); // Obtener los IDs de inscripción
+    fetchMateriales(); // Obtener lista de materiales
+  } else {
+    setToastMessage("No se encontró información del voluntario.");
+  }
+}, [idVoluntario]);
+
 
   // Obtener los IDs de inscripción (evento y comisión) del backend
   const fetchInscripciones = async (idVoluntario: number) => {
