@@ -13,6 +13,7 @@ import {
   IonSpinner,
   IonModal,
 } from "@ionic/react";
+import { useHistory } from "react-router-dom";
 import axios from "../services/axios";
 import { getInfoFromToken } from "../services/authService";
 
@@ -32,6 +33,7 @@ const InscripcionesComisiones: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const userInfo = getInfoFromToken();
   const idVoluntario = userInfo?.idVoluntario; // Obtener el ID del voluntario
+  const history = useHistory(); // Hook para redirigir
 
   // Cargar comisiones disponibles
   const fetchComisiones = async () => {
@@ -85,6 +87,11 @@ const InscripcionesComisiones: React.FC = () => {
       console.error("Error al registrar inscripción:", error.response || error);
       setToastMessage(errorMessage);
     }
+  };
+
+  // Redirigir al registro de materiales
+  const handleIrMateriales = (idComision: number) => {
+    history.push("/registroMateriales", { idComision }); // Pasar idComision en el state
   };
 
   return (
@@ -176,6 +183,23 @@ const InscripcionesComisiones: React.FC = () => {
                 >
                   {comision.isInscrito ? "Ya inscrito" : "Inscribirse"}
                 </IonButton>
+                {comision.isInscrito && (
+                  <IonButton
+                    slot="end"
+                    color="primary"
+                    shape="round"
+                    size="small"
+                    onClick={() => handleIrMateriales(comision.idComision)}
+                    style={{
+                      marginLeft: "10px",
+                      background: "linear-gradient(45deg, #228B22, #32CD32)",
+                      color: "white",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Materiales
+                  </IonButton>
+                )}
               </IonItem>
             ))}
           </IonList>

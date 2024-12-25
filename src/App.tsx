@@ -10,6 +10,7 @@ import RequestTalonario from "./pages/RequestTalonario";
 import PrivateRoute from '../src/components/PrivateRoute';
 import registroEventos from '../src/pages/registroEventos';
 import registroComisiones from '../src/pages/registroComisiones';
+import registroMateriales from '../src/pages/registroMateriales';
 import Sede from '../src/pages/Sede';
 
 /* Core CSS required for Ionic components to work properly */
@@ -84,6 +85,7 @@ const App: React.FC = () => {
             <PrivateRoute exact path="/request-talonario" component={RequestTalonario} />
             <PrivateRoute exact path="/registroEventos" component={registroEventos} />
             <PrivateRoute exact path="/registroComisiones" component={registroComisiones} />
+            <PrivateRoute exact path="/registroMateriales" component={registroMateriales} />
             <Route exact path="/">
               <Redirect to="/login" />
             </Route>
