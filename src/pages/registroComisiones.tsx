@@ -94,6 +94,11 @@ const InscripcionesComisiones: React.FC = () => {
     history.push("/registroMateriales", { idComision }); // Pasar idComision en el state
   };
 
+  // Redirigir al registro de actividades
+  const handleIrActividades = (idComision: number) => {
+    history.push("/registroActiviades", { idComision }); // Pasar `idComision` en el state
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -184,27 +189,45 @@ const InscripcionesComisiones: React.FC = () => {
                   {comision.isInscrito ? "Ya inscrito" : "Inscribirse"}
                 </IonButton>
                 {comision.isInscrito && (
-                  <IonButton
-                    slot="end"
-                    color="primary"
-                    shape="round"
-                    size="small"
-                    onClick={() => handleIrMateriales(comision.idComision)}
-                    style={{
-                      marginLeft: "10px",
-                      background: "linear-gradient(45deg, #228B22, #32CD32)",
-                      color: "white",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Materiales
-                  </IonButton>
+                  <>
+                    <IonButton
+                      slot="end"
+                      color="primary"
+                      shape="round"
+                      size="small"
+                      onClick={() => handleIrMateriales(comision.idComision)}
+                      style={{
+                        marginLeft: "10px",
+                        background: "linear-gradient(45deg, #228B22, #32CD32)",
+                        color: "white",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Materiales
+                    </IonButton>
+                    <IonButton
+                      slot="end"
+                      color="secondary"
+                      shape="round"
+                      size="small"
+                      onClick={() => handleIrActividades(comision.idComision)}
+                      style={{
+                        marginLeft: "10px",
+                        background: "linear-gradient(45deg, #FFD700, #FFA500)",
+                        color: "white",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Actividades
+                    </IonButton>
+                  </>
                 )}
               </IonItem>
             ))}
           </IonList>
         )}
 
+        {/* Modal para confirmar inscripción */}
         <IonModal
           isOpen={showModal}
           onDidDismiss={() => setShowModal(false)}
