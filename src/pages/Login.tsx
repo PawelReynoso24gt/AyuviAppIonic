@@ -58,6 +58,22 @@ const Login: React.FC = () => {
                 <IonButton expand="block" onClick={handleLogin}>
                     Iniciar Sesión
                 </IonButton>
+
+                <IonText
+                    onClick={() => history.push('/registroAspirante')}
+                    color="primary"
+                    style={{
+                        marginTop: '20px',
+                        display: 'block',
+                        textAlign: 'center',
+                        textDecoration: 'underline',
+                        cursor: 'pointer',
+                        fontSize: '14px',
+                    }}
+                >
+                    ¿No tienes una cuenta? Regístrate como aspirante
+                </IonText>
+
                 {error && <IonText color="danger">{error}</IonText>}
                 {/* Botón de cierre de sesión 
                 <IonButton expand="block" onClick={handleLogout}>
