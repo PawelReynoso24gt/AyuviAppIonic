@@ -18,6 +18,7 @@ import {
 } from '@ionic/react';
 import axios from '../services/axios';
 import { useHistory } from 'react-router-dom';
+import '../theme/variables.css'; 
 
 const Registro: React.FC = () => {
   const history = useHistory();
@@ -89,25 +90,62 @@ const Registro: React.FC = () => {
   };
 
   return (
-    <IonPage>
+    <IonPage >
       <IonHeader>
         <IonToolbar color="primary">
           <IonTitle>Registro de Aspirantes</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">
-        <IonItem>
-          <IonLabel position="floating" className="ion-padding-bottom">Nombre Completo</IonLabel>
+      <IonContent  className="custom-content" 
+      style={{
+        backgroundColor: 'var(--main-bg-color)', // Fondo verde
+        minHeight: '50vh',        // Altura completa
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: '20px',
+     }}>
+        <IonItem
+        style={{
+            display: 'flex', // Habilitar flexbox
+            justifyContent: 'center', // Centrar horizontalmente
+            alignItems: 'center', // Centrar verticalmente
+            width: '100%', // Ajustar ancho
+            maxWidth: '400px', // Ancho máximo
+            height: '100px', // Altura del combobox
+            margin: '16px auto', // Margen para separación y centrar horizontalmente
+            textAlign: 'center', // Alinear contenido
+            borderRadius: '8px', // Opcional: bordes redondeados
+            backgroundColor: '#107bc1', // Opcional: sombra para diseño
+          }}>
+          <IonLabel position="floating">Nombre Completo</IonLabel>
           <IonInput
             value={formData.nombre}
             onIonChange={(e) => handleInputChange('nombre', e.detail.value!)}
+            style={{
+                fontSize: '16px', 
+                width: '50%', 
+              }}
             placeholder="Ingrese su nombre"
             className="ion-padding-top"
           />
         </IonItem>
 
-        <IonItem>
-          <IonLabel position="floating" className="ion-padding-bottom">Fecha de Nacimiento</IonLabel>
+        <IonItem
+        style={{
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            width: '100%', 
+            maxWidth: '400px', 
+            height: '100px', 
+            margin: '16px auto', 
+            textAlign: 'center', 
+            borderRadius: '8px', 
+            backgroundColor: '#107bc1', 
+          }}>
+          <IonLabel position="floating" >Fecha de Nacimiento</IonLabel>
           <IonInput
             value={formData.fechaNacimiento}
             readonly
@@ -118,16 +156,61 @@ const Registro: React.FC = () => {
         </IonItem>
 
         {/* Mostrar IonDatetime solo si isDatePickerVisible es true */}
-        {isDatePickerVisible && (
-          <IonDatetime
-            value={formData.fechaNacimiento}
-            onIonChange={handleDateConfirm}
-            presentation="date" // Propiedad para presentación en versiones modernas
-          />
-        )}
+      {/* Mostrar IonDatetime solo si isDatePickerVisible es true */}
+            {isDatePickerVisible && (
+            <div
+                style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                backgroundColor: '#fff', // Fondo blanco para que destaque
+                borderRadius: '8px',
+                padding: '16px',
+                boxShadow: '0 2px 10px rgba(173, 22, 211, 0.2)', // Sombra para resaltar el calendario
+                zIndex: 1000, // Asegurarte de que esté por encima de otros elementos
+                }}
+            >
+                <IonDatetime
+                value={formData.fechaNacimiento}
+                onIonChange={handleDateConfirm}
+                presentation="date" // Propiedad para presentación moderna
+                style={{
+                    maxWidth: '100%', 
+                    textAlign: 'center', 
+                }}
+                />
+                <IonButton
+                color="danger"
+                style={{
+                    marginTop: '16px',
+                    display: 'block', 
+                    marginLeft: 'auto', 
+                    marginRight: 'auto', 
+                    width: '200px'                               
+                }}
+                onClick={() => setIsDatePickerVisible(false)}
+                >
+                Cerrar
+                </IonButton>
+            </div>
+)}
 
-        <IonItem >
-          <IonLabel position="floating" className="ion-padding-bottom">Teléfono</IonLabel>
+
+        <IonItem 
+        style={{
+            display: 'flex',
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            width: '100%', 
+            maxWidth: '400px', 
+            height: '100px',
+            margin: '16px auto', 
+            textAlign: 'center', 
+            borderRadius: '8px', 
+            backgroundColor: '#107bc1',
+          }}>
+          <IonLabel position="floating"  >Teléfono</IonLabel>
           <IonInput
             value={formData.telefono}
             onIonChange={(e) => handleInputChange('telefono', e.detail.value!)}
@@ -137,8 +220,20 @@ const Registro: React.FC = () => {
           />
         </IonItem>
 
-        <IonItem>
-          <IonLabel position="floating" className="ion-padding-bottom">Domicilio</IonLabel>
+        <IonItem
+        style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center', 
+            width: '100%', 
+            maxWidth: '400px', 
+            height: '100px', 
+            margin: '16px auto', 
+            textAlign: 'center', 
+            borderRadius: '8px', 
+            backgroundColor: '#107bc1',
+          }}>
+          <IonLabel position="floating" >Domicilio</IonLabel>
           <IonInput
             value={formData.domicilio}
             onIonChange={(e) => handleInputChange('domicilio', e.detail.value!)}
@@ -147,8 +242,20 @@ const Registro: React.FC = () => {
           />
         </IonItem>
 
-        <IonItem>
-          <IonLabel position="floating" className="ion-padding-bottom">CUI</IonLabel>
+        <IonItem
+        style={{
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center',
+            width: '100%', 
+            maxWidth: '400px',
+            height: '100px',
+            margin: '16px auto',
+            textAlign: 'center', 
+            borderRadius: '8px', 
+            backgroundColor: '#107bc1',
+          }}>
+          <IonLabel position="floating" >CUI</IonLabel>
           <IonInput
             value={formData.CUI}
             onIonChange={(e) => handleInputChange('CUI', e.detail.value!)}
@@ -158,8 +265,20 @@ const Registro: React.FC = () => {
           />
         </IonItem>
 
-        <IonItem>
-          <IonLabel position="floating" className="ion-padding-bottom">Correo Electrónico</IonLabel>
+        <IonItem
+        style={{
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            width: '100%', 
+            maxWidth: '400px', 
+            height: '100px', 
+            margin: '16px auto', 
+            textAlign: 'center', 
+            borderRadius: '8px', 
+            backgroundColor: '#107bc1',
+          }}>
+          <IonLabel position="floating"  >Correo Electrónico</IonLabel>
           <IonInput
             value={formData.correo}
             onIonChange={(e) => handleInputChange('correo', e.detail.value!)}
@@ -169,7 +288,19 @@ const Registro: React.FC = () => {
           />
         </IonItem>
 
-        <IonItem>
+        <IonItem 
+        style={{
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            width: '100%', 
+            maxWidth: '400px', 
+            height: '100px',
+            margin: '16px auto', 
+            textAlign: 'center', 
+            borderRadius: '8px', 
+            backgroundColor: '#107bc1',
+          }}>
           <IonLabel>Departamento</IonLabel>
           <IonSelect
             value={formData.idDepartamento}
@@ -184,7 +315,18 @@ const Registro: React.FC = () => {
           </IonSelect>
         </IonItem>
 
-        <IonItem>
+        <IonItem style={{
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            width: '100%', 
+            maxWidth: '400px', 
+            height: '100px', 
+            margin: '16px auto', 
+            textAlign: 'center', 
+            borderRadius: '8px', 
+            backgroundColor: '#107bc1',
+          }}>
           <IonLabel>Municipio</IonLabel>
           <IonSelect
             value={formData.idMunicipio}
@@ -201,7 +343,7 @@ const Registro: React.FC = () => {
         </IonItem>
 
 
-        <IonButton expand="block" onClick={handleSubmit} color="primary" style={{ marginTop: '16px' }}>
+        <IonButton expand="block" onClick={handleSubmit} color="primary" style={{ marginTop: '16px', width: '300px',  margin: '30px auto', }}>
           Registrarse
         </IonButton>
 
