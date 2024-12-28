@@ -12,7 +12,10 @@ import {
   IonToast,
   IonSpinner,
   IonModal,
+  IonIcon,
 } from "@ionic/react";
+import { arrowBackOutline } from 'ionicons/icons';
+import { useHistory } from 'react-router-dom';
 import axios from "../services/axios";
 import { getInfoFromToken } from "../services/authService";
 
@@ -28,6 +31,7 @@ interface Inscripcion {
 }
 
 const DetalleInscripcionActividad: React.FC = () => {
+  const history = useHistory();
   const [actividades, setActividades] = useState<Actividad[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
@@ -116,6 +120,17 @@ const DetalleInscripcionActividad: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar style={{ backgroundColor: "#4B0082" }}>
+          <IonButton
+            slot="start"
+            fill="clear"
+            onClick={() => history.push('/registroMateriales')}  // Acción para regresar
+            style={{
+            marginLeft: '10px',
+            color: 'white',
+            }}
+          >
+        <IonIcon icon={arrowBackOutline} slot="icon-only" />
+          </IonButton>
           <IonTitle style={{ color: "#FFFFFF" }}>Registro de Actividades</IonTitle>
         </IonToolbar>
       </IonHeader>

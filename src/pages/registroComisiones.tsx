@@ -12,7 +12,9 @@ import {
   IonToast,
   IonSpinner,
   IonModal,
+  IonIcon,
 } from "@ionic/react";
+import { arrowBackOutline } from 'ionicons/icons';
 import { useHistory } from "react-router-dom";
 import axios from "../services/axios";
 import { getInfoFromToken } from "../services/authService";
@@ -39,7 +41,7 @@ const InscripcionesComisiones: React.FC = () => {
   const fetchComisiones = async () => {
     setLoading(true);
     try {
-      const response = await axios.get<Comision[]>("http://localhost:5000/comisiones/activos");
+      const response = await axios.get<Comision[]>(`http://localhost:5000/comisiones/active?idVoluntario=${idVoluntario}`);
       setComisiones(response.data);
     } catch (error: any) {
       const errorMessage =
@@ -53,7 +55,7 @@ const InscripcionesComisiones: React.FC = () => {
 
   useEffect(() => {
     fetchComisiones();
-  }, []);
+  }, [history.location]);
 
   // Manejar inscripción a una comisión
   const handleInscripcion = async () => {
@@ -69,18 +71,12 @@ const InscripcionesComisiones: React.FC = () => {
         estado: 1, // Por defecto activo
       });
 
-      // Actualizar lista de comisiones para reflejar inscripción
-      setComisiones((prevComisiones) =>
-        prevComisiones.map((comision) =>
-          comision.idComision === selectedComision
-            ? { ...comision, isInscrito: true }
-            : comision
-        )
-      );
 
       setToastMessage(response.data.message || "¡Inscripción registrada con éxito!");
       setShowModal(false); // Cerrar modal
       setSelectedComision(null);
+
+      fetchComisiones();
     } catch (error: any) {
       const errorMessage =
         error.response?.data?.message || error.message || "Error desconocido al registrar inscripción.";
@@ -103,6 +99,17 @@ const InscripcionesComisiones: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar style={{ backgroundColor: "#4B0082" }}>
+           <IonButton
+              slot="start"
+              fill="clear"
+              onClick={() => history.push('/registroEventos')}  // Acción para regresar
+              style={{
+              marginLeft: '10px',
+              color: 'white',
+              }}
+              >
+              <IonIcon icon={arrowBackOutline} slot="icon-only" />
+            </IonButton>
           <IonTitle style={{ color: "#FFFFFF" }}>Inscripción a Comisiones</IonTitle>
         </IonToolbar>
       </IonHeader>
@@ -176,7 +183,7 @@ const InscripcionesComisiones: React.FC = () => {
                     setSelectedComision(comision.idComision);
                     setShowModal(true);
                   }}
-                  disabled={comision.isInscrito}
+                  disabled={!!comision.isInscrito}
                   style={{
                     background: comision.isInscrito
                       ? "#A9A9A9"

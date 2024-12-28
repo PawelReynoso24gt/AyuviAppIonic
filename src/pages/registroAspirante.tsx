@@ -15,7 +15,9 @@ import {
   IonModal,
   IonText,
   IonDatetime,
+  IonIcon,
 } from '@ionic/react';
+import { arrowBackOutline } from 'ionicons/icons';
 import axios from '../services/axios';
 import { useHistory } from 'react-router-dom';
 import '../theme/variables.css'; 
@@ -93,6 +95,17 @@ const Registro: React.FC = () => {
     <IonPage >
       <IonHeader>
         <IonToolbar color="primary">
+        <IonButton
+            slot="start"
+            fill="clear"
+            onClick={() => history.goBack()} // Acción para regresar
+            style={{
+              marginLeft: '10px',
+              color: 'white',
+            }}
+          >
+            <IonIcon icon={arrowBackOutline} slot="icon-only" />
+          </IonButton>
           <IonTitle>Registro de Aspirantes</IonTitle>
         </IonToolbar>
       </IonHeader>
@@ -112,7 +125,7 @@ const Registro: React.FC = () => {
             justifyContent: 'center', // Centrar horizontalmente
             alignItems: 'center', // Centrar verticalmente
             width: '100%', // Ajustar ancho
-            maxWidth: '400px', // Ancho máximo
+            maxWidth: '300px', // Ancho máximo
             height: '100px', // Altura del combobox
             margin: '16px auto', // Margen para separación y centrar horizontalmente
             textAlign: 'center', // Alinear contenido
@@ -138,7 +151,7 @@ const Registro: React.FC = () => {
             justifyContent: 'center', 
             alignItems: 'center', 
             width: '100%', 
-            maxWidth: '400px', 
+            maxWidth: '300px', 
             height: '100px', 
             margin: '16px auto', 
             textAlign: 'center', 
@@ -203,7 +216,7 @@ const Registro: React.FC = () => {
             justifyContent: 'center', 
             alignItems: 'center', 
             width: '100%', 
-            maxWidth: '400px', 
+            maxWidth: '300px', 
             height: '100px',
             margin: '16px auto', 
             textAlign: 'center', 
@@ -226,7 +239,7 @@ const Registro: React.FC = () => {
             justifyContent: 'center',
             alignItems: 'center', 
             width: '100%', 
-            maxWidth: '400px', 
+            maxWidth: '300px', 
             height: '100px', 
             margin: '16px auto', 
             textAlign: 'center', 
@@ -248,7 +261,7 @@ const Registro: React.FC = () => {
             justifyContent: 'center', 
             alignItems: 'center',
             width: '100%', 
-            maxWidth: '400px',
+            maxWidth: '300px',
             height: '100px',
             margin: '16px auto',
             textAlign: 'center', 
@@ -271,7 +284,7 @@ const Registro: React.FC = () => {
             justifyContent: 'center', 
             alignItems: 'center', 
             width: '100%', 
-            maxWidth: '400px', 
+            maxWidth: '300px', 
             height: '100px', 
             margin: '16px auto', 
             textAlign: 'center', 
@@ -294,14 +307,13 @@ const Registro: React.FC = () => {
             justifyContent: 'center', 
             alignItems: 'center', 
             width: '100%', 
-            maxWidth: '400px', 
+            maxWidth: '300px', 
             height: '100px',
             margin: '16px auto', 
             textAlign: 'center', 
             borderRadius: '8px', 
             backgroundColor: '#107bc1',
           }}>
-          <IonLabel>Departamento</IonLabel>
           <IonSelect
             value={formData.idDepartamento}
             placeholder="Seleccione su departamento"
@@ -320,14 +332,13 @@ const Registro: React.FC = () => {
             justifyContent: 'center', 
             alignItems: 'center', 
             width: '100%', 
-            maxWidth: '400px', 
+            maxWidth: '300px', 
             height: '100px', 
             margin: '16px auto', 
             textAlign: 'center', 
             borderRadius: '8px', 
             backgroundColor: '#107bc1',
           }}>
-          <IonLabel>Municipio</IonLabel>
           <IonSelect
             value={formData.idMunicipio}
             placeholder="Seleccione su municipio"
@@ -343,7 +354,7 @@ const Registro: React.FC = () => {
         </IonItem>
 
 
-        <IonButton expand="block" onClick={handleSubmit} color="primary" style={{ marginTop: '16px', width: '300px',  margin: '30px auto', }}>
+        <IonButton expand="block" onClick={handleSubmit} color="primary" style={{ marginTop: '16px', width: '200px',  margin: '30px auto', }}>
           Registrarse
         </IonButton>
 

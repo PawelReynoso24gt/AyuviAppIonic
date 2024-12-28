@@ -13,7 +13,10 @@ import {
   IonSpinner,
   IonModal,
   IonInput,
+  IonIcon,
 } from "@ionic/react";
+import { arrowBackOutline } from 'ionicons/icons';
+import { useHistory } from 'react-router-dom';
 import { useLocation } from "react-router-dom";
 import axios from "../services/axios";
 import { getInfoFromToken } from "../services/authService";
@@ -30,6 +33,7 @@ interface Inscripcion {
 }
 
 const DetalleInscripcionMaterial: React.FC = () => {
+  const history = useHistory();
   const [materiales, setMateriales] = useState<Material[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
@@ -110,7 +114,7 @@ useEffect(() => {
       };
 
       const response = await axios.post(
-        "http://localhost:5000/detalle_inscripcion_materiales/create",
+        "https://ms12grnp-5000.use2.devtunnels.ms/detalle_inscripcion_materiales/create",
         payload
       );
 
@@ -130,6 +134,17 @@ useEffect(() => {
     <IonPage>
       <IonHeader>
         <IonToolbar style={{ backgroundColor: "#4B0082" }}>
+          <IonButton
+            slot="start"
+            fill="clear"
+            onClick={() => history.push('/registroComisiones')}  // Acción para regresar
+            style={{
+            marginLeft: '10px',
+            color: 'white',
+            }}
+          >
+           <IonIcon icon={arrowBackOutline} slot="icon-only" />
+          </IonButton>
           <IonTitle style={{ color: "#FFFFFF" }}>Ingreso de Materiales</IonTitle>
         </IonToolbar>
       </IonHeader>

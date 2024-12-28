@@ -1,12 +1,26 @@
     import React from 'react';
-    import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonImg } from '@ionic/react';
+    import { IonPage, IonHeader, IonToolbar, IonIcon, IonTitle, IonContent, IonButton, IonImg } from '@ionic/react';
     import solicitudPendienteImg from '../img/ayuvi1.jpeg';
+    import { useHistory } from 'react-router-dom';
+    import { arrowBackOutline } from 'ionicons/icons';
 
     const SolicitudPendiente: React.FC = () => {
+         const history = useHistory();
     return (
         <IonPage>
         <IonHeader>
-            <IonToolbar style={{ backgroundColor: '#6A5ACD' }}>
+              <IonButton
+                        slot="start"
+                        fill="clear"
+                        onClick={() => history.push('/login')} // Acción para regresar
+                        style={{
+                          marginLeft: '10px',
+                          color: 'white',
+                        }}
+                      >
+                        <IonIcon icon={arrowBackOutline} slot="icon-only" />
+                      </IonButton>
+            <IonToolbar style={{ backgroundColor: '#6A5ACD' }}>              
             <IonTitle style={{ color: 'white', fontWeight: 'bold', fontSize: '24px' }}>
                 Solicitud Pendiente
             </IonTitle>
@@ -20,7 +34,7 @@
             justifyContent: 'center',
             padding: '20px',
             background: 'linear-gradient(45deg, #E6E6FA, #F0F8FF)',
-            minHeight: '200vh',
+            minHeight: '50vh',
             }}
         >
             {/* Imagen principal */}
@@ -29,7 +43,7 @@
             style={{
                 display: 'block',
                 margin: '0 auto',
-                maxWidth: '400px',
+                maxWidth: '300px',
                 marginTop: '30px',
                 width: '100%',
                 height: 'auto',
@@ -42,7 +56,7 @@
             <div style={{ textAlign: 'center', marginBottom: '30px' }}>
             <h1
                 style={{
-                fontSize: '26px',
+                fontSize: '24px',
                 fontWeight: 'bold',
                 color: '#4B0082',
                 marginBottom: '10px',
@@ -52,7 +66,7 @@
             </h1>
             <h2
                 style={{
-                fontSize: '22px',
+                fontSize: '20px',
                 fontWeight: 'bold',
                 color: '#4B0082',
                 marginBottom: '20px',
@@ -68,12 +82,20 @@
                 }}
             >
                 Para cualquier información adicional, por favor llame al{' '}
-                <a href="tel:+50212345678" style={{ color: '#007AC3', fontWeight: 'bold' }}>
-                +502 1234 5678
+                <a href="tel:+50235757028" style={{ color: '#007AC3', fontWeight: 'bold' }}>
+                +502 3575 7028
                 </a>{' '}
+            </p>
+            <p
+            style={{
+                fontSize: '18px',
+                color: '#333',
+                lineHeight: '1.6',
+                }}
+            >
                 o escriba al correo{' '}
-                <a href="mailto:info@example.com" style={{ color: '#FF4500', fontWeight: 'bold' }}>
-                info@example.com
+                <a href="eduardo.godinez@ayuvi.org.gt" style={{ color: '#FF4500', fontWeight: 'bold' }}>
+                eduardo.godinez@ayuvi.org.gt
                 </a>
                 .
             </p>
@@ -89,7 +111,7 @@
                 margin: '30px auto', // Centrado horizontal con margen superior
                 padding: '10px',
                 fontSize: '18px',
-                width: '300px',
+                width: '200px',
             }}
             routerLink="/inicio"
             >
