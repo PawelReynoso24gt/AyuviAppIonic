@@ -51,11 +51,11 @@ const Login: React.FC = () => {
                 <div className="login-container">
                     <img src={logo} alt="Logo Ayuvi" className="logo" />
                     <IonItem className="ion-margin-bottom custom-item">
-                        <IonLabel position="floating" >Usuario</IonLabel>
+                        <IonLabel className="usuario-label">Usuario</IonLabel>
                         <IonInput className="custom-input" value={usuario} onIonChange={e => setUsuario(e.detail.value!)} />
                     </IonItem>
                     <IonItem className="password-item custom-item">
-                        <IonLabel position="floating">Contraseña</IonLabel>
+                        <IonLabel className="contrasenia-label">Contraseña</IonLabel>
                         <IonInput className="custom-input" type={showPassword ? "text" : "password"} value={contrasenia} onIonChange={e => setContrasenia(e.detail.value!)} />
                         <IonIcon className="password-toggle-icon" slot="end" icon={showPassword ? eyeOff : eye} onClick={() => setShowPassword(!showPassword)} />
                     </IonItem>
