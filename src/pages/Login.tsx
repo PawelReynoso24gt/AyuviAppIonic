@@ -4,6 +4,7 @@ import { eyeOff, eye } from 'ionicons/icons';
 import { loginUser } from '../services/authService';
 import { useHistory } from 'react-router-dom';
 import './Login.css'; // Importa el archivo de estilos
+import logo from '../img/LOGOAYUVI.png'; // Importa la imagen
 
 const Login: React.FC = () => {
     const [usuario, setUsuario] = useState('');
@@ -48,11 +49,12 @@ const Login: React.FC = () => {
             </IonHeader>
             <IonContent className="ion-padding">
                 <div className="login-container">
-                    <IonItem className="ion-margin-bottom">
-                        <IonLabel position="floating">Usuario</IonLabel>
+                    <img src={logo} alt="Logo Ayuvi" className="logo" />
+                    <IonItem className="ion-margin-bottom custom-item">
+                        <IonLabel position="floating" >Usuario</IonLabel>
                         <IonInput className="custom-input" value={usuario} onIonChange={e => setUsuario(e.detail.value!)} />
                     </IonItem>
-                    <IonItem className="password-item">
+                    <IonItem className="password-item custom-item">
                         <IonLabel position="floating">Contraseña</IonLabel>
                         <IonInput className="custom-input" type={showPassword ? "text" : "password"} value={contrasenia} onIonChange={e => setContrasenia(e.detail.value!)} />
                         <IonIcon className="password-toggle-icon" slot="end" icon={showPassword ? eyeOff : eye} onClick={() => setShowPassword(!showPassword)} />

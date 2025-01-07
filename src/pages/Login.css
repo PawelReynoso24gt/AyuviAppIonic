@@ -5,8 +5,8 @@
     align-items: center;
     height: 100%;
     padding: 20px;
-    background: #c8c8ca;
-    border-radius: 10px;
+    background: #ffffff;
+    border-radius: 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -14,11 +14,13 @@
     width: 100%;
     max-width: 400px;
     margin-bottom: 15px;
+    border-radius: 10px;
 }
 
 .login-container ion-button {
     width: 100%;
     max-width: 400px;
+    border-radius: 10px;
 }
 
 .login-container ion-icon {
@@ -26,17 +28,26 @@
 }
 
 .custom-input {
-    --color: #1c5aa0; /* Cambia este color al que desees */
-    --placeholder-color: #a1a1a1; /* Cambia este color al que desees */
+    --color: #1c5aa0;
+    /* Cambia este color al que desees */
+    --placeholder-color: #ffffff;
+    /* Cambia este color al que desees */
+}
+
+.custom-item {
+    --background: #E8E8E8; /* Cambia este color al que desees */
 }
 
 .password-item ion-label {
-    padding-left: 0; /* Ajusta el padding del label */
+    padding-left: 0;
+    /* Ajusta el padding del label */
 }
 
 .password-item ion-input {
-    padding-left: 0; /* Ajusta el padding del input */
-    padding-right: 80%; /* Ajusta el padding del input */
+    padding-left: 0;
+    /* Ajusta el padding del input */
+    padding-right: 80%;
+    /* Ajusta el padding del input */
 }
 
 .password-toggle-icon {
@@ -46,5 +57,27 @@
     transform: translateY(-50%);
     cursor: pointer;
     font-size: 18px;
-    color: #333;
+    color: #000000;
+}
+
+.logo {
+    width: 300px;
+    /* Ajusta el tamaño de la imagen según tus necesidades */
+    margin-bottom: 20px;
+}
+
+.ion-margin-bottom {
+    margin-bottom: 20px;
+    color: rgb(0, 0, 0);
+}
+
+.ion-margin-bottom ion-label{
+    
+}
+
+.ion-margin-bottom ion-input{
+    
+}
+.ion-padding {
+    background-color:#000000;
 }
