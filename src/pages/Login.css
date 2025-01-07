@@ -1,0 +1,50 @@
+.login-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 20px;
+    background: #c8c8ca;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.login-container ion-item {
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 15px;
+}
+
+.login-container ion-button {
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-container ion-icon {
+    cursor: pointer;
+}
+
+.custom-input {
+    --color: #1c5aa0; /* Cambia este color al que desees */
+    --placeholder-color: #a1a1a1; /* Cambia este color al que desees */
+}
+
+.password-item ion-label {
+    padding-left: 0; /* Ajusta el padding del label */
+}
+
+.password-item ion-input {
+    padding-left: 0; /* Ajusta el padding del input */
+    padding-right: 80%; /* Ajusta el padding del input */
+}
+
+.password-toggle-icon {
+    position: absolute;
+    right: 2%;
+    top: 55%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 18px;
+    color: #333;
+}
