@@ -12,7 +12,10 @@ import {
   IonToast,
   IonSpinner,
   IonModal,
+  IonIcon,
 } from "@ionic/react";
+import { arrowBackOutline } from 'ionicons/icons';
+import { useHistory } from "react-router-dom";
 import axios from "../services/axios";
 import { getInfoFromToken } from "../services/authService";
 
@@ -32,12 +35,13 @@ const InscripcionesComisiones: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const userInfo = getInfoFromToken();
   const idVoluntario = userInfo?.idVoluntario; // Obtener el ID del voluntario
+  const history = useHistory(); // Hook para redirigir
 
   // Cargar comisiones disponibles
   const fetchComisiones = async () => {
     setLoading(true);
     try {
-      const response = await axios.get<Comision[]>("http://localhost:5000/comisiones/activos");
+      const response = await axios.get<Comision[]>(`http://localhost:5000/comisiones/active?idVoluntario=${idVoluntario}`);
       setComisiones(response.data);
     } catch (error: any) {
       const errorMessage =
@@ -51,7 +55,7 @@ const InscripcionesComisiones: React.FC = () => {
 
   useEffect(() => {
     fetchComisiones();
-  }, []);
+  }, [history.location]);
 
   // Manejar inscripción a una comisión
   const handleInscripcion = async () => {
@@ -67,18 +71,12 @@ const InscripcionesComisiones: React.FC = () => {
         estado: 1, // Por defecto activo
       });
 
-      // Actualizar lista de comisiones para reflejar inscripción
-      setComisiones((prevComisiones) =>
-        prevComisiones.map((comision) =>
-          comision.idComision === selectedComision
-            ? { ...comision, isInscrito: true }
-            : comision
-        )
-      );
 
       setToastMessage(response.data.message || "¡Inscripción registrada con éxito!");
       setShowModal(false); // Cerrar modal
       setSelectedComision(null);
+
+      fetchComisiones();
     } catch (error: any) {
       const errorMessage =
         error.response?.data?.message || error.message || "Error desconocido al registrar inscripción.";
@@ -87,10 +85,31 @@ const InscripcionesComisiones: React.FC = () => {
     }
   };
 
+  // Redirigir al registro de materiales
+  const handleIrMateriales = (idComision: number) => {
+    history.push("/registroMateriales", { idComision }); // Pasar idComision en el state
+  };
+
+  // Redirigir al registro de actividades
+  const handleIrActividades = (idComision: number) => {
+    history.push("/registroActiviades", { idComision }); // Pasar `idComision` en el state
+  };
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar style={{ backgroundColor: "#4B0082" }}>
+           <IonButton
+              slot="start"
+              fill="clear"
+              onClick={() => history.push('/registroEventos')}  // Acción para regresar
+              style={{
+              marginLeft: '10px',
+              color: 'white',
+              }}
+              >
+              <IonIcon icon={arrowBackOutline} slot="icon-only" />
+            </IonButton>
           <IonTitle style={{ color: "#FFFFFF" }}>Inscripción a Comisiones</IonTitle>
         </IonToolbar>
       </IonHeader>
@@ -164,7 +183,7 @@ const InscripcionesComisiones: React.FC = () => {
                     setSelectedComision(comision.idComision);
                     setShowModal(true);
                   }}
-                  disabled={comision.isInscrito}
+                  disabled={!!comision.isInscrito}
                   style={{
                     background: comision.isInscrito
                       ? "#A9A9A9"
@@ -176,11 +195,46 @@ const InscripcionesComisiones: React.FC = () => {
                 >
                   {comision.isInscrito ? "Ya inscrito" : "Inscribirse"}
                 </IonButton>
+                {comision.isInscrito && (
+                  <>
+                    <IonButton
+                      slot="end"
+                      color="primary"
+                      shape="round"
+                      size="small"
+                      onClick={() => handleIrMateriales(comision.idComision)}
+                      style={{
+                        marginLeft: "10px",
+                        background: "linear-gradient(45deg, #228B22, #32CD32)",
+                        color: "white",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Materiales
+                    </IonButton>
+                    <IonButton
+                      slot="end"
+                      color="secondary"
+                      shape="round"
+                      size="small"
+                      onClick={() => handleIrActividades(comision.idComision)}
+                      style={{
+                        marginLeft: "10px",
+                        background: "linear-gradient(45deg, #FFD700, #FFA500)",
+                        color: "white",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Actividades
+                    </IonButton>
+                  </>
+                )}
               </IonItem>
             ))}
           </IonList>
         )}
 
+        {/* Modal para confirmar inscripción */}
         <IonModal
           isOpen={showModal}
           onDidDismiss={() => setShowModal(false)}

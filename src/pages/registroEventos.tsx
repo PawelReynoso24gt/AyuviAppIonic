@@ -12,7 +12,9 @@ import {
   IonToast,
   IonSpinner,
   IonModal,
+  IonIcon,
 } from "@ionic/react";
+import { arrowBackOutline } from 'ionicons/icons';
 import { useHistory } from "react-router-dom";
 import axios from "../services/axios";
 import { getInfoFromToken } from "../services/authService";
@@ -33,6 +35,7 @@ const InscripcionesEventos: React.FC = () => {
   const [toastMessage, setToastMessage] = useState<string>("");
   const [selectedEvento, setSelectedEvento] = useState<number | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [processingInscripcion, setProcessingInscripcion] = useState(false);
   const userInfo = getInfoFromToken();
   const idVoluntario = userInfo?.idVoluntario; // Obtener el ID del voluntario
   const history = useHistory();
@@ -41,7 +44,7 @@ const InscripcionesEventos: React.FC = () => {
   const fetchEventos = async () => {
     setLoading(true);
     try {
-      const response = await axios.get<Evento[]>("http://localhost:5000/eventos/activas");
+      const response = await axios.get<Evento[]>( `http://localhost:5000/eventos/activo?idVoluntario=${idVoluntario}`);
       setEventos(response.data);
     } catch (error: any) {
       const errorMessage =
@@ -55,7 +58,7 @@ const InscripcionesEventos: React.FC = () => {
 
   useEffect(() => {
     fetchEventos();
-  }, []);
+  }, [idVoluntario]);
 
   // Manejar inscripción a un evento
   const handleInscripcion = async () => {
@@ -64,7 +67,9 @@ const InscripcionesEventos: React.FC = () => {
       return;
     }
 
+    setProcessingInscripcion(true); // Deshabilitar botones
     const fechaHoraInscripcion = new Date().toISOString();
+
 
     try {
       const response = await axios.post("http://localhost:5000/inscripcion_eventos/create", {
@@ -72,35 +77,39 @@ const InscripcionesEventos: React.FC = () => {
         idVoluntario,
         idEvento: selectedEvento,
       });
-
-      // Actualizar lista de eventos para reflejar inscripción
-      setEventos((prevEventos) =>
-        prevEventos.map((evento) =>
-          evento.idEvento === selectedEvento
-            ? { ...evento, isInscrito: true }
-            : evento
-        )
-      );
-
       setToastMessage(response.data.message || "¡Inscripción registrada con éxito!");
-      setShowModal(false); // Cerrar modal
-      setSelectedEvento(null);
-    } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.message || error.message || "Error desconocido al registrar inscripción.";
-      console.error("Error al registrar inscripción:", error.response || error);
-      setToastMessage(errorMessage);
-    }
-  };
+      fetchEventos(); 
+     } catch (error: any) {
+        const errorMessage =
+          error.response?.data?.message || error.message || "Error desconocido al registrar inscripción.";
+        console.error("Error al registrar inscripción:", error.response || error);
+        setToastMessage(errorMessage);
+      } finally {
+        setProcessingInscripcion(false); // Reactivar botones
+        setShowModal(false); // Cerrar modal
+        setSelectedEvento(null);
+      }
+    };
 
-  const handleIrAComision = (idEvento: number) => {
-    history.push(`/registroComisiones?eventoId=${idEvento}`);
-  };
+      const handleIrAComision = (idEvento: number) => {
+        history.push(`/registroComisiones?eventoId=${idEvento}`);
+      };
 
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar style={{ backgroundColor: "#4B0082" }}>
+          <IonButton
+            slot="start"
+            fill="clear"
+            onClick={() => history.goBack()} // Acción para regresar
+            style={{
+            marginLeft: '10px',
+            color: 'white',
+            }}
+          >
+            <IonIcon icon={arrowBackOutline} slot="icon-only" />
+          </IonButton>
           <IonTitle style={{ color: "#FFFFFF" }}>Inscripción a Eventos</IonTitle>
         </IonToolbar>
       </IonHeader>
@@ -221,7 +230,7 @@ const InscripcionesEventos: React.FC = () => {
           onDidDismiss={() => setShowModal(false)}
           style={{
             "--width": "500px",
-            "--height": "200px",
+            "--height": "250px",
             "--border-radius": "15px",
           }}
         >

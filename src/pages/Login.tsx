@@ -57,6 +57,22 @@ const Login: React.FC = () => {
                         <IonInput className="custom-input" type={showPassword ? "text" : "password"} value={contrasenia} onIonChange={e => setContrasenia(e.detail.value!)} />
                         <IonIcon className="password-toggle-icon" slot="end" icon={showPassword ? eyeOff : eye} onClick={() => setShowPassword(!showPassword)} />
                     </IonItem>
+
+                <IonText
+                    onClick={() => history.push('/registroAspirante')}
+                    color="primary"
+                    style={{
+                        marginTop: '20px',
+                        display: 'block',
+                        textAlign: 'center',
+                        textDecoration: 'underline',
+                        cursor: 'pointer',
+                        fontSize: '14px',
+                    }}
+                >
+                    ¿No tienes una cuenta? Regístrate como aspirante
+                </IonText>
+
                     {error && <IonText color="danger">{error}</IonText>}
                     <IonButton expand="block" onClick={handleLogin}>Iniciar Sesión</IonButton>
                 </div>
