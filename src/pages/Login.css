@@ -5,20 +5,24 @@
     align-items: center;
     height: 100%;
     padding: 20px;
-    background: #c8c8ca;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(93, 119, 189, 0.658);
 }
 
 .login-container ion-item {
     width: 100%;
     max-width: 400px;
     margin-bottom: 15px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
 }
 
 .login-container ion-button {
     width: 100%;
     max-width: 400px;
+    border-radius: 10px;
 }
 
 .login-container ion-icon {
@@ -26,17 +30,32 @@
 }
 
 .custom-input {
-    --color: #1c5aa0; /* Cambia este color al que desees */
-    --placeholder-color: #a1a1a1; /* Cambia este color al que desees */
+    --color: #000000;
+    /* Cambia este color al que desees */
+    --placeholder-color: #ffffff;
+    /* Cambia este color al que desees */
+}
+
+.custom-item {
+    --background: #E8E8E8; /* Cambia este color al que desees */
+}
+
+.usuario-label, .contrasenia-label {
+    display: block;
+    margin-bottom: 10px; /* Ajusta el valor según tus necesidades */
+    font-weight: bold;
 }
 
 .password-item ion-label {
-    padding-left: 0; /* Ajusta el padding del label */
+    padding-block: 0;
+    /* Ajusta el padding del label */
 }
 
 .password-item ion-input {
-    padding-left: 0; /* Ajusta el padding del input */
-    padding-right: 80%; /* Ajusta el padding del input */
+    padding-left: 0;
+    /* Ajusta el padding del input */
+    padding-right: 80%;
+    /* Ajusta el padding del input */
 }
 
 .password-toggle-icon {
@@ -46,5 +65,35 @@
     transform: translateY(-50%);
     cursor: pointer;
     font-size: 18px;
-    color: #333;
+    color: #000000;
+}
+
+.logo {
+    width: 300px;
+    /* Ajusta el tamaño de la imagen según tus necesidades */
+    margin-bottom: 20px;
+}
+
+.ion-margin-bottom {
+    margin-bottom: 20px;
+    color: rgb(0, 0, 0);
+}
+
+.ion-padding {
+    background-color:#000000;
+}
+
+.text-center {
+    text-align: center;
+    padding-left: 0%;
+    padding: auto;
+}
+
+/* Añade estos estilos para aumentar el espacio entre el texto y los inputs */
+.custom-item ion-label {
+    margin-bottom: 10px; /* Ajusta el valor según tus necesidades */
+}
+
+.custom-item ion-input {
+    margin-top: 10px; /* Ajusta el valor según tus necesidades */
 }
