@@ -1,20 +1,14 @@
 import React, { useState } from 'react';
-import {
-    IonPage,
-    IonContent,
-    IonInput,
-    IonButton,
-    IonText,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-} from '@ionic/react';
-import { loginUser  } from '../services/authService';
+import { IonPage, IonContent, IonInput, IonButton, IonText, IonHeader, IonToolbar, IonTitle, IonItem, IonLabel, IonIcon } from '@ionic/react';
+import { eyeOff, eye } from 'ionicons/icons';
+import { loginUser } from '../services/authService';
 import { useHistory } from 'react-router-dom';
+import './Login.css'; // Importa el archivo de estilos
 
 const Login: React.FC = () => {
     const [usuario, setUsuario] = useState('');
     const [contrasenia, setContrasenia] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const history = useHistory();
 
@@ -22,7 +16,7 @@ const Login: React.FC = () => {
         try {
             setError(''); // Limpiar errores previos
 
-            const data = await loginUser (usuario, contrasenia); // Llama al servicio de login
+            const data = await loginUser(usuario, contrasenia); // Llama al servicio de login
 
             // Redirige al usuario al Home
             history.push('/home'); // Asegúrate de que la ruta sea '/home'
@@ -53,25 +47,21 @@ const Login: React.FC = () => {
     return (
         <IonPage>
             <IonHeader>
-                <IonToolbar color="primary">
-                    <IonTitle>Iniciar Sesión</IonTitle>
+                <IonToolbar>
+                    <IonTitle>Login</IonTitle>
                 </IonToolbar>
             </IonHeader>
             <IonContent className="ion-padding">
-                <IonInput
-                    placeholder="Usuario"
-                    value={usuario}
-                    onIonChange={(e) => setUsuario(e.detail.value!)}
-                />
-                <IonInput
-                    type="password"
-                    placeholder="Contraseña"
-                    value={contrasenia}
-                    onIonChange={(e) => setContrasenia(e.detail.value!)}
-                />
-                <IonButton expand="block" onClick={handleLogin}>
-                    Iniciar Sesión
-                </IonButton>
+                <div className="login-container">
+                    <IonItem className="ion-margin-bottom">
+                        <IonLabel position="floating">Usuario</IonLabel>
+                        <IonInput className="custom-input" value={usuario} onIonChange={e => setUsuario(e.detail.value!)} />
+                    </IonItem>
+                    <IonItem className="password-item">
+                        <IonLabel position="floating">Contraseña</IonLabel>
+                        <IonInput className="custom-input" type={showPassword ? "text" : "password"} value={contrasenia} onIonChange={e => setContrasenia(e.detail.value!)} />
+                        <IonIcon className="password-toggle-icon" slot="end" icon={showPassword ? eyeOff : eye} onClick={() => setShowPassword(!showPassword)} />
+                    </IonItem>
                 
                 <IonButton
                     expand="block"
@@ -97,11 +87,9 @@ const Login: React.FC = () => {
                     ¿No tienes una cuenta? Regístrate como aspirante
                 </IonText>
 
-                {error && <IonText color="danger">{error}</IonText>}
-                {/* Botón de cierre de sesión 
-                <IonButton expand="block" onClick={handleLogout}>
-                    Cerrar Sesión
-                </IonButton>*/}
+                    {error && <IonText color="danger">{error}</IonText>}
+                    <IonButton expand="block" onClick={handleLogin}>Iniciar Sesión</IonButton>
+                </div>
             </IonContent>
         </IonPage>
     );
