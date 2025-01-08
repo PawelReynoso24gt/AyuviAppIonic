@@ -64,15 +64,9 @@ const Login: React.FC = () => {
                         <IonInput className="custom-input" type={showPassword ? "text" : "password"} value={contrasenia} onIonChange={e => setContrasenia(e.detail.value!)} />
                         <IonIcon className="password-toggle-icon" slot="end" icon={showPassword ? eyeOff : eye} onClick={() => setShowPassword(!showPassword)} />
                     </IonItem>
-                
-                <IonButton
-                    expand="block"
-                    color="secondary"
-                    onClick={handleGuestLogin}
-                    style={{ marginTop: '10px' }}
-                >
-                    Entrar como invitad@
-                </IonButton>
+
+                    <IonButton expand="block" onClick={handleLogin}>Iniciar Sesión</IonButton>
+                    {error && <IonText color="danger">{error}</IonText>}
 
                     <IonText
                         onClick={() => history.push('/registroAspirante')}
@@ -89,8 +83,14 @@ const Login: React.FC = () => {
                         ¿No tienes una cuenta? Regístrate como aspirante
                     </IonText>
 
-                    {error && <IonText color="danger">{error}</IonText>}
-                    <IonButton expand="block" onClick={handleLogin}>Iniciar Sesión</IonButton>
+                    <IonButton
+                        expand="block"
+                        color="secondary"
+                        onClick={handleGuestLogin}
+                        style={{ marginTop: '10px' }}
+                    >
+                        Entrar como invitad@
+                    </IonButton>
                 </div>
             </IonContent>
         </IonPage>
