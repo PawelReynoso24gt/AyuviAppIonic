@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { IonPage, IonContent, IonInput, IonButton, IonText, IonHeader, IonToolbar, IonTitle } from '@ionic/react';
+import {
+    IonPage,
+    IonContent,
+    IonInput,
+    IonButton,
+    IonText,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+} from '@ionic/react';
 import { loginUser  } from '../services/authService';
 import { useHistory } from 'react-router-dom';
 
@@ -36,6 +45,11 @@ const Login: React.FC = () => {
         history.push('/login');
     };
 
+    const handleGuestLogin = () => {
+        // Redirige al usuario como invitado
+        history.push('/invitado');
+    };
+
     return (
         <IonPage>
             <IonHeader>
@@ -57,6 +71,15 @@ const Login: React.FC = () => {
                 />
                 <IonButton expand="block" onClick={handleLogin}>
                     Iniciar Sesión
+                </IonButton>
+                
+                <IonButton
+                    expand="block"
+                    color="secondary"
+                    onClick={handleGuestLogin}
+                    style={{ marginTop: '10px' }}
+                >
+                    Entrar como invitad@
                 </IonButton>
 
                 <IonText

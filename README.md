@@ -72,9 +72,29 @@ npm install axios
 npm install jwt-decode
 ```
 
+```bash
+npm install axios react-slick slick-carousel
+```
+
+```bash
+npm install --save-dev @types/react-slick
+```
+
+```bash
+npm install date-fns
+```
+
+```bash
+npm install react-multi-carousel
+```
+
+```bash
+npm install --save-dev @types/react-modal
+```
+
 # DESARROLLADORES
 
-- **Angely Esmeralda Thomas Cortéz** - 202108048
+- **Angely Esmeralda Thomas Cortéz** - 202108047
 - **Pablo Daniel Vásquez Monzón** - 202108025
 - **Alejandra González Monterrosa** - 20108048 
 - **Pawel Alessandro Reynoso Marquez** - 202108006
