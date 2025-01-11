@@ -1,2 +1,15 @@
 /* For information on how to create your own theme, please see:
 http://ionicframework.com/docs/theming/ */
+:root {
+    --main-bg-color: rgb(53, 110, 56); /* Tu color personalizado */
+}
+
+/* Clase exclusiva para un componente */
+.custom-content {
+    --ion-background-color: #ffffff;/* Aplica solo a este componente */
+    min-height: 100vh; /* Altura completa */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

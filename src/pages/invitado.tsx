@@ -12,20 +12,13 @@ import { format, parseISO } from "date-fns";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { useHistory } from "react-router-dom";
-import { getInfoFromToken } from "../services/authService";
 
 const Home: React.FC = () => {
-  const [username, setUsername] = useState<string | null>(null);
   const [publicaciones, setPublicaciones] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const history = useHistory();
 
   useEffect(() => {
-    const info = getInfoFromToken();
-    if (info?.usuario) {
-      setUsername(info.usuario);
-    }
-
     const fetchPublicaciones = async () => {
       try {
         const response = await axios.get(
@@ -36,7 +29,6 @@ const Home: React.FC = () => {
           nombre: publicacion.nombrePublicacion,
           descripcion: publicacion.descripcion,
           fecha: publicacion.fechaPublicacion,
-          tipoPublicacion: publicacion.tipoPublicacion, // Incluye el tipo de publicación
           fotos: Array.from(
             new Set([
               ...publicacion.publicacionesGenerales.map((foto: any) => foto.foto),
@@ -55,6 +47,10 @@ const Home: React.FC = () => {
 
     fetchPublicaciones();
   }, []);
+
+  const handlePublicationClick = () => {
+    history.push("/login");
+  };
 
   const styles: { [key: string]: React.CSSProperties } = {
     welcomeContainer: {
@@ -77,11 +73,11 @@ const Home: React.FC = () => {
       borderRadius: "10px",
       overflow: "hidden",
       boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-      cursor: "pointer", // Indica que es clickeable
+      cursor: "pointer", // Cambia el cursor al pasar sobre la publicación
     },
     photoContainer: {
       width: "100%",
-      height: "523px", // Tamaño fijo para el contenedor
+      height: "523px",
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
@@ -131,36 +127,16 @@ const Home: React.FC = () => {
     },
   };
 
-  const handleRedirect = (tipoPublicacion: string) => {
-    switch (tipoPublicacion) {
-      case "eventos":
-        history.push("/registroEventos");
-        break;
-      case "rifas":
-        history.push("/request-talonario");
-        break;
-      default:
-        console.log("Tipo de publicación no manejado:", tipoPublicacion);
-        break;
-    }
-  };
-
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Inicio</IonTitle>
+          <IonTitle>Invitad@</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
         <div style={styles.welcomeContainer}>
-          {username ? (
-            <h2>
-              Bienvenido <strong>{username}</strong>
-            </h2>
-          ) : (
-            <p>Cargando información del usuario...</p>
-          )}
+          <h2>Bienvenid@</h2>
         </div>
 
         {isLoading && (
@@ -173,7 +149,7 @@ const Home: React.FC = () => {
           <div
             key={publicacion.id}
             style={styles.publication}
-            onClick={() => handleRedirect(publicacion.tipoPublicacion)}
+            onClick={handlePublicationClick}
           >
             <div style={styles.content}>
               <p style={styles.title}>{publicacion.nombre}</p>
