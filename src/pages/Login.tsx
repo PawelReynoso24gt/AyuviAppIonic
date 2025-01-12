@@ -55,14 +55,14 @@ const Login: React.FC = () => {
             <IonContent className="ion-padding">
                 <div className="login-container">
                     <img src={logo} alt="Logo Ayuvi" className="logo" />
+                    <IonLabel className="usuario-label">Usuario</IonLabel>
                     <IonItem className="ion-margin-bottom custom-item">
-                        <IonLabel className="usuario-label">Usuario</IonLabel>
                         <IonInput className="custom-input" value={usuario} onIonChange={e => setUsuario(e.detail.value!)} />
                     </IonItem>
+                    <IonLabel className="contrasenia-label">Contraseña</IonLabel>
                     <IonItem className="password-item custom-item">
-                        <IonLabel className="contrasenia-label">Contraseña</IonLabel>
-                        <IonInput className="custom-input" type={showPassword ? "text" : "password"} value={contrasenia} onIonChange={e => setContrasenia(e.detail.value!)} />
-                        <IonIcon className="password-toggle-icon" slot="end" icon={showPassword ? eyeOff : eye} onClick={() => setShowPassword(!showPassword)} />
+                        <IonInput className="password-input" type={showPassword ? "text" : "password"} value={contrasenia} onIonChange={e => setContrasenia(e.detail.value!)} />
+                        <IonIcon slot="end" icon={showPassword ? eyeOff : eye} onClick={() => setShowPassword(!showPassword)} />
                     </IonItem>
 
                     <IonButton expand="block" onClick={handleLogin}>Iniciar Sesión</IonButton>
