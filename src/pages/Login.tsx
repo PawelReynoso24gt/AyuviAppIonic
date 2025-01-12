@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IonPage, IonContent, IonInput, IonButton, IonText, IonHeader, IonToolbar, IonTitle, IonItem, IonLabel, IonIcon } from '@ionic/react';
+import { IonPage, IonContent, IonInput, IonButton, IonText, IonItem, IonLabel, IonIcon } from '@ionic/react';
 import { eyeOff, eye } from 'ionicons/icons';
 import { loginUser } from '../services/authService';
 import { useHistory } from 'react-router-dom';
@@ -33,13 +33,6 @@ const Login: React.FC = () => {
         }
     };
 
-    const handleLogout = () => {
-        // Borra el localStorage
-        localStorage.clear();
-        // Redirige al usuario a la página de login
-        history.push('/login');
-    };
-
     const handleGuestLogin = () => {
         // Redirige al usuario como invitado
         history.push('/invitado');
@@ -47,12 +40,7 @@ const Login: React.FC = () => {
 
     return (
         <IonPage>
-            <IonHeader>
-                <IonToolbar>
-                    <IonTitle>Login</IonTitle>
-                </IonToolbar>
-            </IonHeader>
-            <IonContent className="ion-padding">
+            <IonContent className="ion-padding" fullscreen>
                 <div className="login-container">
                     <img src={logo} alt="Logo Ayuvi" className="logo" />
                     <IonLabel className="usuario-label">Usuario</IonLabel>

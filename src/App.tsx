@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Redirect, Switch, useLocation } from 'react-router-dom';
 import { IonApp, IonMenu, IonContent, IonHeader, IonToolbar, IonTitle, IonList, IonItem, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import Home from './pages/Home';
 import About from './pages/About';
@@ -38,46 +38,10 @@ import axios from './services/axios';
 setupIonicReact();
 
 const App: React.FC = () => {
-  const handleLogout = () => {
-    // Borra el localStorage
-    //localStorage.clear();
-    try {
-      // Obtener el userId desde el token
-      const tokenInfo = getInfoFromToken();
-      if (!tokenInfo || !tokenInfo.idUsuario) {
-        throw new Error('No se pudo obtener la información del usuario.');
-      }
-      // Enviar la solicitud al backend
-      axios.put(`/usuarios/logout/${tokenInfo.idUsuario}`);
-      localStorage.clear();
-    } catch (err: any) {
-      console.error(err.message);
-    }
-    // Redirige al usuario a la página de login
-    window.location.href = '/login'; // Redirige a la página de login
-  };
-
   return (
     <IonApp>
-      <IonMenu contentId="main-content">
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>Menu</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent>
-          <IonList>
-            <IonItem routerLink="/home">Inicio</IonItem>
-            <IonItem routerLink="/request-talonario">Solicitar Talonario</IonItem>
-            <IonItem routerLink="/registroEventos">Registro a Eventos</IonItem>
-            <IonItem routerLink="/about">Acerca de</IonItem>
-            <IonItem routerLink="/profile">Perfil</IonItem>
-            <IonItem routerLink="/sede">Sede</IonItem>
-            <IonItem button onClick={handleLogout}>Cerrar sesión</IonItem>
-          </IonList>
-        </IonContent>
-      </IonMenu>
       <Router>
+        <Menu />
         <IonRouterOutlet id="main-content">
           <Switch>
             <Route exact path="/login" component={Login} />
@@ -104,6 +68,55 @@ const App: React.FC = () => {
         </IonRouterOutlet>
       </Router>
     </IonApp>
+  );
+};
+
+const Menu: React.FC = () => {
+  const location = useLocation();
+  const isLoginPage = location.pathname === '/login';
+
+  const handleLogout = () => {
+    // Borra el localStorage
+    //localStorage.clear();
+    try {
+      // Obtener el userId desde el token
+      const tokenInfo = getInfoFromToken();
+      if (!tokenInfo || !tokenInfo.idUsuario) {
+        throw new Error('No se pudo obtener la información del usuario.');
+      }
+      // Enviar la solicitud al backend
+      axios.put(`/usuarios/logout/${tokenInfo.idUsuario}`);
+      localStorage.clear();
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    // Redirige al usuario a la página de login
+    window.location.href = '/login'; // Redirige a la página de login
+  };
+
+  if (isLoginPage) {
+    return null;
+  }
+
+  return (
+    <IonMenu contentId="main-content">
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>Menu</IonTitle>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent>
+        <IonList>
+          <IonItem routerLink="/home">Inicio</IonItem>
+          <IonItem routerLink="/request-talonario">Solicitar Talonario</IonItem>
+          <IonItem routerLink="/registroEventos">Registro a Eventos</IonItem>
+          <IonItem routerLink="/about">Acerca de</IonItem>
+          <IonItem routerLink="/profile">Perfil</IonItem>
+          <IonItem routerLink="/sede">Sede</IonItem>
+          <IonItem button onClick={handleLogout}>Cerrar sesión</IonItem>
+        </IonList>
+      </IonContent>
+    </IonMenu>
   );
 };
 
