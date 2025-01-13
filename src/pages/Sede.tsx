@@ -21,6 +21,7 @@ const Sede: React.FC = () => {
   const [fotosSede, setFotosSede] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [modalAlertMessage, setModalAlertMessage] = useState("");
 
   useEffect(() => {
     const fetchSedeData = async () => {
