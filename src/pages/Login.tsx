@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { IonPage, IonContent, IonInput, IonButton, IonText, IonHeader, IonToolbar, IonTitle } from '@ionic/react';
-import { loginUser  } from '../services/authService';
+import { IonPage, IonContent, IonInput, IonButton, IonText, IonItem, IonLabel, IonIcon } from '@ionic/react';
+import { eyeOff, eye } from 'ionicons/icons';
+import { loginUser } from '../services/authService';
 import { useHistory } from 'react-router-dom';
+import './Login.css'; // Importa el archivo de estilos
+import logo from '../img/LOGOAYUVI.png'; // Importa la imagen
 
 const Login: React.FC = () => {
     const [usuario, setUsuario] = useState('');
     const [contrasenia, setContrasenia] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const history = useHistory();
 
@@ -13,7 +17,7 @@ const Login: React.FC = () => {
         try {
             setError(''); // Limpiar errores previos
 
-            const data = await loginUser (usuario, contrasenia); // Llama al servicio de login
+            const data = await loginUser(usuario, contrasenia); // Llama al servicio de login
 
             // Redirige al usuario al Home
             history.push('/home'); // Asegúrate de que la ruta sea '/home'
@@ -29,40 +33,53 @@ const Login: React.FC = () => {
         }
     };
 
-    const handleLogout = () => {
-        // Borra el localStorage
-        localStorage.clear();
-        // Redirige al usuario a la página de login
-        history.push('/login');
+    const handleGuestLogin = () => {
+        // Redirige al usuario como invitado
+        history.push('/invitado');
     };
 
     return (
         <IonPage>
-            <IonHeader>
-                <IonToolbar color="primary">
-                    <IonTitle>Iniciar Sesión</IonTitle>
-                </IonToolbar>
-            </IonHeader>
-            <IonContent className="ion-padding">
-                <IonInput
-                    placeholder="Usuario"
-                    value={usuario}
-                    onIonChange={(e) => setUsuario(e.detail.value!)}
-                />
-                <IonInput
-                    type="password"
-                    placeholder="Contraseña"
-                    value={contrasenia}
-                    onIonChange={(e) => setContrasenia(e.detail.value!)}
-                />
-                <IonButton expand="block" onClick={handleLogin}>
-                    Iniciar Sesión
-                </IonButton>
-                {error && <IonText color="danger">{error}</IonText>}
-                {/* Botón de cierre de sesión 
-                <IonButton expand="block" onClick={handleLogout}>
-                    Cerrar Sesión
-                </IonButton>*/}
+            <IonContent className="ion-padding" fullscreen>
+                <div className="login-container">
+                    <img src={logo} alt="Logo Ayuvi" className="logo" />
+                    <IonLabel className="usuario-label">Usuario</IonLabel>
+                    <IonItem className="ion-margin-bottom custom-item">
+                        <IonInput className="custom-input" value={usuario} onIonChange={e => setUsuario(e.detail.value!)} />
+                    </IonItem>
+                    <IonLabel className="contrasenia-label">Contraseña</IonLabel>
+                    <IonItem className="password-item custom-item">
+                        <IonInput className="password-input" type={showPassword ? "text" : "password"} value={contrasenia} onIonChange={e => setContrasenia(e.detail.value!)} />
+                        <IonIcon slot="end" icon={showPassword ? eyeOff : eye} onClick={() => setShowPassword(!showPassword)} />
+                    </IonItem>
+
+                    <IonButton expand="block" onClick={handleLogin}>Iniciar Sesión</IonButton>
+                    {error && <IonText color="danger">{error}</IonText>}
+
+                    <IonText
+                        onClick={() => history.push('/registroAspirante')}
+                        color="primary"
+                        style={{
+                            marginTop: '20px',
+                            display: 'block',
+                            textAlign: 'center',
+                            textDecoration: 'underline',
+                            cursor: 'pointer',
+                            fontSize: '14px',
+                        }}
+                    >
+                        ¿No tienes una cuenta? Regístrate como aspirante
+                    </IonText>
+
+                    <IonButton
+                        expand="block"
+                        color="secondary"
+                        onClick={handleGuestLogin}
+                        style={{ marginTop: '10px' }}
+                    >
+                        Entrar como invitad@
+                    </IonButton>
+                </div>
             </IonContent>
         </IonPage>
     );
