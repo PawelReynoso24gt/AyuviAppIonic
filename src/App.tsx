@@ -14,6 +14,7 @@ import registroMateriales from '../src/pages/registroMateriales';
 import registroActividades from '../src/pages/registroActividades';
 import registroAspirante from '../src/pages/registroAspirante';
 import solicitudPendiente from '../src/pages/solicitudPendiente';
+import productosVoluntarios from '../src/pages/productosVoluntarios';
 import Sede from '../src/pages/Sede';
 import invitado from '../src/pages/invitado';
 
@@ -70,6 +71,8 @@ const App: React.FC = () => {
             <IonItem routerLink="/home">Inicio</IonItem>
             <IonItem routerLink="/request-talonario">Solicitar Talonario</IonItem>
             <IonItem routerLink="/registroEventos">Registro a Eventos</IonItem>
+            <IonItem routerLink="/productosVoluntarios">Venta por Voluntario</IonItem>
+            <IonItem routerLink="/perfil">Perfil</IonItem>
             <IonItem routerLink="/about">Acerca de</IonItem>
             <IonItem routerLink="/profile">Perfil</IonItem>
             <IonItem routerLink="/sede">Sede</IonItem>
@@ -94,6 +97,7 @@ const App: React.FC = () => {
             <PrivateRoute exact path="/registroAspirante" component={registroAspirante} />
             <PrivateRoute exact path="/solicitudPendiente" component={solicitudPendiente} />
             <PrivateRoute exact path="/invitado" component={invitado} />
+            <PrivateRoute exact path="/productosVoluntarios" component={productosVoluntarios} />
             <Route exact path="/">
               <Redirect to="/login" />
             </Route>

@@ -45,5 +45,13 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+
+	<!-- Descripciones de uso de la cámara y la galería -->
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Esta aplicación necesita acceso a tu galería para seleccionar imágenes.</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Esta aplicación necesita acceso a tu cámara para capturar fotos.</string>
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>Esta aplicación necesita permisos para guardar fotos en tu galería.</string>
 </dict>
 </plist>
