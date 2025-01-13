@@ -17,6 +17,8 @@
     border-radius: 10px;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    /* Añadir esta línea */
 }
 
 .login-container ion-button {
@@ -31,31 +33,30 @@
 
 .custom-input {
     --color: #000000;
-    /* Cambia este color al que desees */
     --placeholder-color: #ffffff;
-    /* Cambia este color al que desees */
+    position: center;
 }
 
 .custom-item {
-    --background: #E8E8E8; /* Cambia este color al que desees */
+    --background: #E8E8E8;
 }
 
-.usuario-label, .contrasenia-label {
+.usuario-label,
+.contrasenia-label {
     display: block;
-    margin-bottom: 10px; /* Ajusta el valor según tus necesidades */
+    margin-bottom: 10px;
     font-weight: bold;
+    text-align: center;
+    /* Añadir esta línea */
 }
 
 .password-item ion-label {
     padding-block: 0;
-    /* Ajusta el padding del label */
 }
 
 .password-item ion-input {
     padding-left: 0;
-    /* Ajusta el padding del input */
     padding-right: 80%;
-    /* Ajusta el padding del input */
 }
 
 .password-toggle-icon {
@@ -70,7 +71,6 @@
 
 .logo {
     width: 300px;
-    /* Ajusta el tamaño de la imagen según tus necesidades */
     margin-bottom: 20px;
 }
 
@@ -80,7 +80,7 @@
 }
 
 .ion-padding {
-    background-color:#000000;
+    background-color: #000000;
 }
 
 .text-center {
@@ -89,11 +89,19 @@
     padding: auto;
 }
 
-/* Añade estos estilos para aumentar el espacio entre el texto y los inputs */
 .custom-item ion-label {
-    margin-bottom: 10px; /* Ajusta el valor según tus necesidades */
+    margin-bottom: 10px;
 }
 
 .custom-item ion-input {
-    margin-top: 10px; /* Ajusta el valor según tus necesidades */
+    margin-top: 10px;
+}
+
+.password-input {
+    --color: #000000;
+    --placeholder-color: #ffffff;
+    padding: 10px;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
 }
