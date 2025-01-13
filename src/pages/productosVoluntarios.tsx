@@ -159,20 +159,22 @@ const VoluntarioProductos: React.FC = () => {
   // función para usar la cámara o la galería
     const handleFileUpload = async (index: number) => {
         try {
-        const photo = await Camera.getPhoto({
-            resultType: CameraResultType.Base64,
-            source: CameraSource.Photos, // Cambia esto a CameraSource.Camera si prefieres usar la cámara en lugar de la galería
-            quality: 100,
-        });
-    
-        const nuevosPagos = [...tiposPagos];
-        nuevosPagos[index].imagenTransferencia = `data:image/jpeg;base64,${photo.base64String}`;
-        setTiposPagos(nuevosPagos);
-        // Mostrar mensaje de éxito
-        setToastMessage("Foto cargada exitosamente.");
+            const photo = await Camera.getPhoto({
+                resultType: CameraResultType.Base64,
+                source: CameraSource.Photos, // Cambia esto a CameraSource.Camera si prefieres usar la cámara en lugar de la galería
+                quality: 100,
+            });
+
+            const nuevosPagos = [...tiposPagos];
+            // Guardar la cadena Base64 directamente sin el prefijo
+            nuevosPagos[index].imagenTransferencia = photo.base64String || "";
+            setTiposPagos(nuevosPagos);
+
+            // Mostrar mensaje de éxito
+            setToastMessage("Foto cargada exitosamente.");
         } catch (error) {
-        console.error("Error uploading file:", error);
-        setToastMessage("Error al subir la imagen.");
+            console.error("Error uploading file:", error);
+            setToastMessage("Error al subir la imagen.");
         }
     };
 
@@ -211,10 +213,15 @@ const VoluntarioProductos: React.FC = () => {
           imagenTransferencia: pago.imagenTransferencia || "efectivo", // Valor por defecto
         };
       });
+
+      const detallesConDonacion = detallesVenta.map((detalle) => ({
+        ...detalle,
+        donacion: newVenta.donacion // Incluye la donación en cada detalle
+      }));
   
       const ventaData = {
         venta: { ...newVenta, totalVenta: totalAPagar },
-        detalles: detallesVenta.filter((detalle) => detalle.cantidad > 0),
+        detalles: detallesConDonacion.filter((detalle) => detalle.cantidad > 0),
         pagos: pagosValidados,
       };    
   
