@@ -92,6 +92,10 @@ npm install react-multi-carousel
 npm install --save-dev @types/react-modal
 ```
 
+```bash
+npm install @capacitor/camera
+```
+
 # DESARROLLADORES
 
 - **Angely Esmeralda Thomas Cortéz** - 202108047
