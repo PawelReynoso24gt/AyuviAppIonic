@@ -58,6 +58,7 @@ const App: React.FC = () => {
             <PrivateRoute exact path="/registroActiviades" component={registroActividades} />
             <PrivateRoute exact path="/registroAspirante" component={registroAspirante} />
             <PrivateRoute exact path="/solicitudPendiente" component={solicitudPendiente} />
+            <PrivateRoute exact path="/productosVoluntarios" component={productosVoluntarios} />
             <PrivateRoute exact path="/invitado" component={invitado} />
             <PrivateRoute exact path="/productosVoluntarios" component={productosVoluntarios} />
             <Route exact path="/">
@@ -112,6 +113,7 @@ const Menu: React.FC = () => {
           <IonItem routerLink="/home">Inicio</IonItem>
           <IonItem routerLink="/request-talonario">Solicitar Talonario</IonItem>
           <IonItem routerLink="/registroEventos">Registro a Eventos</IonItem>
+          <IonItem routerLink="/productosVoluntarios">Venta por Voluntario</IonItem>
           <IonItem routerLink="/about">Acerca de</IonItem>
           <IonItem routerLink="/profile">Perfil</IonItem>
           <IonItem routerLink="/sede">Sede</IonItem>
