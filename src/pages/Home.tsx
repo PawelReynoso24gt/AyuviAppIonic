@@ -7,7 +7,7 @@ import {
   IonToolbar,
   IonSpinner,
 } from "@ionic/react";
-import axios from "axios";
+import axios from '../services/axios'; // Instancia de Axios
 import { format, parseISO } from "date-fns";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
@@ -29,7 +29,7 @@ const Home: React.FC = () => {
     const fetchPublicaciones = async () => {
       try {
         const response = await axios.get(
-          "https://3hkpqqqv-5000.use.devtunnels.ms/publicaciones/completas"
+          "/publicaciones/completas"
         );
         const publicaciones = response.data.map((publicacion: any) => ({
           id: publicacion.id,
