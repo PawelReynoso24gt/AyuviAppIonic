@@ -168,6 +168,8 @@ const VoluntarioProductos: React.FC = () => {
         const nuevosPagos = [...tiposPagos];
         nuevosPagos[index].imagenTransferencia = `data:image/jpeg;base64,${photo.base64String}`;
         setTiposPagos(nuevosPagos);
+        // Mostrar mensaje de éxito
+        setToastMessage("Foto cargada exitosamente.");
         } catch (error) {
         console.error("Error uploading file:", error);
         setToastMessage("Error al subir la imagen.");
