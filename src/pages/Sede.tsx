@@ -214,6 +214,7 @@ const Sede: React.FC = () => {
             No se encontraron datos de la sede.
           </IonText>
         )}
+      
       </IonContent>
     </IonPage>
   );
