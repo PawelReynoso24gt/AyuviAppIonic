@@ -60,163 +60,160 @@ const Sede: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Sede</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-
-      <IonContent className="ion-padding">
-        {loading ? (
-          <IonLoading isOpen={loading} message="Cargando..." />
-        ) : error ? (
-          <IonText color="danger">{error}</IonText>
-        ) : sedeData ? (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            {/* Contenedor de información */}
-            <IonCard style={{ boxShadow: 'none', border: 'none' }}>
-              <IonCardContent>
+    <IonHeader>
+      <IonToolbar>
+        <IonTitle>Sede</IonTitle>
+      </IonToolbar>
+    </IonHeader>
+  
+    <IonContent className="ion-padding">
+      {loading ? (
+        <IonLoading isOpen={loading} message="Cargando..." />
+      ) : error ? (
+        <IonText color="danger">{error}</IonText>
+      ) : sedeData ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          {/* Contenedor de información */}
+          <IonCard style={{ boxShadow: 'none', border: 'none', width: '100%' }}>
+            <IonCardContent>
+              <IonText
+                color="primary"
+                style={{
+                  textAlign: 'center',
+                  fontSize: '24px',
+                  fontWeight: 'bold',
+                  display: 'block',
+                  marginBottom: '10px',
+                }}
+              >
+                {sedeData.nombreSede}
+              </IonText>
+  
+              <IonTitle
+                style={{
+                  textAlign: 'center',
+                  marginTop: '10px',
+                  fontSize: '20px',
+                  marginBottom: '10px',
+                }}
+              >
+                Información
+              </IonTitle>
+              <IonText
+                style={{
+                  textAlign: 'justify',
+                  display: 'block',
+                  fontSize: '16px',
+                }}
+              >
+                {sedeData.informacion}
+              </IonText>
+            </IonCardContent>
+          </IonCard>
+  
+          {/* Contenedor del carrusel de fotos */}
+          <IonCard style={{ boxShadow: 'none', border: 'none', padding: '0' }}>
+            <IonCardContent style={{ padding: '0', paddingTop: '20px' }}>
+              <IonTitle
+                style={{
+                  textAlign: 'center',
+                  fontSize: '20px',
+                  marginBottom: '10px',
+                }}
+              >
+                Fotos de la Sede
+              </IonTitle>
+              {fotosSede.length > 0 ? (
+                <Carousel
+                  responsive={responsive}
+                  infinite
+                  autoPlay
+                  autoPlaySpeed={3000}
+                  keyBoardControl
+                  showDots
+                  containerClass="carousel-container"
+                  arrows
+                  customLeftArrow={
+                    <div
+                      style={{
+                        position: 'absolute',
+                        left: '10px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        zIndex: 10,
+                        cursor: 'pointer',
+                        fontSize: '30px',
+                        color: '#007AC3',
+                      }}
+                    >
+                      &#9664;
+                    </div>
+                  }
+                  customRightArrow={
+                    <div
+                      style={{
+                        position: 'absolute',
+                        right: '10px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        zIndex: 10,
+                        cursor: 'pointer',
+                        fontSize: '30px',
+                        color: '#007AC3',
+                      }}
+                    >
+                      &#9654;
+                    </div>
+                  }
+                >
+                  {fotosSede.map((foto) => (
+                    <div
+                      key={foto.id}
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        padding: '10px',
+                        boxSizing: 'border-box',
+                      }}
+                    >
+                      <img
+                        src={foto.ruta}
+                        alt={`Foto de la sede ${foto.id}`}
+                        style={{
+                          width: '100%',
+                          maxWidth: '800px',
+                          height: 'auto',
+                          objectFit: 'contain',
+                          borderRadius: '10px',
+                        }}
+                      />
+                    </div>
+                  ))}
+                </Carousel>
+              ) : (
                 <IonText
-                  color="primary"
+                  color="medium"
                   style={{
                     textAlign: 'center',
-                    fontSize: '24px',
-                    fontWeight: 'bold',
+                    marginTop: '20px',
                     display: 'block',
-                    marginBottom: '10px',
                   }}
                 >
-                  {sedeData.nombreSede}
+                  No hay fotos disponibles para esta sede.
                 </IonText>
-
-                <IonTitle
-                  style={{
-                    textAlign: 'center',
-                    marginTop: '10px',
-                    fontSize: '20px',
-                    marginBottom: '10px',
-                  }}
-                >
-                  Información
-                </IonTitle>
-                <IonText
-                  style={{
-                    textAlign: 'center',
-                    display: 'block',
-                    marginBottom: '10px',
-                    fontSize: '16px',
-                  }}
-                >
-                  {sedeData.informacion}
-                </IonText>
-              </IonCardContent>
-            </IonCard>
-
-            {/* Contenedor del carrusel de fotos */}
-            <IonCard style={{ boxShadow: 'none', border: 'none', padding: '0' }}>
-              <IonCardContent style={{ padding: '0' }}>
-                <IonTitle
-                  style={{
-                    textAlign: 'center',
-                    fontSize: '20px',
-                    marginBottom: '10px',
-                  }}
-                >
-                  Fotos de la Sede
-                </IonTitle>
-                {fotosSede.length > 0 ? (
-                  <Carousel
-                    responsive={responsive}
-                    infinite
-                    autoPlay
-                    autoPlaySpeed={3000}
-                    keyBoardControl
-                    showDots
-                    containerClass="carousel-container"
-                    arrows
-                    customLeftArrow={
-                      <div
-                        style={{
-                          position: 'absolute',
-                          left: '10px',
-                          top: '50%',
-                          transform: 'translateY(-50%)',
-                          zIndex: 10,
-                          cursor: 'pointer',
-                          fontSize: '30px',
-                          color: '#007AC3',
-                        }}
-                      >
-                        &#9664;
-                      </div>
-                    }
-                    customRightArrow={
-                      <div
-                        style={{
-                          position: 'absolute',
-                          right: '10px',
-                          top: '50%',
-                          transform: 'translateY(-50%)',
-                          zIndex: 10,
-                          cursor: 'pointer',
-                          fontSize: '30px',
-                          color: '#007AC3',
-                        }}
-                      >
-                        &#9654;
-                      </div>
-                    }
-                  >
-                    {fotosSede.map((foto) => (
-                      <div
-                        key={foto.id}
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          padding: '10px',
-                          boxSizing: 'border-box',
-                        }}
-                      >
-                        <img
-                          src={foto.ruta}
-                          alt={`Foto de la sede ${foto.id}`}
-                          style={{
-                            width: '100%',
-                            maxWidth: '800px',
-                            height: 'auto',
-                            maxHeight: '500px',
-                            objectFit: 'contain',
-                            borderRadius: '10px',
-                          }}
-                        />
-                      </div>
-                    ))}
-
-                  </Carousel>
-                ) : (
-                  <IonText
-                    color="medium"
-                    style={{
-                      textAlign: 'center',
-                      marginTop: '20px',
-                      display: 'block',
-                    }}
-                  >
-                    No hay fotos disponibles para esta sede.
-                  </IonText>
-                )}
-              </IonCardContent>
-            </IonCard>
-          </div>
-        ) : (
-          <IonText color="danger" style={{ textAlign: 'center' }}>
-            No se encontraron datos de la sede.
-          </IonText>
-        )}
-      
-      </IonContent>
-    </IonPage>
+              )}
+            </IonCardContent>
+          </IonCard>
+        </div>
+      ) : (
+        <IonText color="danger" style={{ textAlign: 'center' }}>
+          No se encontraron datos de la sede.
+        </IonText>
+      )}
+    </IonContent>
+  </IonPage>
+  
   );
 };
 
