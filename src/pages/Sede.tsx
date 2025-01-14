@@ -75,7 +75,14 @@ const Sede: React.FC = () => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           {/* Contenedor de información */}
           <IonCard style={{ boxShadow: 'none', border: 'none', width: '100%' }}>
-            <IonCardContent>
+            <IonCardContent
+             style={{
+              padding: '20px',
+              textAlign: 'justify',
+              overflowWrap: 'break-word', // Evita que palabras largas se desborden
+              wordBreak: 'break-word', // Asegura que palabras largas se rompan correctamente  
+              }}
+              >
               <IonText
                 color="primary"
                 style={{
@@ -104,6 +111,8 @@ const Sede: React.FC = () => {
                   textAlign: 'justify',
                   display: 'block',
                   fontSize: '16px',
+                  overflowWrap: 'break-word', // Aplica también al texto interno
+                  wordBreak: 'break-word',
                 }}
               >
                 {sedeData.informacion}
