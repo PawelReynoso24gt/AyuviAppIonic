@@ -578,80 +578,50 @@ const recalculateTotals = (detalles: DetallesVenta[], donacion: number) => {
         </IonContent>
         </IonModal>
 
-        <IonAccordionGroup>
-            {stands.map((stand) => {
-                if (!stand.detallesStands || stand.detallesStands.length === 0) {
-                    return null; // Ignora stands sin productos
-                }
-                return (
-                    <IonAccordion value={`stand-${stand.idStand}`} key={stand.idStand}>
-                        {/* Encabezado del stand */}
-                        <IonItem
-                            slot="header"
+        <IonList style={{ backgroundColor: "#E0E7FF" }}>
+    {stands.flatMap((stand) => stand.detallesStands).slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((detalle: any) => (
+        <IonItem
+            key={detalle.producto.idProducto}
+            style={{
+                margin: "10px",
+                borderRadius: "10px",
+                boxShadow: "0 4px 8px rgba(99, 175, 233, 0.18)"
+            }}
+        >
+            <IonLabel>
+                <h2 style={{ color: "#0274E5" }}>{detalle.producto.nombreProducto}</h2>
+                <p><strong>Cantidad disponible:</strong> {detalle.cantidad}</p>
+                <p><strong>Precio:</strong> Q{detalle.producto.precio}</p>
+                <p><strong>Descripción:</strong> {detalle.producto.descripcion}</p>
+                <p><strong>Talla:</strong> {detalle.producto.talla}</p>
+                {detalle.producto.foto && (
+                    <div style={{ textAlign: "center", marginTop: "10px" }}>
+                        <img
+                            src={`https://3hkpqqqv-5000.use.devtunnels.ms/${detalle.producto.foto}`}
+                            alt={detalle.producto.nombreProducto}
                             style={{
-                                backgroundColor: "#0274E5",
-                                color: "#000000",
-                                marginBottom: "10px",
-                                borderRadius: "10px",
-                                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                                width: "100px",
+                                height: "100px",
+                                objectFit: "cover",
+                                borderRadius: "10px"
                             }}
-                        >
-                            <IonLabel style={{ color: "#FFFFFF", fontSize: "20px", fontWeight: "bold", backgroundColor: "#51ab31" }}>
-                                {stand.nombreStand}
-                            </IonLabel>
-                            <IonLabel slot="end" style={{ color: "#000000", fontSize: "18px" }}>
-                                {stand.direccion}
-                            </IonLabel>
-                        </IonItem>
+                        />
+                    </div>
+                )}
+            </IonLabel>
+        </IonItem>
+    ))}
+</IonList>
 
-                        {/* Lista de productos del stand */}
-                        <IonList slot="content" style={{ backgroundColor: "#E0E7FF" }}>
-                            {stand.detallesStands.map((detalle: any) => (
-                                <IonItem
-                                    key={detalle.producto.idProducto}
-                                    style={{
-                                        margin: "10px",
-                                        borderRadius: "10px",
-                                        boxShadow: "0 4px 8px rgba(99, 175, 233, 0.18)",
-                                    }}
-                                >
-                                    <IonLabel>
-                                        <h2 style={{ color: "#0274E5" }}>{detalle.producto.nombreProducto}</h2>
-                                        <p>
-                                            <strong>Cantidad disponible:</strong> {detalle.cantidad}
-                                        </p>
-                                        <p>
-                                            <strong>Precio:</strong> Q{detalle.producto.precio}
-                                        </p>
-                                        <p>
-                                            <strong>Descripción:</strong> {detalle.producto.descripcion}
-                                        </p>
-
-                                        <p>
-                                            <strong>Talla:</strong> {detalle.producto.talla}
-                                        </p>
-                                        {detalle.producto.foto && (
-                                            <div style={{ textAlign: "center", marginTop: "10px" }}>
-                                                <img
-                                                    src={`https://3hkpqqqv-5000.use.devtunnels.ms/${detalle.producto.foto}`}
-                                                    alt={detalle.producto.nombreProducto}
-                                                    style={{
-                                                        width: "100px",
-                                                        height: "100px",
-                                                        objectFit: "cover",
-                                                        borderRadius: "10px",
-                                                    }}
-                                                />
-                                            </div>
-                                        )}
-                                    </IonLabel>
-                                </IonItem>
-                            ))}
-                        </IonList>
-                    </IonAccordion>
-                );
-            })}
-        </IonAccordionGroup>
+{/* Botones de navegación */}
+<div style={{ textAlign: "center", marginTop: "20px" }}>
+    <IonButton onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>
+        Anterior
+    </IonButton>
+    <IonButton onClick={() => setCurrentPage((prev) => (prev * itemsPerPage < stands.flatMap((stand) => stand.detallesStands).length ? prev + 1 : prev))} disabled={currentPage * itemsPerPage >= stands.flatMap((stand) => stand.detallesStands).length}>
+        Siguiente
+    </IonButton>
+</div>
         <IonToast
           isOpen={!!toastMessage}
           message={toastMessage}
