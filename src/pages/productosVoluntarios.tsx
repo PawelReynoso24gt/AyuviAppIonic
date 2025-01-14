@@ -181,7 +181,7 @@ const VoluntarioProductos: React.FC = () => {
   const handleCreateVenta = async () => {
     try {
       // Validar que cada pago tenga un producto asociado con cantidad > 0
-      const pagosValidados = tiposPagos.map((pago) => {
+      const pagosValidados = tiposPagos.reduce((acc: Pago[], pago) => {
         if (!pago.idTipoPago) {
             throw new Error("Selecciona un tipo de pago para cada entrada.");
           }
@@ -204,15 +204,26 @@ const VoluntarioProductos: React.FC = () => {
 
         if (detallesVenta.filter((detalle) => detalle.cantidad > 0).length === 0) {
             alert("Debes ingresar al menos un producto con cantidad mayor a 0.");
-            return;
+            throw new Error("Validación de pago fallida");
         }  
+
+        if ([1, 2, 4].includes(parseInt(pago.idTipoPago, 10))) { // Depósito, Transferencia, Cheque
+          if (!pago.correlativo || !pago.imagenTransferencia) {
+              const tipoPago = tiposPagosOptions.find(option => option.idTipoPago === pago.idTipoPago)?.tipo || "desconocido";
+              alert(`El tipo de pago ${tipoPago} requiere correlativo e imagen.`);
+              throw new Error("Validación de pago fallida");
+          }
+        }
   
-        return {
-          ...pago,
-          correlativo: pago.correlativo || "NA", // Valor por defecto
-          imagenTransferencia: pago.imagenTransferencia || "efectivo", // Valor por defecto
-        };
+        // Manejo de valores por defecto para tipos de pago
+      acc.push({
+        ...pago,
+        correlativo: pago.correlativo || "NA", // Valor por defecto
+        imagenTransferencia: pago.imagenTransferencia || "efectivo", // Valor por defecto
       });
+
+      return acc;
+    }, []);
 
       const detallesConDonacion = detallesVenta.map((detalle) => ({
         ...detalle,

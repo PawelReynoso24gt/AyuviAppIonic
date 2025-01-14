@@ -170,6 +170,32 @@ const VoluntarioProductos: React.FC = () => {
     setTiposPagos(nuevosPagos);
   };
 
+  const handleOpenModal = () => {
+    setNewVenta({
+      totalVenta: 0,
+      idTipoPublico: "2",
+      estado: 1,
+      donacion: 0,
+    });
+    setDetallesVenta(
+      stands.flatMap((stand) =>
+        selectedStand?.detallesStands.map((detalle: any): DetallesVenta => ({
+          idProducto: detalle.producto.idProducto,
+          nombreProducto: detalle.producto.nombreProducto,
+          precio: detalle.producto.precio,
+          cantidad: 0,
+          subTotal: 0,
+          idVoluntario: idVoluntario,
+          donacion: 0,
+          estado: 1,
+          idStand: selectedStand.idStand // Incluye idStand
+        }))|| []
+      )
+    );
+    setTiposPagos([]);
+    setShowModal(true);
+  };
+
   const recalculateTotals = (detalles: DetallesVenta[], donacion: number) => {
     const nuevoSubtotal = detalles.reduce((sum, detalle) => sum + detalle.subTotal, 0);
     const nuevoTotalAPagar = nuevoSubtotal + parseFloat(donacion.toString() || "0");
@@ -206,7 +232,7 @@ const VoluntarioProductos: React.FC = () => {
   const handleCreateVenta = async () => {
     try {
       // Validar que cada pago tenga un producto asociado con cantidad > 0
-      const pagosValidados = tiposPagos.map((pago) => {
+      const pagosValidados = tiposPagos.reduce((acc: Pago[], pago) => {
         if (!pago.idTipoPago) {
             throw new Error("Selecciona un tipo de pago para cada entrada.");
           }
@@ -229,15 +255,26 @@ const VoluntarioProductos: React.FC = () => {
 
         if (detallesVenta.filter((detalle) => detalle.cantidad > 0).length === 0) {
             alert("Debes ingresar al menos un producto con cantidad mayor a 0.");
-            return;
+            throw new Error("Validación de pago fallida");
         }  
+
+        if ([1, 2, 4].includes(parseInt(pago.idTipoPago, 10))) { // Depósito, Transferencia, Cheque
+          if (!pago.correlativo || !pago.imagenTransferencia) {
+              const tipoPago = tiposPagosOptions.find(option => option.idTipoPago === pago.idTipoPago)?.tipo || "desconocido";
+              alert(`El tipo de pago ${tipoPago} requiere correlativo e imagen.`);
+              throw new Error("Validación de pago fallida");
+          }
+        }
   
-        return {
-          ...pago,
-          correlativo: pago.correlativo || "NA", // Valor por defecto
-          imagenTransferencia: pago.imagenTransferencia || "efectivo", // Valor por defecto
-        };
+        // Manejo de valores por defecto para tipos de pago
+      acc.push({
+        ...pago,
+        correlativo: pago.correlativo || "NA", // Valor por defecto
+        imagenTransferencia: pago.imagenTransferencia || "efectivo", // Valor por defecto
       });
+
+      return acc;
+    }, []);
 
       const detallesConDonacion = detallesVenta.map((detalle) => ({
         ...detalle,
@@ -257,6 +294,19 @@ const VoluntarioProductos: React.FC = () => {
       const response = await axios.post("/ventas/create/stands/completa", ventaData);
       if (response.status === 201) {
         alert("Venta creada con éxito");
+        // Restablecer los estados
+      setNewVenta({
+        totalVenta: 0,
+        idTipoPublico: "2",
+        estado: 1,
+        donacion: 0,
+      });
+      setDetallesVenta([]);
+      setTiposPagos([]);
+      setSubtotal(0);
+      setTotalAPagar(0);
+      setSelectedStand(null); // Restablecer la selección del stand
+
         setShowModal(false);
       }
     } catch (error) {
@@ -304,6 +354,7 @@ const VoluntarioProductos: React.FC = () => {
     setTiposPagos([]);
     setSubtotal(0);
     setTotalAPagar(0);
+    setSelectedStand(null); // Restablecer la selección del stand
   };
 
   if (loading) {
@@ -344,7 +395,7 @@ const VoluntarioProductos: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar style={{ backgroundColor: "#0274E5" }}>
-          <IonTitle style={{ color: "#000000" }}>Productos del Voluntario</IonTitle>
+          <IonTitle style={{ color: "#000000" }}>Productos del Stand</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent style={{ backgroundColor: "#F0F8FF" }}>
@@ -366,29 +417,7 @@ const VoluntarioProductos: React.FC = () => {
               padding: "10px", 
             }}
             onClick={() => {
-                setNewVenta({
-                  totalVenta: 0,
-                  idTipoPublico: "2",
-                  estado: 1,
-                  donacion: 0,
-                });
-                setDetallesVenta(
-                  stands.flatMap((stand) =>
-                    selectedStand?.detallesStands.map((detalle: any): DetallesVenta => ({
-                      idProducto: detalle.producto.idProducto,
-                      nombreProducto: detalle.producto.nombreProducto,
-                      precio: detalle.producto.precio,
-                      cantidad: 0,
-                      subTotal: 0,
-                      idVoluntario: idVoluntario,
-                      donacion: 0,
-                      estado: 1,
-                      idStand: selectedStand.idStand // Incluye idStand
-                    }))|| []
-                  )
-                );
-                setTiposPagos([]);
-                setShowModal(true);
+              handleOpenModal();
               }}
           >
             Crear Venta
@@ -427,6 +456,8 @@ const VoluntarioProductos: React.FC = () => {
                         idStand: stand.idStand // Incluye idStand
                         }))
                     );
+                    }else {
+                      setDetallesVenta([]); // Restablecer los detalles de la venta si no hay stand seleccionado
                     }
                 }}
             >
@@ -580,16 +611,16 @@ const VoluntarioProductos: React.FC = () => {
                     slot="header"
                     style={{
                         backgroundColor: "#0274E5",
-                        color: "#FFFFFF",
+                        color: "#000000",
                         marginBottom: "10px",
                         borderRadius: "10px",
                         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
                     }}
                     >
-                    <IonLabel style={{ color: "#FFFFFF", fontSize: "20px", fontWeight: "bold" }}>
+                    <IonLabel style={{ color: "#FFFFFF", fontSize: "20px", fontWeight: "bold", backgroundColor: "#51ab31" }}>
                         {stand.nombreStand}
                     </IonLabel>
-                    <IonLabel slot="end" style={{ color: "#FFFFFF", fontSize: "14px" }}>
+                    <IonLabel slot="end" style={{ color: "#000000", fontSize: "18px" }}>
                         {stand.direccion}
                     </IonLabel>
                     </IonItem>

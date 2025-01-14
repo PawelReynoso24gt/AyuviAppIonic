@@ -18,6 +18,7 @@ import productosVoluntarios from '../src/pages/productosVoluntarios';
 import Sede from '../src/pages/Sede';
 import invitado from '../src/pages/invitado';
 import productosStands from '../src/pages/productosStands';
+import recaudacionRifas from '../src/pages/recaudacionRifas';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -63,6 +64,7 @@ const App: React.FC = () => {
             <PrivateRoute exact path="/invitado" component={invitado} />
             <PrivateRoute exact path="/productosVoluntarios" component={productosVoluntarios} />
             <PrivateRoute exact path="/productosStands" component={productosStands} />
+            <PrivateRoute exact path="/recaudacionRifas" component={recaudacionRifas} />
             <Route exact path="/">
               <Redirect to="/login" />
             </Route>
@@ -117,6 +119,7 @@ const Menu: React.FC = () => {
           <IonItem routerLink="/registroEventos">Registro a Eventos</IonItem>
           <IonItem routerLink="/productosVoluntarios">Venta por Voluntario</IonItem>
           <IonItem routerLink="/productosStands">Venta por Stands</IonItem>
+          <IonItem routerLink="/recaudacionRifas">Recaudación de Rifas</IonItem>
           <IonItem routerLink="/about">Acerca de</IonItem>
           <IonItem routerLink="/profile">Perfil</IonItem>
           <IonItem routerLink="/sede">Sede</IonItem>
