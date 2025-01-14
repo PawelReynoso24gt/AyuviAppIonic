@@ -113,8 +113,8 @@ const Sede: React.FC = () => {
             </IonCard>
 
             {/* Contenedor del carrusel de fotos */}
-            <IonCard style={{ boxShadow: 'none', border: 'none' }}>
-              <IonCardContent>
+            <IonCard style={{ boxShadow: 'none', border: 'none', padding: '0' }}>
+              <IonCardContent style={{ padding: '0' }}>
                 <IonTitle
                   style={{
                     textAlign: 'center',
@@ -133,6 +133,39 @@ const Sede: React.FC = () => {
                     keyBoardControl
                     showDots
                     containerClass="carousel-container"
+                    arrows
+                    customLeftArrow={
+                      <div
+                        style={{
+                          position: 'absolute',
+                          left: '10px',
+                          top: '50%',
+                          transform: 'translateY(-50%)',
+                          zIndex: 10,
+                          cursor: 'pointer',
+                          fontSize: '30px',
+                          color: '#007AC3',
+                        }}
+                      >
+                        &#9664;
+                      </div>
+                    }
+                    customRightArrow={
+                      <div
+                        style={{
+                          position: 'absolute',
+                          right: '10px',
+                          top: '50%',
+                          transform: 'translateY(-50%)',
+                          zIndex: 10,
+                          cursor: 'pointer',
+                          fontSize: '30px',
+                          color: '#007AC3',
+                        }}
+                      >
+                        &#9654;
+                      </div>
+                    }
                   >
                     {fotosSede.map((foto) => (
                       <div
@@ -142,21 +175,24 @@ const Sede: React.FC = () => {
                           justifyContent: 'center',
                           alignItems: 'center',
                           padding: '10px',
+                          boxSizing: 'border-box',
                         }}
                       >
                         <img
                           src={foto.ruta}
                           alt={`Foto de la sede ${foto.id}`}
                           style={{
-                            maxWidth: '100%',
-                            maxHeight: '300px',
+                            width: '100%',
+                            maxWidth: '800px',
+                            height: 'auto',
+                            maxHeight: '500px',
                             objectFit: 'contain',
                             borderRadius: '10px',
-                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
                           }}
                         />
                       </div>
                     ))}
+
                   </Carousel>
                 ) : (
                   <IonText
