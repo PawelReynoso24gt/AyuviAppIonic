@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Redirect, Switch, useLocation } from 'react-router-dom';
-import { IonApp, IonMenu, IonContent, IonHeader, IonToolbar, IonTitle, IonList, IonItem, IonRouterOutlet, setupIonicReact } from '@ionic/react';
+import { IonApp, IonMenu, IonContent, IonHeader, IonToolbar, IonTitle, IonList, IonItem, IonRouterOutlet, setupIonicReact, IonModal, IonButton } from '@ionic/react';
 import Home from './pages/Home';
 import About from './pages/About';
 import Login from './pages/Login';
@@ -38,10 +38,13 @@ import './theme/variables.css';
 //  Importar funcion para extraer idUsuario del token
 import { getInfoFromToken } from './services/authService';
 import axios from './services/axios';
+import usePasswordChangeCheck from './hooks/usePasswordChangeCheck';
 
 setupIonicReact();
 
 const App: React.FC = () => {
+  const { showModal, message, daysRemaining, handleCloseModal } = usePasswordChangeCheck();
+
   return (
     <IonApp>
       <Router>
@@ -76,6 +79,23 @@ const App: React.FC = () => {
           </Switch>
         </IonRouterOutlet>
       </Router>
+
+      {/* Modal de Advertencia */}
+      <IonModal isOpen={showModal} onDidDismiss={handleCloseModal}>
+        <IonHeader>
+          <IonToolbar>
+            <IonTitle>¡Advertencia!</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent>
+          <p>{message}</p>
+          {daysRemaining !== null && (
+            <p>Te quedan {daysRemaining} días para cambiarla, de lo contrario, tu usuario será bloqueado.</p>
+          )}
+        </IonContent>
+        <IonButton onClick={handleCloseModal}>Entendido</IonButton>
+        <IonButton routerLink="/change-password">Cambiar contraseña</IonButton>
+      </IonModal>
     </IonApp>
   );
 };
