@@ -11,7 +11,9 @@ import {
   IonLabel,
   IonText,
   IonAlert,
+  IonIcon,
 } from '@ionic/react';
+import { eyeOff, eye } from 'ionicons/icons';
 import axios from '../services/axios';
 import { getInfoFromToken } from '../services/authService';
 import { useHistory } from 'react-router-dom';
@@ -23,19 +25,81 @@ const ChangePassword: React.FC = () => {
     newPassword: '',
     confirmPassword: '',
   });
+  const [showPassword, setShowPassword] = useState({
+    currentPassword: false,
+    newPassword: false,
+    confirmPassword: false,
+  });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState('');
+  const [passwordMatch, setPasswordMatch] = useState('');
 
-  // Función para manejar cambios en los campos
-  const handleInputChange = (field: string, value: string) => {
-    setFormData({ ...formData, [field]: value });
+  // Manejar cambios en los campos del formulario
+  const handleInputChange = (e: any) => {
+    const { name, value } = e.target;
+    const updatedFormData = {
+      ...formData,
+      [name]: value,
+    };
+    setFormData(updatedFormData);
+
+    if (name === "newPassword") {
+      validatePassword(value);
+    }
+
+    if (name === "confirmPassword" || name === "newPassword") {
+      checkPasswordMatch(updatedFormData.newPassword, updatedFormData.confirmPassword);
+    }
   };
 
-  // Función para manejar el envío del formulario
-  const handleSubmit = async () => {
-    // Validar que las contraseñas nuevas coincidan
+  // Validar la fortaleza de la contraseña
+  const validatePassword = (password: string) => {
+    let strength = "";
+    if (password.length < 8) {
+      strength = "La contraseña es demasiado corta.";
+    } else if (!/[A-Z]/.test(password)) {
+      strength = "La contraseña debe contener al menos una letra mayúscula.";
+    } else if (!/[a-z]/.test(password)) {
+      strength = "La contraseña debe contener al menos una letra minúscula.";
+    } else if (!/[0-9]/.test(password)) {
+      strength = "La contraseña debe contener al menos un número.";
+    } else if (!/[!@#$%^&*]/.test(password)) {
+      strength = "La contraseña debe contener al menos un carácter especial.";
+    } else {
+      strength = "La contraseña es fuerte.";
+    }
+    setPasswordStrength(strength);
+  };
+
+  // Verificar si las contraseñas coinciden
+  const checkPasswordMatch = (newPassword: string, confirmPassword: string) => {
+    if (newPassword && confirmPassword) {
+      if (newPassword === confirmPassword) {
+        setPasswordMatch("Las contraseñas coinciden.");
+      } else {
+        setPasswordMatch("Las contraseñas no coinciden.");
+      }
+    } else {
+      setPasswordMatch("");
+    }
+  };
+
+  // Alternar visibilidad de la contraseña
+  const toggleShowPassword = (field: keyof typeof showPassword) => {
+    setShowPassword((prevState) => ({
+      ...prevState,
+      [field]: !prevState[field],
+    }));
+  };
+
+  // Manejar el envío del formulario
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+
+    // Verificar que las contraseñas nuevas coincidan
     if (formData.newPassword !== formData.confirmPassword) {
-      setError('Las contraseñas no coinciden.');
+      setError("La nueva contraseña y la confirmación no coinciden.");
       return;
     }
 
@@ -55,6 +119,8 @@ const ChangePassword: React.FC = () => {
       setSuccess(true);
       setFormData({ currentPassword: '', newPassword: '', confirmPassword: '' });
       setError('');
+      setPasswordStrength('');
+      setPasswordMatch('');
     } catch (err: any) {
       console.error('Error al actualizar la contraseña:', err);
       setError(
@@ -73,59 +139,89 @@ const ChangePassword: React.FC = () => {
       </IonHeader>
 
       <IonContent className="ion-padding">
-        {/* Contraseña Actual */}
-        <IonItem>
-          <IonLabel position="stacked">Contraseña Actual</IonLabel>
-          <IonInput
-            type="password"
-            value={formData.currentPassword}
-            onIonChange={(e) => handleInputChange('currentPassword', e.detail.value!)}
+        <form onSubmit={handleSubmit}>
+          {/* Contraseña Actual */}
+          <IonItem>
+            <IonLabel position="stacked">Contraseña Actual</IonLabel>
+            <IonInput
+              type={showPassword.currentPassword ? "text" : "password"}
+              name="currentPassword"
+              value={formData.currentPassword}
+              onIonInput={handleInputChange}
+            />
+            <IonIcon
+              slot="end"
+              icon={showPassword.currentPassword ? eyeOff : eye}
+              onClick={() => toggleShowPassword("currentPassword")}
+            />
+          </IonItem>
+
+          {/* Nueva Contraseña */}
+          <IonItem>
+            <IonLabel position="stacked">Nueva Contraseña</IonLabel>
+            <IonInput
+              type={showPassword.newPassword ? "text" : "password"}
+              name="newPassword"
+              value={formData.newPassword}
+              onIonInput={handleInputChange}
+            />
+            <IonIcon
+              slot="end"
+              icon={showPassword.newPassword ? eyeOff : eye}
+              onClick={() => toggleShowPassword("newPassword")}
+            />
+          </IonItem>
+          {passwordStrength && (
+            <IonText color={passwordStrength === "La contraseña es fuerte." ? "success" : "danger"} style={{ marginTop: '5px' }}>
+              {passwordStrength}
+            </IonText>
+          )}
+
+          {/* Confirmar Contraseña */}
+          <IonItem>
+            <IonLabel position="stacked">Confirmar Contraseña</IonLabel>
+            <IonInput
+              type={showPassword.confirmPassword ? "text" : "password"}
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onIonInput={handleInputChange}
+            />
+            <IonIcon
+              slot="end"
+              icon={showPassword.confirmPassword ? eyeOff : eye}
+              onClick={() => toggleShowPassword("confirmPassword")}
+            />
+          </IonItem>
+          {passwordMatch && (
+            <IonText color={passwordMatch === "Las contraseñas coinciden." ? "success" : "danger"} style={{ marginTop: '5px' }}>
+              {passwordMatch}
+            </IonText>
+          )}
+
+          {/* Botón de Enviar */}
+          <IonButton expand="block" type="submit">
+            Actualizar Contraseña
+          </IonButton>
+
+          {/* Mostrar error */}
+          {error && (
+            <IonText color="danger" style={{ marginTop: '10px' }}>
+              {error}
+            </IonText>
+          )}
+
+          {/* Alerta de éxito */}
+          <IonAlert
+            isOpen={success}
+            onDidDismiss={() => {
+              setSuccess(false);
+              history.push('/profile'); // Redirigir a perfil
+            }}
+            header="Éxito"
+            message="Contraseña actualizada correctamente."
+            buttons={['OK']}
           />
-        </IonItem>
-
-        {/* Nueva Contraseña */}
-        <IonItem>
-          <IonLabel position="stacked">Nueva Contraseña</IonLabel>
-          <IonInput
-            type="password"
-            value={formData.newPassword}
-            onIonChange={(e) => handleInputChange('newPassword', e.detail.value!)}
-          />
-        </IonItem>
-
-        {/* Confirmar Contraseña */}
-        <IonItem>
-          <IonLabel position="stacked">Confirmar Contraseña</IonLabel>
-          <IonInput
-            type="password"
-            value={formData.confirmPassword}
-            onIonChange={(e) => handleInputChange('confirmPassword', e.detail.value!)}
-          />
-        </IonItem>
-
-        {/* Botón de Enviar */}
-        <IonButton expand="block" onClick={handleSubmit}>
-          Actualizar Contraseña
-        </IonButton>
-
-        {/* Mostrar error */}
-        {error && (
-          <IonText color="danger" style={{ marginTop: '10px' }}>
-            {error}
-          </IonText>
-        )}
-
-        {/* Alerta de éxito */}
-        <IonAlert
-          isOpen={success}
-          onDidDismiss={() => {
-            setSuccess(false);
-            history.push('/profile'); // Redirigir a perfil
-          }}
-          header="Éxito"
-          message="Contraseña actualizada correctamente."
-          buttons={['OK']}
-        />
+        </form>
       </IonContent>
     </IonPage>
   );
