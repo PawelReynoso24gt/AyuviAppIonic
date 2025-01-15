@@ -8,13 +8,14 @@ import {
   IonList,
   IonItem,
   IonLabel,
-  IonCheckbox,
   IonSpinner,
   IonToast,
+  IonIcon,
+  IonButton
 } from "@ionic/react";
 import axios from "../services/axios";
 import { getInfoFromToken } from "../services/authService";
-import notifyImg from "../assets/img/anotify2.svg";
+import { star, checkmarkCircleOutline, checkmarkCircle } from 'ionicons/icons';
 
 interface Notification {
   idNotificacion: number;
@@ -110,26 +111,34 @@ const NotificationsCom: React.FC = () => {
           <IonList>
             {notifications.length > 0 ? (
               notifications.map((notification) => (
-                <IonItem key={notification.idNotificacion}>
-                  <IonLabel>
-                    <h2 style={{ color: "#0274E5" }}>
-                      {notification.tipo_notificacione.tipoNotificacion}
-                    </h2>
-                    <p>{notification.bitacora.descripcion}</p>
-                    <p style={{ fontSize: "12px", color: "#999" }}>
-                      {new Date(notification.bitacora.fechaHora).toLocaleString("es-ES", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </p>
-                  </IonLabel>
-                  <IonCheckbox
-                    checked={notification.estado === 0}
-                    onIonChange={() => handleCheckNotification(notification.idNotificacion)}
-                  />
+                <IonItem key={notification.idNotificacion} style={{ alignItems: "flex-start" }}>
+                  <div style={{ display: "flex", alignItems: "center", width: "100%" }}>
+                    <IonIcon icon={star} style={{ fontSize: "24px", color: "#0274E5", marginRight: "15px" }} />
+                    <IonLabel style={{ flex: 1 , marginTop: "15px" }}>
+                      <h2 style={{ color: "#0274E5", marginBottom: "5px" }}>
+                        {notification.tipo_notificacione.tipoNotificacion}
+                      </h2>
+                      <p style={{ marginBottom: "5px" }}>{notification.bitacora.descripcion}</p>
+                      <p style={{ fontSize: "12px", color: "#999" }}>
+                        {new Date(notification.bitacora.fechaHora).toLocaleString("es-ES", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </p>
+                    </IonLabel>
+                    <IonButton fill="clear" onClick={() => handleCheckNotification(notification.idNotificacion)}>
+                      <IonIcon
+                        icon={notification.estado === 0 ? checkmarkCircle : checkmarkCircleOutline}
+                        style={{
+                          fontSize: "28px",
+                          color: notification.estado === 0 ? "#10dc60" : "#ccc",
+                        }}
+                      />
+                    </IonButton>
+                  </div>
                 </IonItem>
               ))
             ) : (
