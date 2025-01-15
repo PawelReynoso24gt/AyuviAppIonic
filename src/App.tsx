@@ -89,9 +89,7 @@ const App: React.FC = () => {
         </IonHeader>
         <IonContent>
           <p>{message}</p>
-          {daysRemaining !== null && (
-            <p>Te quedan {daysRemaining} días para cambiarla, de lo contrario, tu usuario será bloqueado.</p>
-          )}
+          {daysRemaining !== null}
         </IonContent>
         <IonButton onClick={handleCloseModal}>Entendido</IonButton>
         <IonButton routerLink="/change-password">Cambiar contraseña</IonButton>
