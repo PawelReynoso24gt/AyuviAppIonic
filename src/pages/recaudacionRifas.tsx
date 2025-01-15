@@ -58,7 +58,7 @@ const [totalVenta, setTotalVenta] = useState<number>(0);
   const fetchVoluntario = async (idVoluntario: number) => {
     try {
       const response = await axios.get(`/voluntarios/${idVoluntario}`);
-      console.log("Datos del voluntario obtenidos:", response.data);
+      //console.log("Datos del voluntario obtenidos:", response.data);
       setVoluntario(response.data);
     } catch (error) {
       console.error("Error fetching voluntario:", error);
@@ -72,7 +72,7 @@ const [totalVenta, setTotalVenta] = useState<number>(0);
   const fetchRifas = async () => {
     try {
       const response = await axios.get("/rifas");
-      console.log("Rifas obtenidas:", response.data);
+      //console.log("Rifas obtenidas:", response.data);
       setRifas(response.data);
     } catch (error) {
       console.error("Error fetching rifas:", error);
@@ -95,7 +95,7 @@ const [totalVenta, setTotalVenta] = useState<number>(0);
 
     try {
       const response = await axios.get(`/rifas/voluntarios/talonarios/${idVoluntario}/${idRifa}`);
-      console.log("Talonarios obtenidos para la rifa:", idRifa, response.data);
+      //console.log("Talonarios obtenidos para la rifa:", idRifa, response.data);
       setTalonarios(response.data);
     } catch (error) {
       console.error("Error fetching talonarios:", error);
@@ -111,10 +111,10 @@ const [totalVenta, setTotalVenta] = useState<number>(0);
     if (info?.idVoluntario) {
       const id = parseInt(info.idVoluntario, 10); // Convertir a número
       setIdVoluntario(id);
-      console.log("Usuario logueado con idVoluntario:", id);
+      //console.log("Usuario logueado con idVoluntario:", id);
       fetchVoluntario(id); // Llamar a la función para obtener los datos del voluntario
     } else {
-      console.log("No se encontró idVoluntario en el token.");
+      //console.log("No se encontró idVoluntario en el token.");
       setToastMessage("ID del voluntario no encontrado en el token.");
       setLoading(false);
       return;
@@ -128,7 +128,7 @@ const [totalVenta, setTotalVenta] = useState<number>(0);
     if (selectedTalonarioPrecio !== null && !isNaN(boletosVendidos)) {
       const nuevoTotalVenta = selectedTalonarioPrecio * boletosVendidos;
       setTotalVenta(nuevoTotalVenta);
-      console.log(`Nuevo total de venta: Q${nuevoTotalVenta.toFixed(2)}`);
+      //console.log(`Nuevo total de venta: Q${nuevoTotalVenta.toFixed(2)}`);
     } else {
       setTotalVenta(0); // Establece un valor por defecto para evitar NaN
     }
@@ -142,7 +142,7 @@ const [totalVenta, setTotalVenta] = useState<number>(0);
 
   const handleVenderBoleto = (idTalonario: string, talonario: any) => {
     const precioBoleto = parseFloat(talonario.rifa.precioBoleto);
-    console.log(`Precio del boleto seleccionado: Q${precioBoleto}`); // Agrega este console.log
+    //console.log(`Precio del boleto seleccionado: Q${precioBoleto}`); 
     setSelectedTalonarioId(idTalonario);
     setSelectedTalonarioPrecio(precioBoleto);
     setShowVentaModal(true);
@@ -154,7 +154,7 @@ const [totalVenta, setTotalVenta] = useState<number>(0);
     setTiposPagos(nuevosPagos);
   
     const totalPagos = nuevosPagos.reduce((sum, pago) => sum + parseFloat(pago.monto.toString()), 0);
-    console.log(`Total de pagos: ${totalPagos}`);
+    //console.log(`Total de pagos: ${totalPagos}`);
   };
   
   const handleRemovePago = (index: number) => {
@@ -201,8 +201,8 @@ const [totalVenta, setTotalVenta] = useState<number>(0);
     const totalVenta = selectedTalonarioPrecio * boletosVendidos;
     const totalPagos = tiposPagos.reduce((sum, pago) => sum + parseFloat(pago.monto.toString()), 0);
     
-    console.log(`Total de pagos: ${totalPagos}`); // Agrega este console.log
-    console.log(`Total de venta: ${totalVenta}`); // Agrega este console.log
+    //console.log(`Total de pagos: ${totalPagos}`); 
+    //console.log(`Total de venta: ${totalVenta}`); 
     
     if (totalPagos !== totalVenta) {
       alert(`La suma de los pagos (${totalPagos}) no coincide con el total de la venta (${totalVenta}).`);
@@ -230,7 +230,7 @@ const [totalVenta, setTotalVenta] = useState<number>(0);
       pagos: tiposPagos
     };
     
-    console.log("JSON a enviar:", JSON.stringify(recaudacionData, null, 2)); // Agrega este console.log
+    //console.log("JSON a enviar:", JSON.stringify(recaudacionData, null, 2)); 
   
     try {
       const response = await axios.post("/recaudaciones/rifa/completa", recaudacionData);

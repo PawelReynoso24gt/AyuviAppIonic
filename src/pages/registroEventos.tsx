@@ -38,6 +38,7 @@ const InscripcionesEventos: React.FC = () => {
   const [processingInscripcion, setProcessingInscripcion] = useState(false);
   const userInfo = getInfoFromToken();
   const idVoluntario = userInfo?.idVoluntario; // Obtener el ID del voluntario
+  const idUsuario = userInfo?.idUsuario; // Obtener el ID del usuario
   const history = useHistory();
 
   // Cargar eventos disponibles
@@ -60,6 +61,22 @@ const InscripcionesEventos: React.FC = () => {
     fetchEventos();
   }, [idVoluntario]);
 
+  // * bitacora
+  const logBitacora = async (descripcion: string, idCategoriaBitacora: number) => {
+    const bitacoraData = {
+      descripcion,
+      idCategoriaBitacora,
+      idUsuario,
+      fechaHora: new Date().toISOString()
+    };
+  
+    try {
+      await axios.post("/bitacora/create", bitacoraData);
+    } catch (error) {
+      console.error("Error logging bitacora:", error);
+    }
+  };
+
   // Manejar inscripción a un evento
   const handleInscripcion = async () => {
     if (!idVoluntario || !selectedEvento) {
@@ -79,6 +96,10 @@ const InscripcionesEventos: React.FC = () => {
       });
       setToastMessage(response.data.message || "¡Inscripción registrada con éxito!");
       fetchEventos(); 
+
+       // Log the action in the bitacora
+      await logBitacora(`Voluntario ${idVoluntario} inscrito en el evento ${selectedEvento}`,38);
+
      } catch (error: any) {
         const errorMessage =
           error.response?.data?.message || error.message || "Error desconocido al registrar inscripción.";

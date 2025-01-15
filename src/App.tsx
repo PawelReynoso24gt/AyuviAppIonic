@@ -20,6 +20,8 @@ import invitado from '../src/pages/invitado';
 import productosStands from '../src/pages/productosStands';
 import recaudacionRifas from '../src/pages/recaudacionRifas';
 import standVirtual from '../src/pages/standVirtual';
+import Notifications from './pages/NotificationsCom';
+import NotificationBell from './components/NotificationBell';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -32,7 +34,6 @@ import '@ionic/react/css/text-alignment.css';
 import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
-//import '@ionic/react/css/palettes/dark.system.css';
 import './theme/variables.css';
 
 //  Importar funcion para extraer idUsuario del token
@@ -46,37 +47,83 @@ const App: React.FC = () => {
     <IonApp>
       <Router>
         <Menu />
-        <IonRouterOutlet id="main-content">
-          <Switch>
-            <Route exact path="/login" component={Login} />
-            <PrivateRoute exact path="/home" component={Home} />
-            <PrivateRoute exact path="/about" component={About} />
-            <PrivateRoute exact path="/sede" component={Sede} />
-            <PrivateRoute exact path="/profile" component={Profile} />
-            <PrivateRoute exact path="/change-password" component={ChangePassword} />
-            <PrivateRoute exact path="/request-talonario" component={RequestTalonario} />
-            <PrivateRoute exact path="/registroEventos" component={registroEventos} />
-            <PrivateRoute exact path="/registroComisiones" component={registroComisiones} />
-            <PrivateRoute exact path="/registroMateriales" component={registroMateriales} />
-            <PrivateRoute exact path="/registroActiviades" component={registroActividades} />
-            <PrivateRoute exact path="/registroAspirante" component={registroAspirante} />
-            <PrivateRoute exact path="/solicitudPendiente" component={solicitudPendiente} />
-            <PrivateRoute exact path="/productosVoluntarios" component={productosVoluntarios} />
-            <PrivateRoute exact path="/invitado" component={invitado} />
-            <PrivateRoute exact path="/productosVoluntarios" component={productosVoluntarios} />
-            <PrivateRoute exact path="/productosStands" component={productosStands} />
-            <PrivateRoute exact path="/recaudacionRifas" component={recaudacionRifas} />
-            <PrivateRoute exact path="/standVirtual" component={standVirtual} />
-            <Route exact path="/">
-              <Redirect to="/login" />
-            </Route>
-            <Route path="*">
-              <Redirect to="/login" />
-            </Route>
-          </Switch>
-        </IonRouterOutlet>
+        <MainContent />
       </Router>
     </IonApp>
+  );
+};
+
+const MainContent: React.FC = () => {
+  const location = useLocation();
+  const isLoginPage = location.pathname === '/login';
+
+  // Mapeo de rutas a títulos de la barra de navegación (se agregan las rutas que se necesiten)
+  const routeTitles: { [key: string]: string } = {
+    '/home': 'Inicio',
+    '/about': 'Acerca de',
+    '/sede': 'Sede',
+    '/profile': 'Perfil',
+    '/change-password': 'Cambiar Contraseña',
+    '/request-talonario': 'Solicitar Talonario',
+    '/registroEventos': 'Registro a Eventos',
+    '/registroComisiones': 'Registro de Comisiones',
+    '/registroMateriales': 'Registro de Materiales',
+    '/registroActividades': 'Registro de Actividades',
+    '/registroAspirante': 'Registro de Aspirante',
+    '/solicitudPendiente': 'Solicitud Pendiente',
+    '/productosVoluntarios': 'Venta por Voluntario',
+    '/invitado': 'Invitado',
+    '/productosStands': 'Venta por Stands',
+    '/recaudacionRifas': 'Recaudación de Rifas',
+    '/standVirtual': 'Stand Virtual',
+    '/notifications': 'Notificaciones'
+  };
+
+  const title = routeTitles[location.pathname] || 'App'; // Título por defecto
+
+  return (
+    <>
+{!isLoginPage && (
+        <IonHeader>
+          <IonToolbar style={{ backgroundColor: "#0274E5" }}>
+            <IonTitle style={{ color: "#000000" }}>{title}</IonTitle>
+            <div slot="end">
+              <NotificationBell />
+            </div>
+          </IonToolbar>
+        </IonHeader>
+      )}
+      <IonRouterOutlet id="main-content">
+        <Switch>
+          <Route exact path="/login" component={Login} />
+          <PrivateRoute exact path="/home" component={Home} />
+          <PrivateRoute exact path="/about" component={About} />
+          <PrivateRoute exact path="/sede" component={Sede} />
+          <PrivateRoute exact path="/profile" component={Profile} />
+          <PrivateRoute exact path="/change-password" component={ChangePassword} />
+          <PrivateRoute exact path="/request-talonario" component={RequestTalonario} />
+          <PrivateRoute exact path="/registroEventos" component={registroEventos} />
+          <PrivateRoute exact path="/registroComisiones" component={registroComisiones} />
+          <PrivateRoute exact path="/registroMateriales" component={registroMateriales} />
+          <PrivateRoute exact path="/registroActiviades" component={registroActividades} />
+          <PrivateRoute exact path="/registroAspirante" component={registroAspirante} />
+          <PrivateRoute exact path="/solicitudPendiente" component={solicitudPendiente} />
+          <PrivateRoute exact path="/productosVoluntarios" component={productosVoluntarios} />
+          <PrivateRoute exact path="/invitado" component={invitado} />
+          <PrivateRoute exact path="/productosVoluntarios" component={productosVoluntarios} />
+          <PrivateRoute exact path="/productosStands" component={productosStands} />
+          <PrivateRoute exact path="/recaudacionRifas" component={recaudacionRifas} />
+          <PrivateRoute exact path="/standVirtual" component={standVirtual} />
+          <PrivateRoute exact path="/notifications" component={Notifications} />
+          <Route exact path="/">
+            <Redirect to="/login" />
+          </Route>
+          <Route path="*">
+            <Redirect to="/login" />
+          </Route>
+        </Switch>
+      </IonRouterOutlet>
+    </>
   );
 };
 
@@ -111,7 +158,7 @@ const Menu: React.FC = () => {
     <IonMenu contentId="main-content">
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Menu</IonTitle>
+          <IonTitle>Menú</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>

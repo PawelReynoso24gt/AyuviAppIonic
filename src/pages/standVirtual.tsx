@@ -100,10 +100,10 @@ const currentProducts = selectedStand?.detallesStands.slice((currentPage - 1) * 
     if (info?.idVoluntario) {
       const id = parseInt(info.idVoluntario, 10); // Convertir a número
       setIdVoluntario(id);
-      console.log("Usuario logueado con idVoluntario:", id);
+      //console.log("Usuario logueado con idVoluntario:", id);
       setVoluntario(info);
     } else {
-      console.log("No se encontró idVoluntario en el token.");
+      //console.log("No se encontró idVoluntario en el token.");
       setToastMessage("ID del voluntario no encontrado en el token.");
       setLoading(false);
       return;
@@ -276,7 +276,7 @@ const recalculateTotals = (detalles: DetallesVenta[], donacion: number) => {
                 idVoluntario: idVoluntario
             };
     
-            console.log("JSON a enviar:", JSON.stringify(ventaData, null, 2));
+            //console.log("JSON a enviar:", JSON.stringify(ventaData, null, 2));
     
             const response = await axios.post("/ventas/create/stands/completa", ventaData);
             if (response.status === 201) {
