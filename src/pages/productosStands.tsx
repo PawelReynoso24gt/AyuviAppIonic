@@ -38,6 +38,17 @@ interface Producto {
   foto: string;
 }
 
+interface DetalleStand {
+  idProducto: number;
+}
+
+interface Stand {
+  idStand: number;
+  nombreStand: string;
+  direccion: string;
+  detallesStands: DetalleStand[];
+}
+
 interface DetallesVenta {
   idProducto: number;
   nombreProducto: string;
@@ -47,6 +58,7 @@ interface DetallesVenta {
   idVoluntario: number | null;
   donacion: number;
   estado: number;
+  idStand: number; // Added idStand property
 }
 
 interface Pago {
@@ -66,6 +78,8 @@ const VoluntarioProductos: React.FC = () => {
   const [tiposPagos, setTiposPagos] = useState<Pago[]>([]);
   const [tiposPagosOptions, setTiposPagosOptions] = useState<{ idTipoPago: string; tipo: string }[]>([]);
   const [showModal, setShowModal] = useState(false);
+  const [stands, setStands] = useState<any[]>([]); // Almacena los stands y productos
+  const [selectedStand, setSelectedStand] = useState<Stand | null>(null);
   const [newVenta, setNewVenta] = useState({
     totalVenta: 0,
     idTipoPublico: "2", 
@@ -82,6 +96,7 @@ const VoluntarioProductos: React.FC = () => {
       const id = parseInt(info.idVoluntario, 10); // Convertir a número
       setIdVoluntario(id);
       console.log("Usuario logueado con idVoluntario:", id);
+      setVoluntario(info);
     } else {
       console.log("No se encontró idVoluntario en el token.");
       setToastMessage("ID del voluntario no encontrado en el token.");
@@ -90,23 +105,33 @@ const VoluntarioProductos: React.FC = () => {
     }
 
     // Buscar datos del voluntario
-    const fetchVoluntario = async () => {
-      try {
-        const response = await axios.get(
-          `/voluntarios/conProductos/${info.idVoluntario}`
-        );
-        setVoluntario(response.data);
-      } catch (error: any) {
-        const errorMessage =
-          error.response?.data?.message || error.message || "Error al cargar los datos del voluntario.";
-        console.error("Error fetching voluntario:", error.response || error);
-        setToastMessage(errorMessage);
-      } finally {
-        setLoading(false);
-      }
-    };
+    const fetchStands = async () => {
+        try {
+          const info = getInfoFromToken();
+          if (info?.idVoluntario) {
+            const response = await axios.get(`/stands/voluntarios/inscritos/${info.idVoluntario}`);
+            // Log para depuración
+            console.log("Respuesta de la API (stands):", response.data);
+            
+            // Guarda los stands en el estado
+            setStands(response.data.map((asignacion: { stand: any }) => asignacion.stand));
+            // Extrae el voluntario del primer stand
+            if (response.data.length > 0) {
+                const voluntarioData = response.data[0].inscripcionEvento.voluntario;
+                setVoluntario(voluntarioData);
+            }
+          } else {
+            setToastMessage("No se encontró el id del voluntario en el token.");
+          }
+        } catch (error) {
+          console.error("Error fetching stands:", error);
+          setToastMessage("Error al cargar los stands.");
+        } finally {
+          setLoading(false);
+        }
+      };
 
-    fetchVoluntario();
+      fetchStands();
   }, []);
 
   useEffect(() => {
@@ -143,6 +168,32 @@ const VoluntarioProductos: React.FC = () => {
     const nuevosPagos = [...tiposPagos];
     (nuevosPagos[index] as any)[field] = value;
     setTiposPagos(nuevosPagos);
+  };
+
+  const handleOpenModal = () => {
+    setNewVenta({
+      totalVenta: 0,
+      idTipoPublico: "2",
+      estado: 1,
+      donacion: 0,
+    });
+    setDetallesVenta(
+      stands.flatMap((stand) =>
+        selectedStand?.detallesStands.map((detalle: any): DetallesVenta => ({
+          idProducto: detalle.producto.idProducto,
+          nombreProducto: detalle.producto.nombreProducto,
+          precio: detalle.producto.precio,
+          cantidad: 0,
+          subTotal: 0,
+          idVoluntario: idVoluntario,
+          donacion: 0,
+          estado: 1,
+          idStand: selectedStand.idStand // Incluye idStand
+        }))|| []
+      )
+    );
+    setTiposPagos([]);
+    setShowModal(true);
   };
 
   const recalculateTotals = (detalles: DetallesVenta[], donacion: number) => {
@@ -227,20 +278,35 @@ const VoluntarioProductos: React.FC = () => {
 
       const detallesConDonacion = detallesVenta.map((detalle) => ({
         ...detalle,
-        donacion: newVenta.donacion // Incluye la donación en cada detalle
+        donacion: newVenta.donacion, // Incluye la donación en cada detalle
+         idStand: selectedStand?.idStand // Incluye idStand
       }));
   
       const ventaData = {
         venta: { ...newVenta, totalVenta: totalAPagar },
         detalles: detallesConDonacion.filter((detalle) => detalle.cantidad > 0),
         pagos: pagosValidados,
+        idVoluntario: idVoluntario // Incluye idVoluntario
       };    
   
       console.log("JSON a enviar:", JSON.stringify(ventaData, null, 2));
   
-      const response = await axios.post("/ventas/create/completa", ventaData);
+      const response = await axios.post("/ventas/create/stands/completa", ventaData);
       if (response.status === 201) {
         alert("Venta creada con éxito");
+        // Restablecer los estados
+      setNewVenta({
+        totalVenta: 0,
+        idTipoPublico: "2",
+        estado: 1,
+        donacion: 0,
+      });
+      setDetallesVenta([]);
+      setTiposPagos([]);
+      setSubtotal(0);
+      setTotalAPagar(0);
+      setSelectedStand(null); // Restablecer la selección del stand
+
         setShowModal(false);
       }
     } catch (error) {
@@ -288,6 +354,7 @@ const VoluntarioProductos: React.FC = () => {
     setTiposPagos([]);
     setSubtotal(0);
     setTotalAPagar(0);
+    setSelectedStand(null); // Restablecer la selección del stand
   };
 
   if (loading) {
@@ -295,7 +362,7 @@ const VoluntarioProductos: React.FC = () => {
       <IonPage>
         <IonHeader>
           <IonToolbar style={{ backgroundColor: "#0274E5" }}>
-            <IonTitle style={{ color: "#000000" }}>Productos del Voluntario</IonTitle>
+            <IonTitle style={{ color: "#000000" }}>Productos del Stand</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonContent>
@@ -307,34 +374,36 @@ const VoluntarioProductos: React.FC = () => {
     );
   }
 
-  if (!voluntario) {
+  if (!stands || stands.length === 0) {
     return (
       <IonPage>
         <IonHeader>
           <IonToolbar style={{ backgroundColor: "#0274E5" }}>
-            <IonTitle style={{ color: "#000000" }}>Productos del Voluntario</IonTitle>
+            <IonTitle style={{ color: "#000000" }}>Productos del Stand</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonContent>
           <div style={{ textAlign: "center", marginTop: "20px", color: "#0274E5" }}>
-            <p>No se encontraron productos asignados al voluntario.</p>
+            <p>No se encontraron productos asignados a los stands.</p>
           </div>
         </IonContent>
       </IonPage>
     );
   }
-
+  
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar style={{ backgroundColor: "#0274E5" }}>
-          <IonTitle style={{ color: "#000000" }}>Productos del Voluntario</IonTitle>
+          <IonTitle style={{ color: "#000000" }}>Productos del Stand</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent style={{ backgroundColor: "#F0F8FF" }}>
         <IonCard style={{ margin: "20px", boxShadow: "0 4px 8px rgba(115, 247, 194, 0.1)" }}>
           <IonCardHeader style={{ backgroundColor: "#0274E5" }}>
-            <IonCardTitle style={{ color: "#FFFFFF" }}>Ventas de {voluntario.persona.nombre}</IonCardTitle>
+            <IonCardTitle style={{ color: "#FFFFFF" }}>
+                Ventas de {voluntario?.persona?.nombre || "Voluntario"}
+            </IonCardTitle>
           </IonCardHeader>
         </IonCard>
 
@@ -348,25 +417,8 @@ const VoluntarioProductos: React.FC = () => {
               padding: "10px", 
             }}
             onClick={() => {
-              setNewVenta({
-                totalVenta: 0,
-                idTipoPublico: "2", 
-                estado: 1,
-                donacion: 0,
-              });
-              setDetallesVenta(voluntario.detalle_productos_voluntarios.map((detalle: any): DetallesVenta => ({
-                idProducto: detalle.idProducto,
-                nombreProducto: detalle.producto.nombreProducto,
-                precio: detalle.producto.precio,
-                cantidad: 0,
-                subTotal: 0,
-                idVoluntario: idVoluntario,
-                donacion: 0,
-                estado: 1,
-              })));
-              setTiposPagos([]);
-              setShowModal(true);
-            }}
+              handleOpenModal();
+              }}
           >
             Crear Venta
           </IonButton>
@@ -382,6 +434,39 @@ const VoluntarioProductos: React.FC = () => {
             </IonToolbar>
         </IonHeader>
         <IonContent style={{ padding: "15px" }}>
+            {/* Selección del Stand */}
+            <IonLabel style={{ fontSize: "18px", fontWeight: "bold", marginTop: "10px" }}>Seleccionar Stand</IonLabel>
+            <IonSelect
+                value={selectedStand?.idStand || ""}
+                onIonChange={(e) => {
+                    const standId = e.detail.value;
+                    const stand = stands.find((s) => s.idStand === standId);
+                    setSelectedStand(stand || null);
+                    if (stand) {
+                    setDetallesVenta(
+                        stand.detallesStands.map((detalle: any): DetallesVenta => ({
+                        idProducto: detalle.producto.idProducto,
+                        nombreProducto: detalle.producto.nombreProducto,
+                        precio: detalle.producto.precio,
+                        cantidad: 0,
+                        subTotal: 0,
+                        idVoluntario: idVoluntario,
+                        donacion: 0,
+                        estado: 1,
+                        idStand: stand.idStand // Incluye idStand
+                        }))
+                    );
+                    }else {
+                      setDetallesVenta([]); // Restablecer los detalles de la venta si no hay stand seleccionado
+                    }
+                }}
+            >
+                {stands.map((stand) => (
+                    <IonSelectOption key={stand.idStand} value={stand.idStand}>
+                    {stand.nombreStand}
+                    </IonSelectOption>
+                ))}
+            </IonSelect>
             {/* Sección de Totales */}
             <IonCard>
             <IonCardHeader>
@@ -515,29 +600,74 @@ const VoluntarioProductos: React.FC = () => {
         </IonModal>
 
         <IonAccordionGroup>
-          <IonAccordion value="productos">
-            <IonItem slot="header" style={{ backgroundColor: "#0274E5", color: "#FFFFFF" }}>
-              <IonLabel style={{ color: "#FFFFFF", fontSize: "24px", fontWeight: "bold", backgroundColor: "#9575FF"}}>Productos</IonLabel>
-            </IonItem>
-            <IonList slot="content" style={{ backgroundColor: "#E0E7FF" }}>
-              {voluntario.detalle_productos_voluntarios.map((detalle: { idProducto: number; producto: { nombreProducto: string; precio: number; foto: string }; cantidad: number }) => (
-                <IonItem key={detalle.idProducto} style={{ margin: "10px", borderRadius: "10px", boxShadow: "0 4px 8px rgba(99, 175, 233, 0.18)" }}>
-                  <IonLabel>
-                    <h2 style={{ color: "#0274E5" }}>{detalle.producto.nombreProducto}</h2>
-                    <p><strong>Cantidad:</strong> {detalle.cantidad}</p>
-                    <p><strong>Precio:</strong> Q{detalle.producto.precio}</p>
-                    <div style={{ textAlign: "center", marginTop: "10px" }}>
-                      <img
-                        src={`https://3hkpqqqv-5000.use.devtunnels.ms/${detalle.producto.foto}`}
-                        alt={detalle.producto.nombreProducto}
-                        style={{ width: "100px", height: "100px", objectFit: "cover", borderRadius: "10px" }}
-                      />
-                    </div>
-                  </IonLabel>
-                </IonItem>
-              ))}
-            </IonList>
-          </IonAccordion>
+            {stands.map((stand) => {
+                if (!stand.detallesStands || stand.detallesStands.length === 0) {
+                return null; // Ignora stands sin productos
+                }
+                return (
+                <IonAccordion value={`stand-${stand.idStand}`} key={stand.idStand}>
+                    {/* Encabezado del stand */}
+                    <IonItem
+                    slot="header"
+                    style={{
+                        backgroundColor: "#0274E5",
+                        color: "#000000",
+                        marginBottom: "10px",
+                        borderRadius: "10px",
+                        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                    }}
+                    >
+                    <IonLabel style={{ color: "#FFFFFF", fontSize: "20px", fontWeight: "bold", backgroundColor: "#51ab31" }}>
+                        {stand.nombreStand}
+                    </IonLabel>
+                    <IonLabel slot="end" style={{ color: "#000000", fontSize: "18px" }}>
+                        {stand.direccion}
+                    </IonLabel>
+                    </IonItem>
+
+                    {/* Lista de productos del stand */}
+                    <IonList slot="content" style={{ backgroundColor: "#E0E7FF" }}>
+                    {stand.detallesStands.map((detalle: any) => (
+                        <IonItem
+                        key={detalle.idDetalleStands}
+                        style={{
+                            margin: "10px",
+                            borderRadius: "10px",
+                            boxShadow: "0 4px 8px rgba(99, 175, 233, 0.18)",
+                        }}
+                        >
+                        <IonLabel>
+                            <h2 style={{ color: "#0274E5" }}>{detalle.producto.nombreProducto}</h2>
+                            <p>
+                            <strong>Cantidad disponible:</strong> {detalle.cantidad}
+                            </p>
+                            <p>
+                            <strong>Precio:</strong> Q{detalle.producto.precio}
+                            </p>
+                            <p>
+                            <strong>Descripción:</strong> {detalle.producto.descripcion}
+                            </p>
+                            {detalle.producto.foto && (
+                            <div style={{ textAlign: "center", marginTop: "10px" }}>
+                                <img
+                                src={`https://3hkpqqqv-5000.use.devtunnels.ms/${detalle.producto.foto}`}
+                                alt={detalle.producto.nombreProducto}
+                                style={{
+                                    width: "100px",
+                                    height: "100px",
+                                    objectFit: "cover",
+                                    borderRadius: "10px",
+                                }}
+                                />
+                            </div>
+                            )}
+                        </IonLabel>
+                        </IonItem>
+                    ))}
+                    </IonList>
+                </IonAccordion>
+                );
+            })}
         </IonAccordionGroup>
         <IonToast
           isOpen={!!toastMessage}

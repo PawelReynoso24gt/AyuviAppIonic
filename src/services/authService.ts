@@ -76,7 +76,7 @@ export async function isAuthenticated(): Promise<boolean> {
 export function getInfoFromToken(): { idUsuario?: string; usuario?: string; idVoluntario?: string; idSede?: string; idPersona?: string} | null {
     const token = localStorage.getItem('authToken'); // Recuperar el token del localStorage
     if (!token) return null; // Si no hay token, retorna null
-  
+    
     try {
         const decodedToken: any = jwtDecode(token);
         return {
