@@ -61,7 +61,7 @@ const MainContent: React.FC = () => {
   const isLoginPage = location.pathname === '/login';
   const isInvitadoPage = location.pathname === '/invitado';
   const isRegistroAspirantePage = location.pathname === '/registroAspirante';
-
+  const { showModal, message, daysRemaining, handleCloseModal } = usePasswordChangeCheck();
   // Mapeo de rutas a títulos de la barra de navegación (se agregan las rutas que se necesiten)
   const routeTitles: { [key: string]: string } = {
     '/home': 'Inicio',
