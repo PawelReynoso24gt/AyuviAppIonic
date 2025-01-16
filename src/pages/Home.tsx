@@ -140,7 +140,7 @@ const Home: React.FC = () => {
         history.push("/request-talonario");
         break;
       default:
-        console.log("Tipo de publicación no manejado:", tipoPublicacion);
+        //console.log("Tipo de publicación no manejado:", tipoPublicacion);
         break;
     }
   };

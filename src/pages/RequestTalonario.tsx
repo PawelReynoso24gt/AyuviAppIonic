@@ -33,6 +33,7 @@ const RequestTalonario: React.FC = () => {
 
   const userInfo = getInfoFromToken();
   const idVoluntario = userInfo?.idVoluntario; // Extraer idVoluntario del token
+  const idUsuario = userInfo?.idUsuario; // Extraer idUsuario del token
 
   // Cargar talonarios disponibles
   useEffect(() => {
@@ -69,6 +70,22 @@ const RequestTalonario: React.FC = () => {
     if (idVoluntario) fetchSolicitudes();
   }, [idVoluntario, showSuccess]); // Se vuelve a cargar cuando hay una nueva solicitud
 
+  // * bitacora
+  const logBitacora = async (descripcion: string, idCategoriaBitacora: number) => {
+    const bitacoraData = {
+      descripcion,
+      idCategoriaBitacora,
+      idUsuario,
+      fechaHora: new Date().toISOString()
+    };
+  
+    try {
+      await axios.post("/bitacora/create", bitacoraData);
+    } catch (error) {
+      console.error("Error logging bitacora:", error);
+    }
+  };
+
   // Enviar solicitud
   const handleSubmit = async () => {
     if (!selectedTalonario) {
@@ -84,6 +101,7 @@ const RequestTalonario: React.FC = () => {
         fechaSolicitud: new Date().toISOString().split("T")[0],
       });
       setShowSuccess(true);
+      logBitacora(`Solicitud de talonario #${selectedTalonario}`, 22);
     } catch (err) {
       console.error("Error al solicitar talonario:", err);
       setError("Error al enviar la solicitud de talonario.");

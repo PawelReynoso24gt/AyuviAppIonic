@@ -68,14 +68,48 @@ const Registro: React.FC = () => {
         setMunicipios(filteredMunicipios); // Actualizar los municipios filtrados
     };
 
+    interface BitacoraData {
+      descripcion: string;
+      idCategoriaBitacora: number;
+      idUsuario: number;
+      fechaHora: Date;
+    }
+
+    const logBitacora = async (descripcion: string, idCategoriaBitacora: number): Promise<boolean> => {
+      const bitacoraData = {
+        descripcion,
+        idCategoriaBitacora: 7,
+        idUsuario: null,
+        fechaHora: new Date(),
+      };
+    
+      try {
+        const response = await axios.post("/bitacora/create", bitacoraData);
+        return !!response.data.idBitacora; // Retorna true si idBitacora está presente
+      } catch (error) {
+        console.error("Error logging bitacora:", error);
+        return false; // Retorna false si hay un error
+      }
+    };
+
   const handleInputChange = (key: string, value: string) => {
     setFormData({ ...formData, [key]: value });
   };
 
   const handleSubmit = async () => {
     try {
+      // Registrar al usuario
       await axios.post('http://localhost:5000/personas/create', formData);
       setToastMessage('¡Registro exitoso! Redirigiendo...');
+      
+      // Crear bitácora después de registrar al usuario
+      try {
+        await logBitacora(`Registro de aspirante: ${formData.nombre}`, 1);
+      } catch (bitacoraError) {
+        console.error('Error al registrar en la bitácora:', bitacoraError);
+      }
+  
+      // Redirigir después de un registro exitoso y la bitácora
       history.push('/solicitudPendiente'); // Cambia al componente correspondiente
     } catch (error: any) {
       // Verifica si es un error de Axios y maneja el mensaje
