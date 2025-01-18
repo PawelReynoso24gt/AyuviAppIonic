@@ -78,7 +78,7 @@ const RequestTalonario: React.FC = () => {
       idUsuario,
       fechaHora: new Date().toISOString()
     };
-  
+
     try {
       await axios.post("/bitacora/create", bitacoraData);
     } catch (error) {
