@@ -142,9 +142,9 @@ const RequestTalonario: React.FC = () => {
             placeholder="Selecciona uno"
             onIonChange={(e) => setSelectedTalonario(e.detail.value)}
           >
-            {talonarios.map((talonario) => (
+            {talonarios.map((talonario, index) => (
               <IonSelectOption
-                key={talonario.idTalonario}
+                key={`${talonario.idTalonario}-${index}`}
                 value={talonario.idTalonario}
               >
                 {`Código: ${talonario.codigoTalonario} - Cantidad: ${talonario.cantidadBoletos}`}
@@ -171,10 +171,10 @@ const RequestTalonario: React.FC = () => {
         <IonList>
           <IonLabel className="ion-padding">Mis Solicitudes</IonLabel>
           {solicitudes.length > 0 ? (
-            solicitudes.map((solicitud) => {
+            solicitudes.map((solicitud, index) => {
               const estado = getEstadoSolicitud(solicitud.estado);
               return (
-                <IonCard key={solicitud.idSolicitud}>
+                <IonCard key={`${solicitud.idSolicitud}-${index}`}>
                   <IonCardHeader>
                     <IonCardTitle>
                       Talonario #{solicitud.idTalonario}
