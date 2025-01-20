@@ -28,6 +28,7 @@ const PerfilUsuario: React.FC = () => {
   const [preview, setPreview] = useState(profileImg);
   const [successMessage, setSuccessMessage] = useState('');
   const [fechaRegistro, setFechaRegistro] = useState<string | null>(null);
+  const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -59,6 +60,9 @@ const PerfilUsuario: React.FC = () => {
         setUserData(loggedUser);
         const photoPath = loggedUser.persona.foto !== "sin foto" ? `http://localhost:5000/${loggedUser.persona.foto.replace(/\\/g, '/')}` : profileImg;
         setPreview(photoPath);
+
+        // Generar URL del código QR
+        setQrCodeUrl(`http://localhost:5000/generateQR?data=${loggedUser.idUsuario}`);
       } catch (err) {
         setError('Error al cargar el perfil del usuario.');
         console.error(err);
@@ -178,6 +182,18 @@ const PerfilUsuario: React.FC = () => {
             <IonButton expand="block" routerLink="/change-password">
               Cambiar Contraseña
             </IonButton>
+
+            {/* Código QR */}
+            <div style={{ textAlign: "center", marginTop: "20px" }}>
+              <div><IonLabel style={{ width: "100%" }}><strong>Mi Código QR</strong></IonLabel></div>
+              {qrCodeUrl && (
+                <img
+                  src={qrCodeUrl}
+                  alt="Código QR"
+                  style={{ width: "100%", maxWidth: "300px", marginTop: "10px" }}
+                />
+              )}
+            </div>
           </>
         ) : (
           <IonText color="danger">No se encontraron datos del usuario.</IonText>
