@@ -96,6 +96,10 @@ npm install --save-dev @types/react-modal
 npm install @capacitor/camera
 ```
 
+```bash
+npm install moment
+```
+
 # DESARROLLADORES
 
 - **Angely Esmeralda Thomas Cortéz** - 202108047

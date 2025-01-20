@@ -16,6 +16,9 @@ import {
 import axios from '../services/axios'; // Instancia de Axios
 import { getInfoFromToken } from '../services/authService';
 import profileImg from '../img/LOGOAYUVI.png'; // Importa la imagen de perfil por defecto
+import moment from 'moment';
+import 'moment/locale/es';
+import './perfilUsuario.css';
 
 const PerfilUsuario: React.FC = () => {
   const [userData, setUserData] = useState<any>(null);
@@ -24,16 +27,25 @@ const PerfilUsuario: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [preview, setPreview] = useState(profileImg);
   const [successMessage, setSuccessMessage] = useState('');
+  const [fechaRegistro, setFechaRegistro] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         // Obtener el idUsuario desde el token
         const tokenInfo = getInfoFromToken();
-        if (!tokenInfo || !tokenInfo.idUsuario) {
+        if (!tokenInfo || !tokenInfo.idUsuario || !tokenInfo.idVoluntario) {
           throw new Error('No se pudo obtener el ID del usuario desde el token.');
         }
+        // Petición al backend para obtener la fecha de registro del voluntario
+        const volunteerResponse = await axios.get(`/voluntarios/${tokenInfo.idVoluntario}`);
+        const volunteerData = volunteerResponse.data;
 
+        if (!volunteerData || !volunteerData.fechaRegistro) {
+          throw new Error('No se pudo obtener la fecha de registro del voluntario.');
+        }
+
+        setFechaRegistro(volunteerData.fechaRegistro);
         // Petición al backend para obtener los usuarios activos
         const response = await axios.get('/usuarios/activos');
         const loggedUser = response.data.find(
@@ -127,18 +139,18 @@ const PerfilUsuario: React.FC = () => {
                 id="fileInput"
                 onChange={handleFileChange}
               />
-              <button className="update-photo-btn" onClick={() => document.getElementById('fileInput')?.click()}>
+              <button className="update-photo-btn custom-btn" onClick={() => document.getElementById('fileInput')?.click()}>
                 Actualizar mi foto
               </button>
               {selectedFile && (
-                <>
-                  <button className="save-photo-btn" onClick={handleSaveChanges}>
+                <div className="button-group">
+                  <button className="save-photo-btn custom-btn save-btn" onClick={handleSaveChanges}>
                     Guardar cambios
                   </button>
-                  <button className="discard-photo-btn" onClick={handleDiscardChanges}>
+                  <button className="discard-photo-btn custom-btn discard-btn" onClick={handleDiscardChanges}>
                     Descartar cambios
                   </button>
-                </>
+                </div>
               )}
               {successMessage && <p>{successMessage}</p>}
             </div>
@@ -157,7 +169,7 @@ const PerfilUsuario: React.FC = () => {
               <IonItem>
                 <IonLabel>
                   <strong>Fecha de Registro:</strong>{' '}
-                  {new Date(userData.persona.createdAt).toLocaleDateString()}
+                  {fechaRegistro ? moment(fechaRegistro).format('DD/MM/YYYY') : 'No disponible'}
                 </IonLabel>
               </IonItem>
             </IonList>
