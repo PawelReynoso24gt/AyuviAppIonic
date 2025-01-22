@@ -30,6 +30,12 @@ interface Comision {
   descripcion: string;
   estado: number; // 1 para activo, 0 para inactivo
   isInscrito: boolean; // Indica si el voluntario ya está inscrito
+  detalleHorario?: {
+    horario?: {
+      horarioInicio: string;
+      horarioFinal: string;
+    };
+  };
 }
 
 const InscripcionesComisiones: React.FC = () => {
@@ -196,6 +202,12 @@ useEffect(() => {
                   <p style={{ color: "#000080", marginBottom: "5px" }}>
                     Descripción: {comision.descripcion}
                   </p>
+                  {comision.detalleHorario?.horario && (
+                    <p style={{ color: "#000080", fontStyle: "bold" }}>
+                      Horario: {comision.detalleHorario.horario.horarioInicio} -{" "}
+                      {comision.detalleHorario.horario.horarioFinal}
+                    </p>
+                  )}
                   <p
                     style={{
                       color: comision.estado === 1 ? "green" : "red",
