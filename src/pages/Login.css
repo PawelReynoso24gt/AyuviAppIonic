@@ -8,6 +8,7 @@
     background: #ffffff;
     border-radius: 15px;
     box-shadow: 0 4px 8px rgba(93, 119, 189, 0.658);
+    transition: margin-bottom 0.3s ease-in-out;
 }
 
 .login-container ion-item {
@@ -104,4 +105,8 @@
     border-radius: 5px;
     width: 100%;
     box-sizing: border-box;
+}
+
+body.keyboard-visible .login-container {
+    margin-bottom: 150px; /* Ajusta el valor según sea necesario */
 }

@@ -3,6 +3,8 @@ import { IonPage, IonContent, IonInput, IonButton, IonText, IonItem, IonLabel, I
 import { eyeOff, eye } from 'ionicons/icons';
 import { loginUser } from '../services/authService';
 import { useHistory } from 'react-router-dom';
+import { Keyboard } from '@capacitor/keyboard';
+import { useEffect } from 'react';
 import './Login.css'; // Importa el archivo de estilos
 import logo from '../img/LOGOAYUVI.png'; // Importa la imagen
 
@@ -12,6 +14,20 @@ const Login: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const history = useHistory();
+
+    useEffect(() => {
+        Keyboard.addListener('keyboardWillShow', () => {
+            document.body.classList.add('keyboard-visible');
+        });
+
+        Keyboard.addListener('keyboardWillHide', () => {
+            document.body.classList.remove('keyboard-visible');
+        });
+
+        return () => {
+            Keyboard.removeAllListeners();
+        };
+    }, []);
 
     const handleLogin = async () => {
         try {
@@ -39,8 +55,8 @@ const Login: React.FC = () => {
     };
 
     return (
-        <IonPage>
-            <IonContent className="ion-padding" fullscreen>
+        <IonPage >
+            <IonContent className="ion-padding" scrollY={true}>
                 <div className="login-container">
                     <img src={logo} alt="Logo Ayuvi" className="logo" />
                     <IonLabel className="usuario-label">Usuario</IonLabel>
