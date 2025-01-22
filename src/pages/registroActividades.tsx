@@ -15,7 +15,7 @@ import {
   IonIcon,
 } from "@ionic/react";
 import { arrowBackOutline } from 'ionicons/icons';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import axios from "../services/axios";
 import { getInfoFromToken } from "../services/authService";
 
@@ -26,31 +26,42 @@ interface Actividad {
 }
 
 interface Inscripcion {
-  idInscripcionEvento: number;
   idInscripcionComision: number;
+  idInscripcionEvento: number;
 }
 
 const DetalleInscripcionActividad: React.FC = () => {
   const history = useHistory();
+  const location = useLocation<{ idComision: number | string }>();
   const [actividades, setActividades] = useState<Actividad[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
   const [selectedActividad, setSelectedActividad] = useState<number | null>(null);
-  const [inscripcion, setInscripcion] = useState<Inscripcion | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [inscripcion, setInscripcion] = useState<Inscripcion | null>(null);
 
-  // Obtener información del voluntario autenticado
+   // Obtener ID del voluntario desde el token
   const userInfo = getInfoFromToken();
   const idVoluntario = userInfo?.idVoluntario ? Number(userInfo.idVoluntario) : null;
 
+  // Obtener el idComision desde la navegación
+  
+  const idComision = location.state?.idComision ? Number(location.state.idComision) : null;
+
   useEffect(() => {
-    if (idVoluntario) {
-      fetchInscripciones(idVoluntario); // Obtener IDs de inscripción
-      fetchActividades(); // Obtener lista de actividades
+    const numericIdVoluntario = Number(idVoluntario); // Asegúrate de que sea número
+    const numericIdComision = Number(idComision); // Asegúrate de que sea número
+  
+    if (numericIdComision && numericIdVoluntario) {
+      fetchInscripciones(numericIdComision); // Obtener inscripción
+      fetchActividades(numericIdComision); // Cargar actividades de la comisión
     } else {
-      setToastMessage("No se encontró información del voluntario.");
+      setToastMessage("Faltan datos para cargar las actividades.");
+      history.push("/registroComisiones");
     }
-  }, [idVoluntario]);
+  }, [idComision, idVoluntario]);
+  
+
 
   // Obtener los IDs de inscripción (evento y comisión)
   const fetchInscripciones = async (idVoluntario: number) => {
@@ -65,14 +76,17 @@ const DetalleInscripcionActividad: React.FC = () => {
     }
   };
 
-  // Obtener lista de actividades
-  const fetchActividades = async () => {
+
+  // Obtener lista de actividades por comisión
+  const fetchActividades = async (idComision: number) => {
     setLoading(true);
     try {
-      const response = await axios.get<Actividad[]>("http://localhost:5000/actividades");
+      const response = await axios.get<Actividad[]>(
+        `http://localhost:5000/actividades/comision/${idComision}` // Nuevo endpoint
+      );
 
       if (Array.isArray(response.data)) {
-        setActividades(response.data);
+        setActividades(response.data); // Actualiza el estado con las actividades obtenidas
       } else {
         console.error("La respuesta no es un arreglo:", response.data);
         setToastMessage("Error: la respuesta del servidor no es válida.");
@@ -116,6 +130,7 @@ const DetalleInscripcionActividad: React.FC = () => {
     }
   };
 
+
   return (
     <IonPage>
       <IonHeader>
@@ -123,13 +138,13 @@ const DetalleInscripcionActividad: React.FC = () => {
           <IonButton
             slot="start"
             fill="clear"
-            onClick={() => history.push('/registroMateriales')}  // Acción para regresar
+            onClick={() => history.push('/registroMateriales')} // Acción para regresar
             style={{
-            marginLeft: '10px',
-            color: 'white',
+              marginLeft: '10px',
+              color: 'white',
             }}
           >
-        <IonIcon icon={arrowBackOutline} slot="icon-only" />
+            <IonIcon icon={arrowBackOutline} slot="icon-only" />
           </IonButton>
           <IonTitle style={{ color: "#FFFFFF" }}>Registro de Actividades</IonTitle>
         </IonToolbar>
