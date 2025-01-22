@@ -128,6 +128,17 @@ const RequestTalonario: React.FC = () => {
     }
   };
 
+  // Filtrar talonarios disponibles
+  const getAvailableTalonarios = (rifa: any) => {
+    const talonariosSolicitados = solicitudes
+      .filter((solicitud) => solicitud.estado !== 0 || solicitud.idVoluntario !== idVoluntario)
+      .map((solicitud) => solicitud.idTalonario);
+
+    return rifa.talonarios.filter(
+      (talonario: any) => !talonariosSolicitados.includes(talonario.idTalonario)
+    );
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -165,16 +176,16 @@ const RequestTalonario: React.FC = () => {
               placeholder="Selecciona un talonario"
               onIonChange={(e) => setSelectedTalonario(e.detail.value)}
             >
-              {rifas
-                .find((rifa) => rifa.idRifa === selectedRifa)
-                ?.talonarios.map((talonario: any) => (
+              {getAvailableTalonarios(rifas.find((rifa) => rifa.idRifa === selectedRifa)).map(
+                (talonario: any) => (
                   <IonSelectOption
                     key={talonario.idTalonario}
                     value={talonario.idTalonario}
                   >
                     {`Código: ${talonario.codigoTalonario} - Cantidad: ${talonario.cantidadBoletos}`}
                   </IonSelectOption>
-                ))}
+                )
+              )}
             </IonSelect>
           </IonItem>
         )}
@@ -199,10 +210,22 @@ const RequestTalonario: React.FC = () => {
           {solicitudes.length > 0 ? (
             solicitudes.map((solicitud, index) => {
               const estado = getEstadoSolicitud(solicitud.estado);
+              const talonario = rifas
+                .flatMap((rifa) => rifa.talonarios)
+                .find((talonario: any) => talonario.idTalonario === solicitud.idTalonario);
+              const rifa = rifas.find((rifa) =>
+                rifa.talonarios.some((t: any) => t.idTalonario === solicitud.idTalonario)
+              );
               return (
                 <IonItem key={`${solicitud.idSolicitud}-${index}`}>
                   <IonLabel>
                     <h2>Talonario #{solicitud.idTalonario}</h2>
+                    <p>
+                      <strong>Código del Talonario:</strong> {talonario?.codigoTalonario}
+                    </p>
+                    <p>
+                      <strong>Rifa:</strong> {rifa?.nombreRifa}
+                    </p>
                     <p>
                       <strong>Fecha de Solicitud:</strong>{" "}
                       {solicitud.fechaSolicitud}
