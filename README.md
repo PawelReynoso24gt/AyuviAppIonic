@@ -100,6 +100,10 @@ npm install @capacitor/camera
 npm install moment
 ```
 
+```bash
+npm install @capacitor/keyboard
+```
+
 # DESARROLLADORES
 
 - **Angely Esmeralda Thomas Cortéz** - 202108047
