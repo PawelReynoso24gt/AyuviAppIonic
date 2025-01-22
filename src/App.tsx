@@ -16,12 +16,14 @@ import registroAspirante from '../src/pages/registroAspirante';
 import solicitudPendiente from '../src/pages/solicitudPendiente';
 import productosVoluntarios from '../src/pages/productosVoluntarios';
 import Sede from '../src/pages/Sede';
+import asignacionStands from './pages/asignacionStands';
 import invitado from '../src/pages/invitado';
 import productosStands from '../src/pages/productosStands';
 import recaudacionRifas from '../src/pages/recaudacionRifas';
 import standVirtual from '../src/pages/standVirtual';
 import Notifications from './pages/NotificationsCom';
 import NotificationBell from './components/NotificationBell';
+import situaciones from './pages/situaciones';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -75,13 +77,15 @@ const MainContent: React.FC = () => {
     '/registroMateriales': 'Registro de Materiales',
     '/registroActividades': 'Registro de Actividades',
     '/registroAspirante': 'Registro de Aspirante',
+    '/asignacionStands': 'Asignación de Stands',
     '/solicitudPendiente': 'Solicitud Pendiente',
     '/productosVoluntarios': 'Venta por Voluntario',
     '/invitado': 'Invitado',
     '/productosStands': 'Venta por Stands',
     '/recaudacionRifas': 'Recaudación de Rifas',
     '/standVirtual': 'Stand Virtual',
-    '/notifications': 'Notificaciones'
+    '/notifications': 'Notificaciones',
+    '/situaciones': 'Situaciones',
   };
 
   const title = routeTitles[location.pathname] || 'App'; // Título por defecto
@@ -111,6 +115,7 @@ const MainContent: React.FC = () => {
           <PrivateRoute exact path="/registroComisiones" component={registroComisiones} />
           <PrivateRoute exact path="/registroMateriales" component={registroMateriales} />
           <PrivateRoute exact path="/registroActiviades" component={registroActividades} />
+          <PrivateRoute exact path="/asignacionStands" component={asignacionStands} />
           <Route exact path="/registroAspirante" component={registroAspirante} />
           <Route exact path="/solicitudPendiente" component={solicitudPendiente} />
           <PrivateRoute exact path="/productosVoluntarios" component={productosVoluntarios} />
@@ -120,6 +125,7 @@ const MainContent: React.FC = () => {
           <PrivateRoute exact path="/recaudacionRifas" component={recaudacionRifas} />
           <PrivateRoute exact path="/standVirtual" component={standVirtual} />
           <PrivateRoute exact path="/notifications" component={Notifications} />
+          <PrivateRoute exact path="/situaciones" component={situaciones} />
           <Route exact path="/">
             <Redirect to="/login" />
           </Route>
@@ -186,6 +192,7 @@ const Menu: React.FC = () => {
           <IonItem routerLink="/home">Inicio</IonItem>
           <IonItem routerLink="/request-talonario">Solicitar Talonario</IonItem>
           <IonItem routerLink="/registroEventos">Registro a Eventos</IonItem>
+          <IonItem routerLink="/asignacionStands">Registro a Stands</IonItem>
           <IonItem routerLink="/productosVoluntarios">Venta por Voluntario</IonItem>
           <IonItem routerLink="/productosStands">Venta por Stands</IonItem>
           <IonItem routerLink="/recaudacionRifas">Recaudación de Rifas</IonItem>
@@ -193,6 +200,7 @@ const Menu: React.FC = () => {
           <IonItem routerLink="/about">Acerca de</IonItem>
           <IonItem routerLink="/profile">Perfil</IonItem>
           <IonItem routerLink="/sede">Sede</IonItem>
+          <IonItem routerLink="/situaciones">Situaciones</IonItem>
           <IonItem button onClick={handleLogout}>Cerrar sesión</IonItem>
         </IonList>
       </IonContent>
