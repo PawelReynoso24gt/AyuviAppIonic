@@ -46,7 +46,6 @@ import usePasswordChangeCheck from './hooks/usePasswordChangeCheck';
 setupIonicReact();
 
 const App: React.FC = () => {
-  const { showModal, message, daysRemaining, handleCloseModal } = usePasswordChangeCheck();
 
   return (
     <IonApp>
