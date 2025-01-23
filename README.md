@@ -96,6 +96,11 @@ npm install --save-dev @types/react-modal
 npm install @capacitor/camera
 ```
 
+```bash
+npm install react-datepicker
+```
+
+
 # DESARROLLADORES
 
 - **Angely Esmeralda Thomas Cortéz** - 202108047
