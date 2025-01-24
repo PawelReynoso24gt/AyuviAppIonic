@@ -206,7 +206,7 @@ const RequestTalonario: React.FC = () => {
 
         {/* Mostrar solicitudes del voluntario */}
         <IonList>
-          <IonLabel className="ion-padding" style={{ color: 'black', background: 'white'}}>Mis Solicitudes</IonLabel>
+          <IonLabel className="ion-padding" style={{ color: 'black', background: 'white'}}>Mis Solicitudes:</IonLabel>
           {solicitudes.length > 0 ? (
             solicitudes.map((solicitud, index) => {
               const estado = getEstadoSolicitud(solicitud.estado);
@@ -239,7 +239,7 @@ const RequestTalonario: React.FC = () => {
               );
             })
           ) : (
-            <IonLabel className="ion-padding">No tienes solicitudes aún.</IonLabel>
+            <IonLabel className="ion-padding" style={{ color: 'black', background: 'white'}}>No tienes solicitudes aún.</IonLabel>
           )}
         </IonList>
       </IonContent>
