@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { Keyboard } from '@capacitor/keyboard';
 import { useEffect } from 'react';
 import './Login.css'; // Importa el archivo de estilos
-import logo from '../img/LOGOAYUVI.png'; // Importa la imagen
+import logo from '../img/LogoAyuvi2.png'; // Importa la imagen
 
 const Login: React.FC = () => {
     const [usuario, setUsuario] = useState('');
@@ -69,7 +69,7 @@ const Login: React.FC = () => {
                         <IonIcon slot="end" icon={showPassword ? eyeOff : eye} onClick={() => setShowPassword(!showPassword)} />
                     </IonItem>
 
-                    <IonButton expand="block" onClick={handleLogin}>Iniciar Sesión</IonButton>
+                    <IonButton expand="block" onClick={handleLogin} className="button-login" color={'017BD4'}>Iniciar Sesión</IonButton>
                     {error && <IonText color="danger">{error}</IonText>}
 
                     <IonText
@@ -89,7 +89,8 @@ const Login: React.FC = () => {
 
                     <IonButton
                         expand="block"
-                        color="secondary"
+                        className='button-login'
+                        color="017BD4"
                         onClick={handleGuestLogin}
                         style={{ marginTop: '10px' }}
                     >

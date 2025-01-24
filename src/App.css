@@ -1,0 +1,10 @@
+/* filepath: /src/App.css */
+body {
+  background-color: var(--ion-background-color);
+  color: var(--ion-text-color);
+}
+
+.ion-page {
+  background-color: var(--ion-background-color);
+  color: var(--ion-text-color);
+}

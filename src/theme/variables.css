@@ -1,15 +1,25 @@
 /* For information on how to create your own theme, please see:
 http://ionicframework.com/docs/theming/ */
 :root {
-    --main-bg-color: rgb(53, 110, 56); /* Tu color personalizado */
+    --main-bg-color: rgb(53, 110, 56);
+    /* Tu color personalizado */
 }
 
 /* Clase exclusiva para un componente */
 .custom-content {
-    --ion-background-color: #ffffff;/* Aplica solo a este componente */
-    min-height: 100vh; /* Altura completa */
+    --ion-background-color: #ffffff;
+    /* Aplica solo a este componente */
+    min-height: 100vh;
+    /* Altura completa */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+/* filepath: /src/theme/variables.css */
+:root {
+    --ion-background-color: #1E1E1E;
+    --ion-text-color: #FFFFFF;
+    /* Cambia el color del texto si es necesario */
 }

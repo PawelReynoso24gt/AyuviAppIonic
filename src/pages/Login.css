@@ -5,9 +5,9 @@
     align-items: center;
     height: 100%;
     padding: 20px;
-    background: #ffffff;
+    background: #1E1E1E;
     border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(93, 119, 189, 0.658);
+    box-shadow: 0 1px 15px rgb(0, 68, 255);
     transition: margin-bottom 0.3s ease-in-out;
 }
 
@@ -109,4 +109,8 @@
 
 body.keyboard-visible .login-container {
     margin-bottom: 150px; /* Ajusta el valor según sea necesario */
+}
+
+.button-login {
+    background-color: #017BD4;
 }
