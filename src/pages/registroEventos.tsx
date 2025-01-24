@@ -112,10 +112,10 @@ const InscripcionesEventos: React.FC = () => {
       }
     };
 
-      const handleIrAComision = (idEvento: number) => {
-        history.push(`/registroComisiones?eventoId=${idEvento}`);
-      };
-
+    const handleIrAComision = (idEvento: number) => {
+      history.push("/registroComisiones", { eventoId: idEvento });
+    };
+    
   return (
     <IonPage>
       <IonHeader>

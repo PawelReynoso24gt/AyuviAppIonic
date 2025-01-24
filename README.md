@@ -104,6 +104,11 @@ npm install moment
 npm install @capacitor/keyboard
 ```
 
+```bash
+npm install react-datepicker
+```
+
+
 # DESARROLLADORES
 
 - **Angely Esmeralda Thomas Cortéz** - 202108047
