@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Redirect, Switch, useLocation } from 'react-router-dom';
-import { IonApp, IonMenu, IonContent, IonHeader, IonToolbar, IonTitle, IonList, IonItem, IonRouterOutlet, setupIonicReact, IonModal, IonButton } from '@ionic/react';
+import { IonApp, IonMenu, IonContent, IonHeader, IonToolbar, IonTitle, IonList, IonItem, IonRouterOutlet, setupIonicReact, IonModal, IonButton, IonIcon, IonFooter } from '@ionic/react';
 import Home from './pages/Home';
 import About from './pages/About';
 import Login from './pages/Login';
@@ -37,16 +37,17 @@ import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 import './theme/variables.css';
+import './App.css';
 
 //  Importar funcion para extraer idUsuario del token
 import { getInfoFromToken } from './services/authService';
 import axios from './services/axios';
 import usePasswordChangeCheck from './hooks/usePasswordChangeCheck';
+import { home, homeOutline, person } from 'ionicons/icons';
 
 setupIonicReact();
 
 const App: React.FC = () => {
-  const { showModal, message, daysRemaining, handleCloseModal } = usePasswordChangeCheck();
 
   return (
     <IonApp>
@@ -95,10 +96,12 @@ const MainContent: React.FC = () => {
       {!isLoginPage && !isInvitadoPage && !isRegistroAspirantePage && (
         <IonHeader>
           <IonToolbar style={{ backgroundColor: "#0274E5" }}>
-            <IonTitle style={{ color: "#000000" }}>{title}</IonTitle>
+            <IonTitle slot='start' style={{ color: "white" }}>{title}</IonTitle>
             <div slot="end">
               <NotificationBell />
             </div>
+            <div><IonButton fill='clear' routerLink='/home' style={{fontsize: 25}}><IonIcon icon={homeOutline} /></IonButton></div>
+            <div><IonButton fill='clear' routerLink='/profile'><IonIcon icon={person}/></IonButton></div>
           </IonToolbar>
         </IonHeader>
       )}

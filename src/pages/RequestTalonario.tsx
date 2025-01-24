@@ -13,43 +13,47 @@ import {
   IonLoading,
   IonAlert,
   IonList,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardContent,
 } from "@ionic/react";
 import axios from "../services/axios";
 import { getInfoFromToken } from "../services/authService";
 
 const RequestTalonario: React.FC = () => {
-  const [talonarios, setTalonarios] = useState<any[]>([]);
-  const [selectedTalonario, setSelectedTalonario] = useState<number | null>(
-    null
-  );
-  const [solicitudes, setSolicitudes] = useState<any[]>([]); // Para almacenar solicitudes del voluntario
+  const [rifas, setRifas] = useState<any[]>([]);
+  const [selectedRifa, setSelectedRifa] = useState<number | null>(null);
+  const [selectedTalonario, setSelectedTalonario] = useState<number | null>(null);
+  const [solicitudes, setSolicitudes] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const userInfo = getInfoFromToken();
-  const idVoluntario = userInfo?.idVoluntario; // Extraer idVoluntario del token
-  const idUsuario = userInfo?.idUsuario; // Extraer idUsuario del token
+  const idVoluntario = userInfo?.idVoluntario;
+  const idUsuario = userInfo?.idUsuario;
 
-  // Cargar talonarios disponibles
+  // Cargar rifas con talonarios disponibles
   useEffect(() => {
-    const fetchTalonarios = async () => {
+    const fetchRifas = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("/talonarios");
-        setTalonarios(response.data);
+        const response = await axios.get("/rifas");
+        const rifasData = response.data;
+
+        const rifasWithTalonarios = await Promise.all(
+          rifasData.map(async (rifa: any) => {
+            const talonariosResponse = await axios.get(`/rifas/withTalonarios/${rifa.idRifa}`);
+            return { ...rifa, talonarios: talonariosResponse.data.talonarios };
+          })
+        );
+
+        setRifas(rifasWithTalonarios);
       } catch (err) {
-        setError("Error al cargar los talonarios.");
+        setError("Error al cargar las rifas.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchTalonarios();
+    fetchRifas();
   }, []);
 
   // Cargar solicitudes del voluntario
@@ -68,7 +72,7 @@ const RequestTalonario: React.FC = () => {
     };
 
     if (idVoluntario) fetchSolicitudes();
-  }, [idVoluntario, showSuccess]); // Se vuelve a cargar cuando hay una nueva solicitud
+  }, [idVoluntario, showSuccess]);
 
   // * bitacora
   const logBitacora = async (descripcion: string, idCategoriaBitacora: number) => {
@@ -78,7 +82,7 @@ const RequestTalonario: React.FC = () => {
       idUsuario,
       fechaHora: new Date().toISOString()
     };
-  
+
     try {
       await axios.post("/bitacora/create", bitacoraData);
     } catch (error) {
@@ -124,6 +128,17 @@ const RequestTalonario: React.FC = () => {
     }
   };
 
+  // Filtrar talonarios disponibles
+  const getAvailableTalonarios = (rifa: any) => {
+    const talonariosSolicitados = solicitudes
+      .filter((solicitud) => solicitud.estado !== 0 || solicitud.idVoluntario !== idVoluntario)
+      .map((solicitud) => solicitud.idTalonario);
+
+    return rifa.talonarios.filter(
+      (talonario: any) => !talonariosSolicitados.includes(talonario.idTalonario)
+    );
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -135,23 +150,45 @@ const RequestTalonario: React.FC = () => {
       <IonContent className="ion-padding">
         <IonLoading isOpen={loading} message="Cargando..." />
 
-        {/* Selección de talonarios */}
+        {/* Selección de rifas */}
         <IonItem>
-          <IonLabel>Selecciona un Talonario</IonLabel>
+          <IonLabel>Selecciona una Rifa</IonLabel>
           <IonSelect
-            placeholder="Selecciona uno"
-            onIonChange={(e) => setSelectedTalonario(e.detail.value)}
+            placeholder="Selecciona una rifa"
+            onIonChange={(e) => {
+              setSelectedRifa(e.detail.value);
+              setSelectedTalonario(null); // Reset talonario selection
+            }}
           >
-            {talonarios.map((talonario) => (
-              <IonSelectOption
-                key={talonario.idTalonario}
-                value={talonario.idTalonario}
-              >
-                {`Código: ${talonario.codigoTalonario} - Cantidad: ${talonario.cantidadBoletos}`}
+            {rifas.map((rifa) => (
+              <IonSelectOption key={rifa.idRifa} value={rifa.idRifa}>
+                {`${rifa.nombreRifa} - Precio: ${rifa.precioBoleto} - Fecha Fin: ${rifa.fechaFin}`}
               </IonSelectOption>
             ))}
           </IonSelect>
         </IonItem>
+
+        {/* Selección de talonarios */}
+        {selectedRifa && (
+          <IonItem>
+            <IonLabel>Selecciona un Talonario</IonLabel>
+            <IonSelect
+              placeholder="Selecciona un talonario"
+              onIonChange={(e) => setSelectedTalonario(e.detail.value)}
+            >
+              {getAvailableTalonarios(rifas.find((rifa) => rifa.idRifa === selectedRifa)).map(
+                (talonario: any) => (
+                  <IonSelectOption
+                    key={talonario.idTalonario}
+                    value={talonario.idTalonario}
+                  >
+                    {`Código: ${talonario.codigoTalonario} - Cantidad: ${talonario.cantidadBoletos}`}
+                  </IonSelectOption>
+                )
+              )}
+            </IonSelect>
+          </IonItem>
+        )}
 
         <IonButton expand="block" onClick={handleSubmit}>
           Solicitar Talonario
@@ -169,18 +206,26 @@ const RequestTalonario: React.FC = () => {
 
         {/* Mostrar solicitudes del voluntario */}
         <IonList>
-          <IonLabel className="ion-padding">Mis Solicitudes</IonLabel>
+          <IonLabel className="ion-padding" style={{ color: 'black', background: 'white'}}>Mis Solicitudes:</IonLabel>
           {solicitudes.length > 0 ? (
-            solicitudes.map((solicitud) => {
+            solicitudes.map((solicitud, index) => {
               const estado = getEstadoSolicitud(solicitud.estado);
+              const talonario = rifas
+                .flatMap((rifa) => rifa.talonarios)
+                .find((talonario: any) => talonario.idTalonario === solicitud.idTalonario);
+              const rifa = rifas.find((rifa) =>
+                rifa.talonarios.some((t: any) => t.idTalonario === solicitud.idTalonario)
+              );
               return (
-                <IonCard key={solicitud.idSolicitud}>
-                  <IonCardHeader>
-                    <IonCardTitle>
-                      Talonario #{solicitud.idTalonario}
-                    </IonCardTitle>
-                  </IonCardHeader>
-                  <IonCardContent>
+                <IonItem key={`${solicitud.idSolicitud}-${index}`}>
+                  <IonLabel>
+                    <h2>Talonario #{solicitud.idTalonario}</h2>
+                    <p>
+                      <strong>Código del Talonario:</strong> {talonario?.codigoTalonario}
+                    </p>
+                    <p>
+                      <strong>Rifa:</strong> {rifa?.nombreRifa}
+                    </p>
                     <p>
                       <strong>Fecha de Solicitud:</strong>{" "}
                       {solicitud.fechaSolicitud}
@@ -189,12 +234,12 @@ const RequestTalonario: React.FC = () => {
                       <strong>Estado:</strong>{" "}
                       <IonLabel color={estado.color}>{estado.text}</IonLabel>
                     </p>
-                  </IonCardContent>
-                </IonCard>
+                  </IonLabel>
+                </IonItem>
               );
             })
           ) : (
-            <IonLabel className="ion-padding">No tienes solicitudes aún.</IonLabel>
+            <IonLabel className="ion-padding" style={{ color: 'black', background: 'white'}}>No tienes solicitudes aún.</IonLabel>
           )}
         </IonList>
       </IonContent>

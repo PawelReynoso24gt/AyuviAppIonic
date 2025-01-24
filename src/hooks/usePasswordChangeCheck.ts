@@ -1,17 +1,21 @@
-// hooks/usePasswordChangeCheck.js
 import { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import axios from '../services/axios'; // Asegúrate de que la ruta sea correcta
 import { isAxiosError } from 'axios';
 
 const usePasswordChangeCheck = () => {
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState('');
-  const [daysRemaining, setDaysRemaining] = useState(null);
+  const [daysRemaining, setDaysRemaining] = useState<number | null>(null);
   const history = useHistory();
+  const location = useLocation();
 
   useEffect(() => {
     const checkPasswordChange = async () => {
+      if (location.pathname === '/login') {
+        return; // No realizar la solicitud si estamos en la página de login
+      }
+
       try {
         const response = await axios.get("/usuarios/verify", {
           headers: {
@@ -37,7 +41,7 @@ const usePasswordChangeCheck = () => {
     };
 
     checkPasswordChange();
-  }, [history]);
+  }, [history, location]);
 
   const handleCloseModal = () => {
     setShowModal(false);

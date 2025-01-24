@@ -97,6 +97,14 @@ npm install @capacitor/camera
 ```
 
 ```bash
+npm install moment
+```
+
+```bash
+npm install @capacitor/keyboard
+```
+
+```bash
 npm install react-datepicker
 ```
 

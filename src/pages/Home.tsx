@@ -13,6 +13,7 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { useHistory } from "react-router-dom";
 import { getInfoFromToken } from "../services/authService";
+import './Home.css'; // Importa el archivo CSS
 
 const Home: React.FC = () => {
   const [username, setUsername] = useState<string | null>(null);
@@ -155,7 +156,7 @@ const Home: React.FC = () => {
       <IonContent>
         <div style={styles.welcomeContainer}>
           {username ? (
-            <h2>
+            <h2 className="welcome-heading">
               Bienvenido <strong>{username}</strong>
             </h2>
           ) : (

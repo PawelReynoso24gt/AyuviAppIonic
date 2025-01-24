@@ -1,0 +1,53 @@
+.custom-btn {
+    background-color: #3880ff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 1px auto;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    display: block;
+    text-align: center;
+    width: 50%;
+    display: grid;
+}
+
+.custom-btn:hover {
+    background-color: #3171e0;
+}
+
+.custom-btn:active {
+    background-color: #2759b8;
+}
+
+.save-btn {
+    background-color: #28a745;
+}
+
+.save-btn:hover {
+    background-color: #218838;
+}
+
+.save-btn:active {
+    background-color: #1e7e34;
+}
+
+.discard-btn {
+    background-color: #dc3545;
+}
+
+.discard-btn:hover {
+    background-color: #c82333;
+}
+
+.discard-btn:active {
+    background-color: #bd2130;
+}
+
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
