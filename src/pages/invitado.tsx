@@ -22,7 +22,7 @@ const Home: React.FC = () => {
     const fetchPublicaciones = async () => {
       try {
         const response = await axios.get(
-          "/publicaciones/completas"
+          "/publicaciones/invitado"
         );
         const publicaciones = response.data.map((publicacion: any) => ({
           id: publicacion.id,
@@ -172,7 +172,7 @@ const Home: React.FC = () => {
               {publicacion.fotos.map((foto: string, index: number) => (
                 <div key={`${publicacion.id}-${index}`} style={styles.photoContainer}>
                   <img
-                    src={`https://lrr4gb41-5001.use.devtunnels.ms/${foto}`}
+                    src={`http://localhost:5000/${foto}`}
                     alt={`Foto ${index + 1}`}
                     style={styles.photo}
                   />
