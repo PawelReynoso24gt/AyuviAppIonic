@@ -122,7 +122,7 @@ const MainContent: React.FC = () => {
           <Route exact path="/registroAspirante" component={registroAspirante} />
           <Route exact path="/solicitudPendiente" component={solicitudPendiente} />
           <PrivateRoute exact path="/productosVoluntarios" component={productosVoluntarios} />
-          <PrivateRoute exact path="/invitado" component={invitado} />
+          <Route exact path="/invitado" component={invitado} />
           <PrivateRoute exact path="/productosVoluntarios" component={productosVoluntarios} />
           <PrivateRoute exact path="/productosStands" component={productosStands} />
           <PrivateRoute exact path="/recaudacionRifas" component={recaudacionRifas} />
@@ -158,7 +158,8 @@ const MainContent: React.FC = () => {
 
 const Menu: React.FC = () => {
   const location = useLocation();
-  const isLoginPage = location.pathname === '/login';
+  const noSidebarRoutes = ['/login', '/invitado', '/registroAspirante','/solicitudPendiente']; 
+  const isNoSidebarPage = noSidebarRoutes.includes(location.pathname);
 
   const handleLogout = () => {
     // Borra el localStorage
@@ -179,10 +180,10 @@ const Menu: React.FC = () => {
     window.location.href = '/login'; // Redirige a la página de login
   };
 
-  if (isLoginPage) {
-    return null;
+  
+  if (isNoSidebarPage) {
+    return null; 
   }
-
   return (
     <IonMenu contentId="main-content">
       <IonHeader>

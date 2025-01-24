@@ -1,16 +1,19 @@
+/* Contenedor principal del login */
 .login-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    min-height: 100vh; /* Asegura que ocupe toda la pantalla */
     padding: 20px;
     background: #1E1E1E;
     border-radius: 15px;
     box-shadow: 0 1px 15px rgb(0, 68, 255);
     transition: margin-bottom 0.3s ease-in-out;
+    box-sizing: border-box;
 }
 
+/* Estilos para elementos ion-item dentro del contenedor de login */
 .login-container ion-item {
     width: 100%;
     max-width: 400px;
@@ -19,38 +22,63 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* Añadir esta línea */
 }
 
-.login-container ion-button {
+/* Estilos para botones dentro del contenedor de login */
+/* .login-container ion-button {
     width: 100%;
     max-width: 400px;
     border-radius: 10px;
+    font-size: 16px; /* Asegurar que la fuente sea grande */
+    /* padding: 12px; */
+/* } */
+
+/* Ajustar el comportamiento de los inputs y botones */
+.custom-input, .password-input, .login-container ion-button {
+    font-size: 18px;
+    max-width: 400px;
+    width: 100%;
 }
 
+/* Estilos para iconos dentro del contenedor de login */
 .login-container ion-icon {
     cursor: pointer;
 }
 
-.custom-input {
+/* Estilos personalizados para el input */
+/* .custom-input {
     --color: #000000;
     --placeholder-color: #ffffff;
-    position: center;
-}
+    text-align: center; /* Centrar el texto dentro del input */
+/* } */
 
+/* Asegurar el tamaño de los inputs */
+/* .custom-input, .password-input { */
+    /* font-size: 18px; Ajustar según lo que consideres óptimo */
+    /* padding: 15px; Mayor padding para hacerlo más grande */
+    /* width: 100%; */
+    /* max-width: 400px; */
+    /* box-sizing: border-box; */
+    /* text-align: left; Para alinearlo a la izquierda */
+/* } */
+
+/* Estilos personalizados para el item */
 .custom-item {
     --background: #E8E8E8;
+    margin-bottom: 15px;
+    border-radius: 10px;
 }
 
+/* Estilos para las etiquetas de usuario y contraseña */
 .usuario-label,
 .contrasenia-label {
     display: block;
     margin-bottom: 10px;
     font-weight: bold;
-    text-align: center;
-    /* Añadir esta línea */
+    text-align: center; /* Centrar el texto de las etiquetas */
 }
 
+/* Ajustes específicos para el item de contraseña */
 .password-item ion-label {
     padding-block: 0;
 }
@@ -60,6 +88,7 @@
     padding-right: 80%;
 }
 
+/* Estilos para el icono de toggle de contraseña */
 .password-toggle-icon {
     position: absolute;
     right: 2%;
@@ -70,26 +99,37 @@
     color: #000000;
 }
 
-.logo {
+/* Estilos para la imagen del logo */
+/* .logo {
     width: 300px;
     margin-bottom: 20px;
+} */
+
+/* Evitar el cambio de tamaño del logo */
+.logo {
+    width: 80%; /* Mantener responsive */
+    max-width: 300px;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease; /* Suave desplazamiento */
 }
 
+/* Estilos para margenes inferiores */
 .ion-margin-bottom {
     margin-bottom: 20px;
     color: rgb(0, 0, 0);
 }
 
+/* Estilos para el padding del contenedor principal */
 .ion-padding {
     background-color: #000000;
 }
 
+/* Estilos para centrar texto */
 .text-center {
     text-align: center;
-    padding-left: 0%;
-    padding: auto;
 }
 
+/* Ajustes adicionales para el item personalizado */
 .custom-item ion-label {
     margin-bottom: 10px;
 }
@@ -98,7 +138,8 @@
     margin-top: 10px;
 }
 
-.password-input {
+/* Estilos para el input de contraseña */
+/* .password-input {
     --color: #000000;
     --placeholder-color: #ffffff;
     padding: 10px;
@@ -113,4 +154,4 @@ body.keyboard-visible .login-container {
 
 .button-login {
     background-color: #017BD4;
-}
+} */
