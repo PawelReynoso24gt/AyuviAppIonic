@@ -13,6 +13,20 @@ const Login: React.FC = () => {
     const [error, setError] = useState('');
     const [keyboardOpen, setKeyboardOpen] = useState(false);
     const history = useHistory();
+
+    useEffect(() => {
+        Keyboard.addListener('keyboardWillShow', () => {
+            document.body.classList.add('keyboard-visible');
+        });
+
+        Keyboard.addListener('keyboardWillHide', () => {
+            document.body.classList.remove('keyboard-visible');
+        });
+
+        return () => {
+            Keyboard.removeAllListeners();
+        };
+    }, []);
     const loginContainerRef = useRef<HTMLDivElement>(null);
 
     const handleFocus = () => {
@@ -56,13 +70,7 @@ const Login: React.FC = () => {
 
     return (
         <IonPage>
-            <IonContent 
-                className="ion-padding" 
-                fullscreen 
-                scroll-y="true" 
-                scroll-assist="true"
-                keyboard-offset="150"
-            >
+            <IonContent className="ion-padding" fullscreen>
                 <div className="login-container">
                     <img src={logo} alt="Logo Ayuvi" className="logo" />
                     <IonLabel className="usuario-label">Usuario</IonLabel>
