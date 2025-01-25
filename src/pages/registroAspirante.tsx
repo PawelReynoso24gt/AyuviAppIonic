@@ -23,6 +23,7 @@ import { useHistory } from 'react-router-dom';
 import '../theme/variables.css';
 import ReactDatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import logo from '../img/LogoAyuvi3.png'; // Importa la imagen
 
 const Registro: React.FC = () => {
   const history = useHistory();
@@ -145,7 +146,7 @@ const Registro: React.FC = () => {
           <IonTitle>Registro de Aspirantes</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="custom-content"
+      <IonContent 
         style={{
           backgroundColor: 'var(--main-bg-color)', // Fondo verde
           minHeight: '50vh',        // Altura completa
@@ -155,6 +156,9 @@ const Registro: React.FC = () => {
           alignItems: 'center',
           padding: '20px',
         }}>
+          <div className="container">
+          <img src={logo} alt="Logo Ayuvi" className="logoaspirante" />
+          </div>
         <IonItem
           style={{
             display: 'flex', // Habilitar flexbox
@@ -166,7 +170,7 @@ const Registro: React.FC = () => {
             margin: '16px auto', // Margen para separación y centrar horizontalmente
             textAlign: 'center', // Alinear contenido
             borderRadius: '8px', // Opcional: bordes redondeados
-            backgroundColor: '#107bc1', // Opcional: sombra para diseño
+            backgroundColor: '#55A605', // Opcional: sombra para diseño
           }}>
           <IonLabel position="floating">Nombre Completo</IonLabel>
           <IonInput
@@ -192,7 +196,7 @@ const Registro: React.FC = () => {
             margin: '16px auto',
             textAlign: 'center',
             borderRadius: '8px',
-            backgroundColor: '#107bc1',
+            backgroundColor: '#D62498',
           }}>
           <IonLabel position="floating" >Fecha de Nacimiento</IonLabel>
           <IonInput
@@ -213,7 +217,7 @@ const Registro: React.FC = () => {
               top: '50%',
               left: '50%',
               transform: 'translate(-50%, -50%)',
-              backgroundColor: '#fff',
+              backgroundColor: '#262626',
               borderRadius: '8px',
               padding: '16px',
               boxShadow: '0 2px 10px rgba(173, 22, 211, 0.2)',
@@ -229,14 +233,15 @@ const Registro: React.FC = () => {
               }
             }}
             presentation="date"
-            showDefaultButtons={true}
+            showDefaultButtons={false}
             style={{
               maxWidth: '100%',
               textAlign: 'center',
+              backgroundColor: '#262626',
             }}
           />
             <IonButton
-              color="danger"
+              color="success"
               style={{
                 marginTop: '16px',
                 display: 'block',
@@ -246,7 +251,7 @@ const Registro: React.FC = () => {
               }}
               onClick={() => setIsDatePickerVisible(false)}
             >
-              Cerrar
+              Aceptar
             </IonButton>
           </div>
         )}
@@ -262,7 +267,7 @@ const Registro: React.FC = () => {
             margin: '16px auto',
             textAlign: 'center',
             borderRadius: '8px',
-            backgroundColor: '#107bc1',
+            backgroundColor: '#28C3F9',
           }}>
           <IonLabel position="floating"  >Teléfono</IonLabel>
           <IonInput
@@ -285,7 +290,7 @@ const Registro: React.FC = () => {
             margin: '16px auto',
             textAlign: 'center',
             borderRadius: '8px',
-            backgroundColor: '#107bc1',
+            backgroundColor: '#F77310',
           }}>
           <IonLabel position="floating" >Domicilio</IonLabel>
           <IonInput
@@ -307,7 +312,7 @@ const Registro: React.FC = () => {
             margin: '16px auto',
             textAlign: 'center',
             borderRadius: '8px',
-            backgroundColor: '#107bc1',
+            backgroundColor: '#FFBC24',
           }}>
           <IonLabel position="floating" >CUI</IonLabel>
           <IonInput
@@ -330,7 +335,7 @@ const Registro: React.FC = () => {
             margin: '16px auto',
             textAlign: 'center',
             borderRadius: '8px',
-            backgroundColor: '#107bc1',
+            backgroundColor: '#8500BC',
           }}>
           <IonLabel position="floating"  >Correo Electrónico</IonLabel>
           <IonInput
@@ -353,15 +358,15 @@ const Registro: React.FC = () => {
             margin: '16px auto',
             textAlign: 'center',
             borderRadius: '8px',
-            backgroundColor: '#107bc1',
+            backgroundColor: '#0896A6',
           }}>
           <IonSelect
             value={formData.idDepartamento}
             placeholder="Seleccione su departamento"
-            onIonChange={(e) => handleDepartamentoChange(e.detail.value!)}
+            onIonChange={(e) => handleDepartamentoChange(e.detail.value!)}    
           >
             {departamentos.map((departamento: any) => (
-              <IonSelectOption key={departamento.idDepartamento} value={departamento.idDepartamento}>
+              <IonSelectOption  key={departamento.idDepartamento} value={departamento.idDepartamento}>
                 {departamento.departamento}
               </IonSelectOption>
             ))}
@@ -378,7 +383,7 @@ const Registro: React.FC = () => {
           margin: '16px auto',
           textAlign: 'center',
           borderRadius: '8px',
-          backgroundColor: '#107bc1',
+          backgroundColor: '#55A605',
         }}>
           <IonSelect
             value={formData.idMunicipio}

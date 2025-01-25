@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { Keyboard } from '@capacitor/keyboard';
 import { useEffect } from 'react';
 import './Login.css'; // Importa el archivo de estilos
-import logo from '../img/LogoAyuvi2.png'; // Importa la imagen
+import logo from '../img/LogoAyuvi3.png'; // Importa la imagen
 
 const Login: React.FC = () => {
     const [usuario, setUsuario] = useState('');
@@ -15,6 +15,20 @@ const Login: React.FC = () => {
     const [error, setError] = useState('');
     const [keyboardOpen, setKeyboardOpen] = useState(false);
     const history = useHistory();
+
+    useEffect(() => {
+        Keyboard.addListener('keyboardWillShow', () => {
+            document.body.classList.add('keyboard-visible');
+        });
+
+        Keyboard.addListener('keyboardWillHide', () => {
+            document.body.classList.remove('keyboard-visible');
+        });
+
+        return () => {
+            Keyboard.removeAllListeners();
+        };
+    }, []);
     const loginContainerRef = useRef<HTMLDivElement>(null);
 
     const handleFocus = () => {
@@ -30,20 +44,6 @@ const Login: React.FC = () => {
             loginContainerRef.current.style.marginBottom = '0'; // Ajusta según sea necesario
         }
     };
-
-    useEffect(() => {
-        Keyboard.addListener('keyboardWillShow', () => {
-            document.body.classList.add('keyboard-visible');
-        });
-
-        Keyboard.addListener('keyboardWillHide', () => {
-            document.body.classList.remove('keyboard-visible');
-        });
-
-        return () => {
-            Keyboard.removeAllListeners();
-        };
-    }, []);
 
     const handleLogin = async () => {
         try {
@@ -102,11 +102,11 @@ const Login: React.FC = () => {
                         />
                     </IonItem>
 
-                    <IonButton expand="block" onClick={handleLogin} className="button-login" color={'017BD4'}>Iniciar Sesión</IonButton>
+                    <IonButton expand="block" onClick={handleLogin} style={{color: ''}}>Iniciar Sesión</IonButton>
                     {error && <IonText color="danger">{error}</IonText>}
 
                     <IonText
-                        onClick={() => history.push('/registroAspirante')} //hola
+                        onClick={() => history.push('/registroAspirante')} 
                         color="primary"
                         style={{
                             marginTop: '20px',
@@ -122,8 +122,7 @@ const Login: React.FC = () => {
 
                     <IonButton
                         expand="block"
-                        className='button-login'
-                        color="017BD4"
+                        color="secondary"
                         onClick={handleGuestLogin}
                         style={{ marginTop: '10px' }}
                     >

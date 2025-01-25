@@ -6,6 +6,10 @@
     align-items: center;
     min-height: 100vh; /* Asegura que ocupe toda la pantalla */
     padding: 20px;
+    background: #1E1E1E;
+    border-radius: 15px;
+    box-shadow: 0 1px 15px rgb(0, 68, 255);
+    transition: margin-bottom 0.3s ease-in-out;
     box-sizing: border-box;
 }
 
@@ -109,6 +113,19 @@
     transition: transform 0.3s ease; /* Suave desplazamiento */
 }
 
+.container {
+    display: grid; /* Activa grid */
+    justify-content: center; /* Centra horizontalmente */
+    align-items: flex-start;
+}
+
+.logoaspirante {
+    width: 150%; /* Mantener responsive */
+    max-width: 300px;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease; /* Suave desplazamiento */
+}
+
 /* Estilos para margenes inferiores */
 .ion-margin-bottom {
     margin-bottom: 20px;
@@ -142,4 +159,11 @@
     border-radius: 5px;
     width: 100%;
     box-sizing: border-box;
+}
+
+body.keyboard-visible .login-container {
+    margin-bottom: 150px; /* Ajusta el valor según sea necesario */
+
+.button-login {
+    background-color: #017BD4;
 }
