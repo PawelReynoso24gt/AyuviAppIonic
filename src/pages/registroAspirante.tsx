@@ -49,8 +49,8 @@ const Registro: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const departamentosResponse = await axios.get('http://localhost:5000/departamentos');
-        const municipiosResponse = await axios.get('http://localhost:5000/municipios');
+        const departamentosResponse = await axios.get('/departamentos');
+        const municipiosResponse = await axios.get('/municipios');
         setDepartamentos(departamentosResponse.data);
         setAllMunicipios(municipiosResponse.data); // Guardar todos los municipios
       } catch (error) {
@@ -101,7 +101,7 @@ const Registro: React.FC = () => {
   const handleSubmit = async () => {
     try {
       // Registrar al usuario
-      await axios.post('http://localhost:5000/personas/create', formData);
+      await axios.post('/personas/create', formData);
       setToastMessage('¡Registro exitoso! Redirigiendo...');
 
       // Crear bitácora después de registrar al usuario

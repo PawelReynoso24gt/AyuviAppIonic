@@ -18,6 +18,7 @@ import { arrowBackOutline } from 'ionicons/icons';
 import { useHistory } from "react-router-dom";
 import axios from "../services/axios";
 import { getInfoFromToken } from "../services/authService";
+import '../theme/variables.css';
 
 interface Evento {
   idEvento: number;
@@ -45,7 +46,7 @@ const InscripcionesEventos: React.FC = () => {
   const fetchEventos = async () => {
     setLoading(true);
     try {
-      const response = await axios.get<Evento[]>( `http://localhost:5000/eventos/activo?idVoluntario=${idVoluntario}`);
+      const response = await axios.get<Evento[]>( `/eventos/activo?idVoluntario=${idVoluntario}`);
       setEventos(response.data);
     } catch (error: any) {
       const errorMessage =
@@ -89,7 +90,7 @@ const InscripcionesEventos: React.FC = () => {
 
 
     try {
-      const response = await axios.post("http://localhost:5000/inscripcion_eventos/create", {
+      const response = await axios.post("/inscripcion_eventos/create", {
         fechaHoraInscripcion,
         idVoluntario,
         idEvento: selectedEvento,
@@ -134,12 +135,12 @@ const InscripcionesEventos: React.FC = () => {
           <IonTitle style={{ color: "#FFFFFF" }}>Inscripción a Eventos</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent style={{ backgroundColor: "#F0F8FF" }}>
+      <IonContent className="page-with-background">
         <div
           style={{
             padding: "20px",
             textAlign: "center",
-            background: "linear-gradient(45deg, #A6BC09, #A6BC09)",
+            background: "linear-gradient(45deg, #0B75D9, #0B75D9)",
             borderRadius: "10px",
             margin: "10px",
             color: "white",
@@ -201,10 +202,19 @@ const InscripcionesEventos: React.FC = () => {
                     Estado del evento: {evento.estado === 1 ? "Activo" : "Inactivo"}
                   </p>
                 </IonLabel>
-                <div>
+
+                <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "10px",
+                  marginLeft: "auto",
+                  marginRight: "10px",
+                  width: "50%",
+                  alignItems: "flex-end",
+                }}>
                   <IonButton
                     slot="end"
-                    color="tertiary"
                     shape="round"
                     size="small"
                     onClick={() => {
@@ -215,10 +225,9 @@ const InscripcionesEventos: React.FC = () => {
                     style={{
                       background: evento.isInscrito
                         ? "#A9A9A9"
-                        : "linear-gradient(45deg, #6A5ACD, #7B68EE)",
+                        : "linear-gradient(45deg, #4556FF, #4556FF)",
                       color: "white",
                       fontWeight: "bold",
-                      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3)",
                       marginBottom: "10px",
                     }}
                   >
@@ -227,14 +236,16 @@ const InscripcionesEventos: React.FC = () => {
                   {evento.isInscrito && (
                     <IonButton
                       slot="end"
-                      color="success"
                       shape="round"
                       size="small"
                       onClick={() => handleIrAComision(evento.idEvento)}
                       style={{
-                        background: "linear-gradient(45deg, #28a745, #218838)",
+                        background: evento.isInscrito
+                          ? "#A9A9A9"
+                          : "linear-gradient(45deg, #4556FF, #4556FF)",
                         color: "white",
                         fontWeight: "bold",
+                        marginBottom: "10px",
                       }}
                     >
                       Ir a Comisión

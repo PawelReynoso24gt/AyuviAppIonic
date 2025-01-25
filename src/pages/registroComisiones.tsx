@@ -97,7 +97,7 @@ useEffect(() => {
     }
   
     try {
-      const response = await axios.post("http://localhost:5000/inscripcion_comisiones/create", {
+      const response = await axios.post("/inscripcion_comisiones/create", {
         fechaHoraInscripcion: new Date().toISOString(),
         idVoluntario,
         idComision: selectedComision,
@@ -135,7 +135,9 @@ useEffect(() => {
 
   return (
     <IonPage>
-      <IonHeader>
+      <IonHeader style={{
+        paddingTop: "50px",
+      }}>
         <IonToolbar style={{ backgroundColor: "#4B0082" }}>
            <IonButton
               slot="start"
@@ -151,12 +153,12 @@ useEffect(() => {
           <IonTitle style={{ color: "#FFFFFF" }}>Inscripción a Comisiones</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent style={{ backgroundColor: "#F0F8FF" }}>
+      <IonContent className="page-with-background" >
         <div
           style={{
             padding: "20px",
             textAlign: "center",
-            background: "linear-gradient(45deg, #A6BC09, #A6BC09)",
+            background: "linear-gradient(45deg, #79A637, #79A637)",
             borderRadius: "10px",
             margin: "10px",
             color: "white",
@@ -228,57 +230,39 @@ useEffect(() => {
                     marginLeft: "auto",
                     marginRight: "10px",
                     width: "50%",
-                    alignItems: "flex-end",
+                    alignItems: "flex-end",                  
                   }}
                 >
                   <IonButton
-                    color="tertiary"
                     shape="round"
                     size="small"
+                    className="custom-green-button"
                     onClick={() => {
                       setSelectedComision(comision.idComision);
                       setShowModal(true);
                     }}
                     disabled={comision.isInscrito} // Actualiza según el estado de la comisión
-                    style={{
-                      background: comision.isInscrito
-                        ? "#A9A9A9" // Color para comisiones inscritas
-                        : "linear-gradient(45deg, #6A5ACD, #7B68EE)",
-                      color: "white",
-                      fontWeight: "bold",
-                      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3)",
-                      width: "15%",
-                    }}
+                   
                   >
                     {comision.isInscrito ? "Ya inscrito" : "Inscribirse"}
                   </IonButton>
                   {comision.isInscrito && (
                     <>
                       <IonButton
-                        color="primary"
                         shape="round"
                         size="small"
+                        className="custom-green-button"
                         onClick={() => handleIrMateriales(comision.idComision)}
-                        style={{
-                          background: "linear-gradient(45deg, #228B22, #32CD32)",
-                          color: "white",
-                          fontWeight: "bold",
-                          width: "15%",
-                        }}
+                      
                       >
                         Materiales
                       </IonButton>
                       <IonButton
-                        color="secondary"
+                        className="custom-green-button"
                         shape="round"
                         size="small"
                         onClick={() => handleIrActividades(comision.idComision)}
-                        style={{
-                          background: "linear-gradient(45deg, #FFD700, #FFA500)",
-                          color: "white",
-                          fontWeight: "bold",
-                          width: "15%",
-                        }}
+                        
                       >
                         Actividades
                       </IonButton>
@@ -306,11 +290,12 @@ useEffect(() => {
             <p>¿Estás seguro de que deseas inscribirte a la comisión seleccionada?</p>
             <IonButton
               expand="block"
+              className="custom-green-button"
               onClick={handleInscripcion}
               style={{
                 marginTop: "20px",
                 margin: "10px auto",
-                background: "linear-gradient(45deg, #6A5ACD, #7B68EE)",
+                background: "linear-gradient(45deg, #79A637, #79A637)",
                 color: "white",
                 width: "50%",
               }}
@@ -318,6 +303,7 @@ useEffect(() => {
               Confirmar Inscripción
             </IonButton>
             <IonButton
+            className="custom-green-button"
               expand="block"
               fill="outline"
               onClick={() => setShowModal(false)}
@@ -334,9 +320,7 @@ useEffect(() => {
           duration={2000}
           onDidDismiss={() => setToastMessage("")}
         />
-      </IonContent>
-
-              
+      </IonContent>             
     </IonPage>
   );
 };

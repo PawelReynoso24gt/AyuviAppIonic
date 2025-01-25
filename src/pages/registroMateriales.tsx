@@ -54,7 +54,7 @@ const DetalleInscripcionMaterial: React.FC = () => {
     setLoading(true);
     try {
       const response = await axios.get<Material[]>(
-        `http://localhost:5000/materiales/comision/${idComision}` // Asegúrate de tener esta ruta en tu backend
+        `/materiales/comision/${idComision}` // Asegúrate de tener esta ruta en tu backend
       );
 
       if (Array.isArray(response.data)) {
@@ -89,7 +89,7 @@ const DetalleInscripcionMaterial: React.FC = () => {
       };
   
       const response = await axios.post(
-        "http://localhost:5000/detalle_inscripcion_materiales/create",
+        "/detalle_inscripcion_materiales/create",
         payload
       );
   
@@ -108,8 +108,9 @@ const DetalleInscripcionMaterial: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar style={{ backgroundColor: "#4B0082" }}>
+      <IonHeader style={{
+        paddingTop: "20px",}}>
+        <IonToolbar style={{ backgroundColor: "#4B0082" ,  paddingBottom: "40px" }}>
           <IonButton
             slot="start"
             fill="clear"
@@ -124,13 +125,27 @@ const DetalleInscripcionMaterial: React.FC = () => {
           <IonTitle style={{ color: "#FFFFFF" }}>Materiales de la Comisión</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent style={{ backgroundColor: "#F0F8FF" }}>
+      <IonContent className="page-with-background"  >
+         <div
+          style={{
+            padding: "20px",
+            textAlign: "center",
+            background: "linear-gradient(45deg, #67198A, #67198A)",
+            borderRadius: "10px",
+            margin: "10px",
+            color: "white",
+          }}
+        >
+          <h2>Materiales Disponibles</h2>
+          <p>Selecciona una comisión para inscribirte.</p>
+        </div>
         {loading ? (
           <div style={{ textAlign: "center", marginTop: "20px" }}>
             <IonSpinner
               name="crescent"
               style={{
                 color: "#4B0082",
+                background: "linear-gradient(45deg, #67198A, #67198A)",
                 width: "50px",
                 height: "50px",
               }}
@@ -146,6 +161,7 @@ const DetalleInscripcionMaterial: React.FC = () => {
                   margin: "10px",
                   borderRadius: "10px",
                   boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                  minHeight: "80px", // Altura mínima del recuadro
                 }}
               >
                 <IonLabel>
@@ -158,22 +174,18 @@ const DetalleInscripcionMaterial: React.FC = () => {
                   >
                     {material.nombre}
                   </h3>
-                  <p style={{ color: "#000080" }}>{material.descripcion}</p>
+                  <p style={{ color: "#000080", fontSize: "16px" }}>{material.descripcion}</p>
                 </IonLabel>
                 <IonButton
                   slot="end"
-                  color="tertiary"
+                  className="custom-purple-button"
                   shape="round"
                   size="small"
                   onClick={() => {
                     setSelectedMaterial(material.idMaterial);
                     setShowModal(true);
                   }}
-                  style={{
-                    background: "linear-gradient(45deg, #6A5ACD, #7B68EE)",
-                    color: "white",
-                    fontWeight: "bold",
-                  }}
+                
                 >
                   Inscribirse
                 </IonButton>
@@ -184,18 +196,13 @@ const DetalleInscripcionMaterial: React.FC = () => {
 
         <div style={{ textAlign: "center", marginTop: "20px" }}>
             <IonButton
-              color="success"
+              className="custom-purple-button"
               shape="round"
               size="small"
               onClick={() =>
                 history.push("/registroActiviades", { idComision }) // Navegar al componente de actividades
               }
-              style={{
-                background: "linear-gradient(45deg, #28a745, #218838)",
-                color: "white",
-                fontWeight: "bold",
-                width: "10%",
-              }}
+           
             >
               Ir a Actividades
             </IonButton>
@@ -220,13 +227,10 @@ const DetalleInscripcionMaterial: React.FC = () => {
               style={{ marginBottom: "20px", padding: "10px" }}
             />
             <IonButton
+            className="custom-green-button"
               expand="block"
               onClick={handleIngresoMaterial}
-              style={{
-                marginTop: "10px",
-                background: "linear-gradient(45deg, #6A5ACD, #7B68EE)",
-                color: "white",
-              }}
+          
             >
               Confirmar
             </IonButton>
