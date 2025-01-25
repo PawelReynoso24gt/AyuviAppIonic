@@ -1,5 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { IonPage, IonContent, IonInput, IonButton, IonText, IonItem, IonLabel, IonIcon } from '@ionic/react';
+import { Keyboard } from '@capacitor/keyboard';
+import { useEffect } from 'react';
 import { eyeOff, eye } from 'ionicons/icons';
 import { loginUser } from '../services/authService';
 import { useHistory } from 'react-router-dom';
