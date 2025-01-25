@@ -27,16 +27,7 @@
             </IonToolbar>
         </IonHeader>
         <IonContent
-            style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '20px',
-            background: 'linear-gradient(45deg, #E6E6FA, #F0F8FF)',
-            minHeight: '50vh',
-            }}
-        >
+        className="page-with-background" >
             {/* Imagen principal */}
             <IonImg
             src={solicitudPendienteImg}
@@ -58,7 +49,7 @@
                 style={{
                 fontSize: '24px',
                 fontWeight: 'bold',
-                color: '#4B0082',
+                color: '#8500BC',
                 marginBottom: '10px',
                 }}
             >
@@ -68,7 +59,7 @@
                 style={{
                 fontSize: '20px',
                 fontWeight: 'bold',
-                color: '#4B0082',
+                color: '#8500BC',
                 marginBottom: '20px',
                 }}
             >
@@ -77,7 +68,7 @@
             <p
                 style={{
                 fontSize: '18px',
-                color: '#333',
+                color: '#FFF',
                 lineHeight: '1.6',
                 }}
             >
@@ -89,7 +80,7 @@
             <p
             style={{
                 fontSize: '18px',
-                color: '#333',
+                color: '#FFF',
                 lineHeight: '1.6',
                 }}
             >

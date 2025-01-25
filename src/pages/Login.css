@@ -113,6 +113,19 @@
     transition: transform 0.3s ease; /* Suave desplazamiento */
 }
 
+.container {
+    display: grid; /* Activa grid */
+    justify-content: center; /* Centra horizontalmente */
+    align-items: flex-start;
+}
+
+.logoaspirante {
+    width: 150%; /* Mantener responsive */
+    max-width: 300px;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease; /* Suave desplazamiento */
+}
+
 /* Estilos para margenes inferiores */
 .ion-margin-bottom {
     margin-bottom: 20px;
