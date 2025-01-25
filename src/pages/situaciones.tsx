@@ -60,6 +60,22 @@ const Situaciones: React.FC = () => {
         }
     };
 
+    // * bitacora
+    const logBitacora = async (descripcion: string, idCategoriaBitacora: number) => {
+        const bitacoraData = {
+        descripcion,
+        idCategoriaBitacora,
+        idUsuario,
+        fechaHora: new Date().toISOString()
+        };
+    
+        try {
+        await axios.post("/bitacora/create", bitacoraData);
+        } catch (error) {
+        console.error("Error logging bitacora:", error);
+        }
+    };
+
     const handleCreateSituacion = async () => {
         if (!newSituacion.descripcion || !newSituacion.idTipoSituacion) {
             setToastMessage("Todos los campos son obligatorios.");
@@ -71,6 +87,8 @@ const Situaciones: React.FC = () => {
                 idUsuario,
             });
             setToastMessage(response.data.message);
+            // Log the action in the bitacora
+            await logBitacora(`Nueva situación creada: ${newSituacion.descripcion}`, 5);
             fetchSituaciones();
             setShowModal(false);
         } catch (error) {
@@ -85,6 +103,8 @@ const Situaciones: React.FC = () => {
                 descripcion,
             });
             setToastMessage(response.data.message);
+            // Log the action in the bitacora
+            await logBitacora(`Situación actualizada: ${descripcion}`, 5);
             fetchSituaciones();
             setSelectedSituacion(null);
         } catch (error) {

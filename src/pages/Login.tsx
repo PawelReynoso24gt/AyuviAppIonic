@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { IonPage, IonContent, IonInput, IonButton, IonText, IonItem, IonLabel, IonIcon } from '@ionic/react';
 import { eyeOff, eye } from 'ionicons/icons';
 import { loginUser } from '../services/authService';
@@ -13,7 +13,23 @@ const Login: React.FC = () => {
     const [contrasenia, setContrasenia] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
+    const [keyboardOpen, setKeyboardOpen] = useState(false);
     const history = useHistory();
+    const loginContainerRef = useRef<HTMLDivElement>(null);
+
+    const handleFocus = () => {
+        setKeyboardOpen(true);
+        if (loginContainerRef.current) {
+            loginContainerRef.current.style.marginBottom = '300px'; // Ajusta según sea necesario
+        }
+    };
+
+    const handleBlur = () => {
+        setKeyboardOpen(false);
+        if (loginContainerRef.current) {
+            loginContainerRef.current.style.marginBottom = '0'; // Ajusta según sea necesario
+        }
+    };
 
     useEffect(() => {
         Keyboard.addListener('keyboardWillShow', () => {
@@ -33,7 +49,7 @@ const Login: React.FC = () => {
         try {
             setError(''); // Limpiar errores previos
 
-            const data = await loginUser(usuario, contrasenia); // Llama al servicio de login
+            await loginUser(usuario, contrasenia); // Llama al servicio de login
 
             // Redirige al usuario al Home
             history.push('/home'); // Asegúrate de que la ruta sea '/home'
@@ -55,18 +71,35 @@ const Login: React.FC = () => {
     };
 
     return (
-        <IonPage >
-            <IonContent className="ion-padding" scrollY={true}>
+        <IonPage>
+            <IonContent className="ion-padding" fullscreen>
                 <div className="login-container">
                     <img src={logo} alt="Logo Ayuvi" className="logo" />
                     <IonLabel className="usuario-label">Usuario</IonLabel>
                     <IonItem className="ion-margin-bottom custom-item">
-                        <IonInput className="custom-input" value={usuario} onIonChange={e => setUsuario(e.detail.value!)} />
+                        <IonInput 
+                            className="custom-input" 
+                            value={usuario} 
+                            onIonChange={e => setUsuario(e.detail.value!)} 
+                            onFocus={handleFocus} 
+                            onBlur={handleBlur} 
+                        />
                     </IonItem>
                     <IonLabel className="contrasenia-label">Contraseña</IonLabel>
                     <IonItem className="password-item custom-item">
-                        <IonInput className="password-input" type={showPassword ? "text" : "password"} value={contrasenia} onIonChange={e => setContrasenia(e.detail.value!)} />
-                        <IonIcon slot="end" icon={showPassword ? eyeOff : eye} onClick={() => setShowPassword(!showPassword)} />
+                        <IonInput 
+                            className="password-input" 
+                            type={showPassword ? "text" : "password"} 
+                            value={contrasenia} 
+                            onIonChange={e => setContrasenia(e.detail.value!)} 
+                            onFocus={handleFocus} 
+                            onBlur={handleBlur} 
+                        />
+                        <IonIcon 
+                            slot="end" 
+                            icon={showPassword ? eyeOff : eye} 
+                            onClick={() => setShowPassword(!showPassword)} 
+                        />
                     </IonItem>
 
                     <IonButton expand="block" onClick={handleLogin} className="button-login" color={'017BD4'}>Iniciar Sesión</IonButton>
