@@ -3,6 +3,8 @@ import { IonPage, IonContent, IonInput, IonButton, IonText, IonItem, IonLabel, I
 import { eyeOff, eye } from 'ionicons/icons';
 import { loginUser } from '../services/authService';
 import { useHistory } from 'react-router-dom';
+import { Keyboard } from '@capacitor/keyboard';
+import { useEffect } from 'react';
 import './Login.css'; // Importa el archivo de estilos
 import logo from '../img/LOGOAYUVI.png'; // Importa la imagen
 
