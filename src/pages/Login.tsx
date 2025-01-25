@@ -96,7 +96,7 @@ const Login: React.FC = () => {
                     {error && <IonText color="danger">{error}</IonText>}
 
                     <IonText
-                        onClick={() => history.push('/registroAspirante')} //hola
+                        onClick={() => history.push('/registroAspirante')} 
                         color="primary"
                         style={{
                             marginTop: '20px',
