@@ -79,8 +79,6 @@ const Login: React.FC = () => {
                 scroll-assist="true"
                 keyboard-offset="150"
             >
-        <IonPage>
-            <IonContent className="ion-padding" fullscreen>
                 <div className="login-container">
                     <img src={logo} alt="Logo Ayuvi" className="logo" />
                     <IonLabel className="usuario-label">Usuario</IonLabel>
