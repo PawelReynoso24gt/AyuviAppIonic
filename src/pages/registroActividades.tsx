@@ -67,7 +67,7 @@ const DetalleInscripcionActividad: React.FC = () => {
   const fetchInscripciones = async (idVoluntario: number) => {
     try {
       const response = await axios.get<Inscripcion>(
-        `http://localhost:5000/inscripciones/voluntario/${idVoluntario}`
+        `/inscripciones/voluntario/${idVoluntario}`
       );
       setInscripcion(response.data);
     } catch (error: any) {
@@ -82,7 +82,7 @@ const DetalleInscripcionActividad: React.FC = () => {
     setLoading(true);
     try {
       const response = await axios.get<Actividad[]>(
-        `http://localhost:5000/actividades/comision/${idComision}` // Nuevo endpoint
+        `/actividades/comision/${idComision}` // Nuevo endpoint
       );
 
       if (Array.isArray(response.data)) {
@@ -117,7 +117,7 @@ const DetalleInscripcionActividad: React.FC = () => {
       console.log("Payload enviado:", payload);
 
       const response = await axios.post(
-        "http://localhost:5000/detalle_inscripcion_actividades/create",
+        "/detalle_inscripcion_actividades/create",
         payload
       );
 
@@ -133,7 +133,9 @@ const DetalleInscripcionActividad: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
+      <IonHeader style={{
+        paddingTop: "50px",
+      }}>
         <IonToolbar style={{ backgroundColor: "#4B0082" }}>
           <IonButton
             slot="start"
@@ -149,7 +151,19 @@ const DetalleInscripcionActividad: React.FC = () => {
           <IonTitle style={{ color: "#FFFFFF" }}>Registro de Actividades</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent style={{ backgroundColor: "#F0F8FF" }}>
+      <IonContent className="page-with-background">\ <div
+          style={{
+            padding: "20px",
+            textAlign: "center",
+            background: "linear-gradient(45deg, #1DA6AD, #1DA6AD)",
+            borderRadius: "10px",
+            margin: "10px",
+            color: "white",
+          }}
+        >
+          <h2>Comisiones Disponibles</h2>
+          <p>Selecciona una comisión para inscribirte.</p>
+        </div>
         {loading ? (
           <div style={{ textAlign: "center", marginTop: "20px" }}>
             <IonSpinner
@@ -185,19 +199,14 @@ const DetalleInscripcionActividad: React.FC = () => {
                   </h3>
                   <p style={{ color: "#000080" }}>{actividad.descripcion}</p>
                 </IonLabel>
-                <IonButton
+                <IonButton     
                   slot="end"
-                  color="tertiary"
                   shape="round"
                   size="small"
+                  className="tom-greenBlue-button"
                   onClick={() => {
                     setSelectedActividad(actividad.idActividad);
                     setShowModal(true);
-                  }}
-                  style={{
-                    background: "linear-gradient(45deg, #6A5ACD, #7B68EE)",
-                    color: "white",
-                    fontWeight: "bold",
                   }}
                 >
                   Registrar
@@ -219,17 +228,19 @@ const DetalleInscripcionActividad: React.FC = () => {
           <div style={{ padding: "20px", borderRadius: "30px" }}>
             <h3>Registrar Actividad</h3>
             <IonButton
+              className="tom-greenBlue-button"
               expand="block"
               onClick={handleRegistroActividad}
               style={{
                 marginTop: "10px",
-                background: "linear-gradient(45deg, #6A5ACD, #7B68EE)",
+                background: "linear-gradient(45deg, #1DA6AD, #1DA6AD)",
                 color: "white",
               }}
             >
               Confirmar
             </IonButton>
             <IonButton
+              className="tom-greenBlue-button"
               expand="block"
               fill="outline"
               onClick={() => setShowModal(false)}
