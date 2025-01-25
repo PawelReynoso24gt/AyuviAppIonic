@@ -58,6 +58,7 @@ const MainContent: React.FC = () => {
   const isLoginPage = location.pathname === '/login';
   const isInvitadoPage = location.pathname === '/invitado';
   const isRegistroAspirantePage = location.pathname === '/registroAspirante';
+  const isSolicitudPendientePage = location.pathname === '/solicitudPendiente';
 
   // Mapeo de rutas a títulos de la barra de navegación (se agregan las rutas que se necesiten)
   const routeTitles: { [key: string]: string } = {
@@ -85,7 +86,7 @@ const MainContent: React.FC = () => {
 
   return (
     <>
-      {!isLoginPage && !isInvitadoPage && !isRegistroAspirantePage && (
+      {!isLoginPage && !isInvitadoPage && !isRegistroAspirantePage && ! isSolicitudPendientePage &&(
         <IonHeader>
           <IonToolbar style={{ backgroundColor: "#0274E5" }}>
             <IonTitle style={{ color: "#000000" }}>{title}</IonTitle>
@@ -175,6 +176,7 @@ const Menu: React.FC = () => {
           <IonItem routerLink="/about">Acerca de</IonItem>
           <IonItem routerLink="/profile">Perfil</IonItem>
           <IonItem routerLink="/sede">Sede</IonItem>
+          <IonItem routerLink="/registroAspirante">Aspirante</IonItem>
           <IonItem button onClick={handleLogout}>Cerrar sesión</IonItem>
         </IonList>
       </IonContent>

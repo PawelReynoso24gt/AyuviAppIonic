@@ -96,6 +96,14 @@ npm install --save-dev @types/react-modal
 npm install @capacitor/camera
 ```
 
+```bash
+npm install @ionic-native/firebase
+```
+
+```bash
+npm i cordova-plugin-firebasex
+```
+
 # DESARROLLADORES
 
 - **Angely Esmeralda Thomas Cortéz** - 202108047
