@@ -102,7 +102,7 @@ const Login: React.FC = () => {
                         />
                     </IonItem>
 
-                    <IonButton expand="block" onClick={handleLogin} style={{color: ''}}>Iniciar Sesión</IonButton>
+                    <IonButton expand="block" onClick={handleLogin} className="button-login" >Iniciar Sesión</IonButton>
                     {error && <IonText color="danger">{error}</IonText>}
 
                     <IonText
@@ -124,6 +124,7 @@ const Login: React.FC = () => {
                         expand="block"
                         color="secondary"
                         onClick={handleGuestLogin}
+                        className="button-login"
                         style={{ marginTop: '10px' }}
                     >
                         Entrar como invitad@

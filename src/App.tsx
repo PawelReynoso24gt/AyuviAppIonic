@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Redirect, Switch, useLocation } from 'react-router-dom';
-import { IonApp, IonMenu, IonContent, IonHeader, IonToolbar, IonTitle, IonList, IonItem, IonRouterOutlet, setupIonicReact, IonModal, IonButton, IonIcon, IonFooter } from '@ionic/react';
+import { IonApp, IonMenu, IonContent, IonHeader, IonToolbar, IonTitle, IonList, IonItem, IonRouterOutlet, setupIonicReact, IonModal, IonButton, IonIcon, IonFooter, IonPage } from '@ionic/react';
 import Home from './pages/Home';
 import About from './pages/About';
 import Login from './pages/Login';
@@ -93,54 +93,59 @@ const MainContent: React.FC = () => {
     '/situaciones': 'Situaciones',
   };
 
-  const title = routeTitles[location.pathname] || 'App'; // Título por defecto
+  
 
   return (
     <>
-      {!isLoginPage && !isInvitadoPage && !isRegistroAspirantePage && (
-        <IonHeader>
-          <IonToolbar style={{ backgroundColor: "#0274E5" }}>
-            <IonTitle slot='start' style={{ color: "white" }}>{title}</IonTitle>
-            <div slot="end">
-              <NotificationBell />
-            </div>
-            <div><IonButton fill='clear' routerLink='/home' style={{fontsize: 25}}><IonIcon icon={homeOutline} /></IonButton></div>
-            <div><IonButton fill='clear' routerLink='/profile'><IonIcon icon={person}/></IonButton></div>
-          </IonToolbar>
-        </IonHeader>
-      )}
-      <IonRouterOutlet id="main-content">
-        <Switch>
-          <Route exact path="/login" component={Login} />
-          <PrivateRoute exact path="/home" component={Home} />
-          <PrivateRoute exact path="/about" component={About} />
-          <PrivateRoute exact path="/sede" component={Sede} />
-          <PrivateRoute exact path="/profile" component={Profile} />
-          <PrivateRoute exact path="/change-password" component={ChangePassword} />
-          <PrivateRoute exact path="/request-talonario" component={RequestTalonario} />
-          <PrivateRoute exact path="/registroEventos" component={registroEventos} />
-          <PrivateRoute exact path="/registroComisiones" component={registroComisiones} />
-          <PrivateRoute exact path="/registroMateriales" component={registroMateriales} />
-          <PrivateRoute exact path="/registroActiviades" component={registroActividades} />
-          <PrivateRoute exact path="/asignacionStands" component={asignacionStands} />
-          <Route exact path="/registroAspirante" component={registroAspirante} />
-          <Route exact path="/solicitudPendiente" component={solicitudPendiente} />
-          <PrivateRoute exact path="/productosVoluntarios" component={productosVoluntarios} />
-          <Route exact path="/invitado" component={invitado} />
-          <PrivateRoute exact path="/productosVoluntarios" component={productosVoluntarios} />
-          <PrivateRoute exact path="/productosStands" component={productosStands} />
-          <PrivateRoute exact path="/recaudacionRifas" component={recaudacionRifas} />
-          <PrivateRoute exact path="/standVirtual" component={standVirtual} />
-          <PrivateRoute exact path="/notifications" component={Notifications} />
-          <PrivateRoute exact path="/situaciones" component={situaciones} />
-          <Route exact path="/">
-            <Redirect to="/login" />
-          </Route>
-          <Route path="*">
-            <Redirect to="/login" />
-          </Route>
-        </Switch>
-      </IonRouterOutlet>
+      <IonPage>
+        <IonContent>
+          <IonRouterOutlet id="main-content">
+            <Switch>
+              <Switch>
+                <Route exact path="/login" component={Login} />
+                <PrivateRoute exact path="/home" component={Home} />
+                <PrivateRoute exact path="/about" component={About} />
+                <PrivateRoute exact path="/sede" component={Sede} />
+                <PrivateRoute exact path="/profile" component={Profile} />
+                <PrivateRoute exact path="/change-password" component={ChangePassword} />
+                <PrivateRoute exact path="/request-talonario" component={RequestTalonario} />
+                <PrivateRoute exact path="/registroEventos" component={registroEventos} />
+                <PrivateRoute exact path="/registroComisiones" component={registroComisiones} />
+                <PrivateRoute exact path="/registroMateriales" component={registroMateriales} />
+                <PrivateRoute exact path="/registroActiviades" component={registroActividades} />
+                <PrivateRoute exact path="/asignacionStands" component={asignacionStands} />
+                <Route exact path="/registroAspirante" component={registroAspirante} />
+                <Route exact path="/solicitudPendiente" component={solicitudPendiente} />
+                <PrivateRoute exact path="/productosVoluntarios" component={productosVoluntarios} />
+                <Route exact path="/invitado" component={invitado} />
+                <PrivateRoute exact path="/productosVoluntarios" component={productosVoluntarios} />
+                <PrivateRoute exact path="/productosStands" component={productosStands} />
+                <PrivateRoute exact path="/recaudacionRifas" component={recaudacionRifas} />
+                <PrivateRoute exact path="/standVirtual" component={standVirtual} />
+                <PrivateRoute exact path="/notifications" component={Notifications} />
+                <PrivateRoute exact path="/situaciones" component={situaciones} />
+                <Route exact path="/">
+                  <Redirect to="/login" />
+                </Route>
+                <Route path="*">
+                  <Redirect to="/login" />
+                </Route>
+              </Switch>
+            </Switch>
+          </IonRouterOutlet>
+        </IonContent>
+        {!isLoginPage && !isInvitadoPage && !isRegistroAspirantePage && (
+          <IonFooter>
+            <IonToolbar style={{ backgroundColor: "#0274E5" }}>
+              <div slot="end">
+                <NotificationBell />
+              </div>
+              <div slot='start'><IonButton fill='clear' routerLink='/home'><IonIcon icon={homeOutline} /></IonButton></div>
+              <div><IonButton fill='clear' routerLink='/profile'><IonIcon icon={person} /></IonButton></div>
+            </IonToolbar>
+          </IonFooter>
+        )}
+      </IonPage>
 
       {/* Modal de Advertencia */}
       <IonModal isOpen={showModal} onDidDismiss={handleCloseModal}>
@@ -162,7 +167,7 @@ const MainContent: React.FC = () => {
 
 const Menu: React.FC = () => {
   const location = useLocation();
-  const noSidebarRoutes = ['/login', '/invitado', '/registroAspirante','/solicitudPendiente']; 
+  const noSidebarRoutes = ['/login', '/invitado', '/registroAspirante', '/solicitudPendiente'];
   const isNoSidebarPage = noSidebarRoutes.includes(location.pathname);
 
   const handleLogout = () => {
@@ -184,9 +189,9 @@ const Menu: React.FC = () => {
     window.location.href = '/login'; // Redirige a la página de login
   };
 
-  
+
   if (isNoSidebarPage) {
-    return null; 
+    return null;
   }
   return (
     <IonMenu contentId="main-content">
@@ -197,7 +202,7 @@ const Menu: React.FC = () => {
       </IonHeader>
       <IonContent>
         <IonList>
-          <IonItem routerLink="/home">Inicio</IonItem>
+          {/*<IonItem routerLink="/home">Inicio</IonItem>*/}
           <IonItem routerLink="/request-talonario">Solicitar Talonario</IonItem>
           <IonItem routerLink="/registroEventos">Registro a Eventos</IonItem>
           <IonItem routerLink="/asignacionStands">Registro a Stands</IonItem>
@@ -206,7 +211,7 @@ const Menu: React.FC = () => {
           <IonItem routerLink="/recaudacionRifas">Recaudación de Rifas</IonItem>
           <IonItem routerLink="/standVirtual">Stand Virtual</IonItem>
           <IonItem routerLink="/about">Acerca de</IonItem>
-          <IonItem routerLink="/profile">Perfil</IonItem>
+          {/*<IonItem routerLink="/profile">Perfil</IonItem>*/}
           <IonItem routerLink="/sede">Sede</IonItem>
           <IonItem routerLink="/situaciones">Situaciones</IonItem>
           <IonItem button onClick={handleLogout}>Cerrar sesión</IonItem>
