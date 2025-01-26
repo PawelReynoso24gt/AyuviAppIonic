@@ -30,7 +30,7 @@ import {
 import axios from "../services/axios"; // Instancia de Axios
 import { getInfoFromToken } from "../services/authService";
 import { Camera, CameraResultType, CameraSource } from "@capacitor/camera"; // Importa el plugin de Camera
-
+import '../theme/variables.css';
 interface Producto {
   idProducto: number;
   nombreProducto: string;
@@ -351,7 +351,7 @@ const recalculateTotals = (detalles: DetallesVenta[], donacion: number) => {
             <IonTitle style={{ color: "#000000" }}>Productos del Stand</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonContent>
+        <IonContent className="page-with-background">
           <div style={{ textAlign: "center", marginTop: "20px" }}>
             <IonSpinner name="crescent" style={{ color: "#0274E5" }} />
           </div>
@@ -368,9 +368,9 @@ const recalculateTotals = (detalles: DetallesVenta[], donacion: number) => {
             <IonTitle style={{ color: "#000000" }}>Productos del Stand</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonContent>
-          <div style={{ textAlign: "center", marginTop: "20px", color: "#0274E5" }}>
-            <p>No se encontraron productos asignados a los stands.</p>
+        <IonContent className="page-with-background">
+          <div style={{ textAlign: "center", marginTop: "100px", color: "#0274E5", fontSize: "20px" }}>
+            <p>No se encontraron productos asignados a este stand.</p>
           </div>
         </IonContent>
       </IonPage>
@@ -384,14 +384,21 @@ const recalculateTotals = (detalles: DetallesVenta[], donacion: number) => {
           <IonTitle style={{ color: "#000000" }}>Productos del Stand</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent style={{ backgroundColor: "#F0F8FF" }}>
-        <IonCard style={{ margin: "20px", boxShadow: "0 4px 8px rgba(115, 247, 194, 0.1)" }}>
-          <IonCardHeader style={{ backgroundColor: "#0274E5" }}>
-            <IonCardTitle style={{ color: "#FFFFFF" }}>
-                Ventas de {voluntario?.persona?.nombre || "Voluntario"}
-            </IonCardTitle>
-          </IonCardHeader>
-        </IonCard>
+      <IonContent className="page-with-background">
+      <div
+          style={{
+              padding: "20px",
+              textAlign: "center",
+              background: "linear-gradient(45deg, #0B75D9, #0B75D9",
+              borderRadius: "10px",
+              margin: "10px",
+              color: "white",
+          }}
+      >
+          <h2>Stand Virtual</h2>
+          <p>Puede ver los productos en existencia y elegir los que guste</p>
+          <p>Estos puede solicitarlos y donar su precio real (opcional)</p>
+      </div>
 
         {/* Botón Crear Venta */}
         <div style={{ textAlign: "center", margin: "20px" }}>
@@ -406,11 +413,11 @@ const recalculateTotals = (detalles: DetallesVenta[], donacion: number) => {
               handleOpenModal();
               }}
           >
-            Crear Venta
+            SOLICITAR
           </IonButton>
         </div>
 
-        <IonModal isOpen={showModal} onDidDismiss={handleCancel}>
+        <IonModal isOpen={showModal} onDidDismiss={handleCancel} style = {{borderRadius: "10px"}}>
         <IonHeader>
             <IonToolbar>
             <IonTitle style={{ fontWeight: "bold", fontSize: "20px" }}>Crear Venta</IonTitle>
@@ -421,7 +428,7 @@ const recalculateTotals = (detalles: DetallesVenta[], donacion: number) => {
         </IonHeader>
         <IonContent style={{ padding: "15px" }}>
         {/* Selección del Stand */}
-        <IonLabel style={{ fontSize: "18px", fontWeight: "bold", marginTop: "10px" }}>Seleccionar Stand</IonLabel>
+        <IonLabel style={{ fontSize: "18px", fontWeight: "bold", marginTop: "20px", marginLeft: "50px"}}>Seleccionar Stand</IonLabel>
         <IonSelect
             value={selectedStand?.idStand || ""}
             onIonChange={(e) => {
@@ -456,20 +463,20 @@ const recalculateTotals = (detalles: DetallesVenta[], donacion: number) => {
         {/* Sección de Totales */}
         <IonCard>
             <IonCardHeader>
-            <IonCardTitle style={{ textAlign: "center" }}>Detalles de Venta</IonCardTitle>
+            <IonCardTitle style={{ textAlign: "center", color: "white"}}>Detalles de Venta</IonCardTitle>
             </IonCardHeader>
             <IonCardContent>
             <IonGrid>
                 <IonRow>
-                <IonCol size="6"><strong>Subtotal:</strong></IonCol>
+                <IonCol size="6" style = {{color: "white"}}><strong>Subtotal:</strong></IonCol>
                 <IonCol size="6">Q{subtotal.toFixed(2)}</IonCol>
                 </IonRow>
                 <IonRow>
-                <IonCol size="6"><strong>Total Venta:</strong></IonCol>
+                <IonCol size="6" style = {{color: "white"}}><strong>Total Venta:</strong></IonCol>
                 <IonCol size="6">Q{totalAPagar.toFixed(2)}</IonCol>
                 </IonRow>
                 <IonRow>
-                <IonCol size="6"><strong>Donación:</strong></IonCol>
+                <IonCol size="6" style = {{color: "white"}}><strong>Donación:</strong></IonCol>
                 <IonCol size="6">
                     <IonInput
                     type="number"
@@ -486,13 +493,13 @@ const recalculateTotals = (detalles: DetallesVenta[], donacion: number) => {
         </IonCard>
 
         {/* Sección de Productos */}
-        <IonLabel style={{ fontSize: "18px", fontWeight: "bold", marginTop: "10px" }}>Productos</IonLabel>
+        <IonLabel style={{ fontSize: "18px", fontWeight: "bold", marginTop: "20px", marginLeft: "50px"}}>Productos</IonLabel>
         {detallesVenta.map((detalle, index) => (
             <IonCard key={index}>
             <IonCardContent>
                 <IonGrid>
                 <IonRow>
-                    <IonCol size="6"><strong>{detalle.nombreProducto}</strong></IonCol>
+                    <IonCol size="6" style = {{color: "white"}}><strong>{detalle.nombreProducto}</strong></IonCol>
                     <IonCol size="3">Q{detalle.precio}</IonCol>
                     <IonCol size="3">SubTotal: Q{detalle.subTotal.toFixed(2)}</IonCol>
                 </IonRow>
@@ -512,7 +519,7 @@ const recalculateTotals = (detalles: DetallesVenta[], donacion: number) => {
         ))}
 
         {/* Sección de Pagos */}
-        <IonLabel style={{ fontSize: "18px", fontWeight: "bold", marginTop: "10px" }}>Pagos</IonLabel>
+        <IonLabel style={{ fontSize: "18px", fontWeight: "bold", marginTop: "20px", marginLeft: "50px"}}>Pagos</IonLabel>
         {tiposPagos.map((pago, index) => (
             <IonCard key={index}>
             <IonCardContent>
@@ -567,26 +574,25 @@ const recalculateTotals = (detalles: DetallesVenta[], donacion: number) => {
             </IonCardContent>
             </IonCard>
         ))}
-        <IonButton expand="block" onClick={() => setTiposPagos([...tiposPagos, { idTipoPago: "", monto: 0, correlativo: "", imagenTransferencia: "", idProducto: "" }])}>
+        <div style={{ textAlign: "center"}}>
+        <IonButton className="custom-Blue-button" style={{marginBottom: "10px"}} onClick={() => setTiposPagos([...tiposPagos, { idTipoPago: "", monto: 0, correlativo: "", imagenTransferencia: "", idProducto: "" }])}>
             Agregar Pago
         </IonButton>
-
-        <IonFooter>
-            <IonButton expand="block" onClick={handleCreateVenta} style={{ marginTop: "20px" }}>Crear Venta</IonButton>
-            <IonButton expand="block" color="medium" onClick={handleCancel}>Cancelar</IonButton>
-        </IonFooter>
+        </div>
+        <div style={{ textAlign: "center", marginBottom: "20px" }}>
+            <IonButton className="custom-Blue-button" onClick={handleCreateVenta} style={{ marginTop: "20px" }}>Crear Venta</IonButton>
+            </div>
+            <div style={{ textAlign: "center", marginBottom: "20px" }}>
+            <IonButton className="custom-Blue-button" onClick={handleCancel}>Cancelar</IonButton>
+            </div>
         </IonContent>
         </IonModal>
 
-        <IonList style={{ backgroundColor: "#E0E7FF" }}>
-    {stands.flatMap((stand) => stand.detallesStands).slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((detalle: any) => (
+        <IonList>
+        {stands.flatMap((stand) => stand.detallesStands).slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((detalle: any) => (
         <IonItem
             key={detalle.producto.idProducto}
-            style={{
-                margin: "10px",
-                borderRadius: "10px",
-                boxShadow: "0 4px 8px rgba(99, 175, 233, 0.18)"
-            }}
+            style={{ margin: "30px", borderRadius: "10px", backgroundColor: "#D6EAF8" }}
         >
             <IonLabel>
                 <h2 style={{ color: "#0274E5" }}>{detalle.producto.nombreProducto}</h2>
@@ -614,7 +620,7 @@ const recalculateTotals = (detalles: DetallesVenta[], donacion: number) => {
 </IonList>
 
 {/* Botones de navegación */}
-<div style={{ textAlign: "center", marginTop: "20px" }}>
+<div style={{ textAlign: "center", marginBottom: "60px" }}>
     <IonButton onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>
         Anterior
     </IonButton>
