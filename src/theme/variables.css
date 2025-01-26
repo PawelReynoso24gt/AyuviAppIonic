@@ -30,6 +30,7 @@ http://ionicframework.com/docs/theming/ */
     background-size: cover;
     --ion-background-color: transparent; /* Opcional: Evita que el tema global sobrescriba */
   }
+  
 
   .dropDownColore {
     --color: '#FFFFFF';
@@ -79,6 +80,44 @@ http://ionicframework.com/docs/theming/ */
     color: white !important;
     font-weight: bold;
   }
+
+  /*para el de aspirantes los select*/
+  .custom-select {
+    --background: #f0f0f0; /* Fondo del select desplegable */
+    --color: #ffffff; /* Color del texto */
+  }
+  
+  .custom-select ion-select-option {
+    --ion-color-text: #ffffff; /* Color del texto en las opciones */
+    --ion-background-color: #6200ea; /* Fondo de las opciones */
+  }
+  
+  .custom-select .select-interface-option {
+    background-color: #6200ea; /* Fondo específico */
+    color: #ffffff; /* Color del texto */
+  }
+  
+  .custom-select .select-interface-option:hover {
+    background-color: #4b00c4; /* Fondo al pasar el mouse */
+  }
+
+ .custom-alert {
+  --background: #1E1E1E; /* Fondo del recuadro */
+  --color: #000000; /* Color del texto general */
+  --ion-color-primary: #6200ea; /* Cambia el color del texto de las opciones */
+  --ion-color-primary-contrast: #ffffff; /* Cambia el color del texto seleccionado */
+}
+
+.custom-alert .alert-radio-label {
+  color: #ffffff !important; /* Cambia este color al que desees */
+  font-size: 16px; /* Ajusta el tamaño de fuente si es necesario */
+}
+
+.custom-alert .alert-radio-checked .alert-radio-inner {
+  background: #007bff; /* Cambia el color del círculo seleccionado */
+}
+
+
 
   .custom-Blue-button {
     --background: linear-gradient(45deg, #0b3bd9, #0b3bd9) !important;

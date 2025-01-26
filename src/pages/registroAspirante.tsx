@@ -130,7 +130,7 @@ const Registro: React.FC = () => {
 
   return (
     <IonPage >
-      <IonHeader>
+      <IonHeader >
         <IonToolbar color="primary">
           <IonButton
             slot="start"
@@ -347,7 +347,7 @@ const Registro: React.FC = () => {
           />
         </IonItem>
 
-        <IonItem
+        <IonItem 
           style={{
             display: 'flex',
             justifyContent: 'center',
@@ -363,7 +363,10 @@ const Registro: React.FC = () => {
           <IonSelect
             value={formData.idDepartamento}
             placeholder="Seleccione su departamento"
-            onIonChange={(e) => handleDepartamentoChange(e.detail.value!)}    
+            onIonChange={(e) => handleDepartamentoChange(e.detail.value!)}  
+            interfaceOptions={{
+              cssClass: 'custom-alert', // Clase CSS selectItem
+            }}
           >
             {departamentos.map((departamento: any) => (
               <IonSelectOption  key={departamento.idDepartamento} value={departamento.idDepartamento}>
@@ -373,7 +376,7 @@ const Registro: React.FC = () => {
           </IonSelect>
         </IonItem>
 
-        <IonItem style={{
+        <IonItem  style={{
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
@@ -390,6 +393,9 @@ const Registro: React.FC = () => {
             placeholder="Seleccione su municipio"
             onIonChange={(e) => handleInputChange('idMunicipio', e.detail.value!)}
             disabled={!municipios.length} // Deshabilitar si no hay municipios disponibles
+            interfaceOptions={{
+              cssClass: 'custom-alert', // Clase CSS para selectItem
+            }}
           >
             {municipios.map((municipio: any) => (
               <IonSelectOption key={municipio.idMunicipio} value={municipio.idMunicipio}>
