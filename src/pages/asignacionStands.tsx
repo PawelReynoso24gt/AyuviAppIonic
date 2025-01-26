@@ -305,9 +305,11 @@ const AsignarStands: React.FC = () => {
                                     backgroundColor: "#D6EAF8",
                                     margin: "10px",
                                     borderRadius: "10px",
+                                    flexDirection: "column", 
+                                    alignItems: "flex-start", 
                                 }}
                             >
-                                <IonLabel style={{ padding: "10px" }}>
+                                <IonLabel style={{ padding: "10px",  }}>
                                     <h3 style={{ color: "#4B0082", fontWeight: "bold" }}>
                                         {stand.nombreStand}
                                     </h3>
@@ -316,11 +318,14 @@ const AsignarStands: React.FC = () => {
                                     </p>
                                     <p style={{ color: "#000080" }}>Dirección: {stand.direccion}</p>
                                 </IonLabel>
-                                {asignacionUsuario && asignacionUsuario.idStand === stand.idStand && (
-                                    <p style={{ color: "green" }}>
-                                        Ya estás asignado a este stand
-                                    </p>
-                                )}
+                                <div style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "flex-end", // Alinea elementos al final del eje horizontal (derecha)
+                                    justifyContent: "center", // Centra verticalmente
+                                    gap: "5px", // Espaciado entre el botón y el mensaje
+                                    }}>  
+                                                                  
                                 <IonButton
                                     slot="end"
                                     shape="round"
@@ -339,9 +344,15 @@ const AsignarStands: React.FC = () => {
                                     }}
                                 >
                                     {asignacionUsuario?.idStand === stand.idStand ? "Ver asignación" : "Asignarme"}
+                                    
                                 </IonButton>
 
-
+                                {asignacionUsuario && asignacionUsuario.idStand === stand.idStand && (
+                                    <p style={{ color: "green" , fontWeight: "bold", margin: 0 }}>
+                                        Ya estás asignado a este stand
+                                    </p>
+                                )}
+                                </div> 
                             </IonItem>
                         ))}
                     </IonList>
