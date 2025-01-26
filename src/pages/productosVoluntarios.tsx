@@ -459,6 +459,9 @@ const VoluntarioProductos: React.FC = () => {
                     <IonSelect
                         value={pago.idProducto}
                         onIonChange={(e) => handlePagoChange(index, 'idProducto', e.detail.value)}
+                        interfaceOptions={{
+                          cssClass: 'custom-alert', // Clase CSS selectItem
+                        }}
                         >
                         <IonSelectOption value="">Seleccionar Producto</IonSelectOption>
                         {detallesVenta
@@ -476,6 +479,9 @@ const VoluntarioProductos: React.FC = () => {
                         <IonSelect
                         value={pago.idTipoPago}
                         onIonChange={(e) => handlePagoChange(index, 'idTipoPago', e.detail.value)}
+                        interfaceOptions={{
+                          cssClass: 'custom-alert', // Clase CSS selectItem
+                        }}
                         >
                         {tiposPagosOptions.map((tipo) => (
                             <IonSelectOption key={tipo.idTipoPago} value={tipo.idTipoPago}>

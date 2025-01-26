@@ -381,7 +381,7 @@ const currentRifas = rifas.slice((currentPage - 1) * itemsPerPage, currentPage *
         </IonHeader>
         <IonContent>
             <IonItem>
-            <IonLabel position="stacked">Cantidad de Boletos</IonLabel>
+            <IonLabel position="stacked" style={{ fontSize: "18px", fontWeight: "bold", marginTop: "20px", marginLeft: "20px"}}>Cantidad de Boletos</IonLabel>
             <IonInput
                 type="number"
                 value={boletosVendidos}
@@ -394,13 +394,13 @@ const currentRifas = rifas.slice((currentPage - 1) * itemsPerPage, currentPage *
 
             {/* Mostrar el total de la venta */}
             <IonItem>
-            <IonLabel>Total a Pagar: </IonLabel>
+            <IonLabel position="stacked" style={{ fontSize: "18px", fontWeight: "bold", marginTop: "20px", marginLeft: "20px"}}>Total a Pagar: </IonLabel>
             <IonInput readonly value={`Q${(totalVenta || 0).toFixed(2)}`} />
             </IonItem>
 
 
             {/* Sección de Pagos */}
-            <IonLabel style={{ fontSize: "18px", fontWeight: "bold", marginTop: "10px" }}>Pagos</IonLabel>
+            <IonLabel style={{ fontSize: "18px", fontWeight: "bold", marginTop: "20px", marginLeft: "50px"}}>Pagos</IonLabel>
             {tiposPagos.map((pago, index) => (
             <IonCard key={index}>
                 <IonCardContent>
@@ -411,6 +411,9 @@ const currentRifas = rifas.slice((currentPage - 1) * itemsPerPage, currentPage *
                         <IonSelect
                         value={pago.idTipoPago}
                         onIonChange={(e) => handlePagoChange(index, 'idTipoPago', e.detail.value)}
+                        interfaceOptions={{
+                          cssClass: 'custom-alert', // Clase CSS para selectItem
+                        }}
                         >
                         {tiposPagosOptions.map((tipo) => (
                             <IonSelectOption key={tipo.idTipoPago} value={tipo.idTipoPago}>

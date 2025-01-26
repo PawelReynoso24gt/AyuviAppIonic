@@ -444,6 +444,7 @@ const VoluntarioProductos: React.FC = () => {
             <IonLabel style={{ fontSize: "18px", fontWeight: "bold", marginTop: "20px", marginLeft: "50px"}}>Seleccionar Stand</IonLabel>
             <IonSelect
                 value={selectedStand?.idStand || ""}
+                placeholder="Seleccione el stand"
                 onIonChange={(e) => {
                     const standId = e.detail.value;
                     const stand = stands.find((s) => s.idStand === standId);
@@ -466,6 +467,10 @@ const VoluntarioProductos: React.FC = () => {
                       setDetallesVenta([]); // Restablecer los detalles de la venta si no hay stand seleccionado
                     }
                 }}
+                interfaceOptions={{
+                  cssClass: 'custom-alert', // Clase CSS selectItem
+                }}
+                style={{ width: "90%", marginLeft: "50px" }}
             >
                 {stands.map((stand) => (
                     <IonSelectOption key={stand.idStand} value={stand.idStand}>
@@ -537,6 +542,9 @@ const VoluntarioProductos: React.FC = () => {
                     <IonSelect
                         value={pago.idProducto}
                         onIonChange={(e) => handlePagoChange(index, 'idProducto', e.detail.value)}
+                        interfaceOptions={{
+                          cssClass: 'custom-alert', // Clase CSS selectItem
+                        }}
                         >
                         <IonSelectOption value="">Seleccionar Producto</IonSelectOption>
                         {detallesVenta
@@ -554,6 +562,9 @@ const VoluntarioProductos: React.FC = () => {
                         <IonSelect
                         value={pago.idTipoPago}
                         onIonChange={(e) => handlePagoChange(index, 'idTipoPago', e.detail.value)}
+                        interfaceOptions={{
+                          cssClass: 'custom-alert', // Clase CSS selectItem
+                        }}
                         >
                         {tiposPagosOptions.map((tipo) => (
                             <IonSelectOption key={tipo.idTipoPago} value={tipo.idTipoPago}>

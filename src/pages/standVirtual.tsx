@@ -431,6 +431,7 @@ const recalculateTotals = (detalles: DetallesVenta[], donacion: number) => {
         <IonLabel style={{ fontSize: "18px", fontWeight: "bold", marginTop: "20px", marginLeft: "50px"}}>Seleccionar Stand</IonLabel>
         <IonSelect
             value={selectedStand?.idStand || ""}
+            placeholder="Seleccione el stand"
             onIonChange={(e) => {
             const standId = e.detail.value;
             const stand = stands.find((s) => s.idStand === standId);
@@ -453,6 +454,10 @@ const recalculateTotals = (detalles: DetallesVenta[], donacion: number) => {
                 setDetallesVenta([]);
             }
             }}
+            interfaceOptions={{
+              cssClass: 'custom-alert', // Clase CSS selectItem
+            }}
+            style={{ width: "90%", marginLeft: "50px" }}
         >
             {stands.map((stand) => (
             <IonSelectOption key={stand.idStand} value={stand.idStand}>
@@ -528,6 +533,9 @@ const recalculateTotals = (detalles: DetallesVenta[], donacion: number) => {
                     <IonSelect
                     value={pago.idProducto}
                     onIonChange={(e) => handlePagoChange(index, 'idProducto', e.detail.value)}
+                    interfaceOptions={{
+                      cssClass: 'custom-alert', // Clase CSS selectItem
+                    }}
                     >
                     <IonSelectOption value="">Seleccionar Producto</IonSelectOption>
                     {detallesVenta
