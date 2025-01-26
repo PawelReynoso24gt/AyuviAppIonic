@@ -21,6 +21,8 @@ import {
 } from "@ionic/react";
 import axios from "../services/axios";
 import { getInfoFromToken } from "../services/authService";
+import { parse, format } from "date-fns";
+
 
 const Situaciones: React.FC = () => {
     const [situaciones, setSituaciones] = useState<any[]>([]);
@@ -36,6 +38,19 @@ const Situaciones: React.FC = () => {
 
     const userInfo = getInfoFromToken();
     const idUsuario = userInfo?.idUsuario;
+
+    const rawDate = "28/12/2024 16:22:23"; // Tu entrada
+    const parsedDate = parse(rawDate, "dd/MM/yyyy HH:mm:ss", new Date());
+    const formattedDate = format(parsedDate, "dd/MM/yyyy hh:mm a"); // Salida formateada
+
+    const [selectedEstado, setSelectedEstado] = useState<string>("");
+
+    const filteredSituaciones = selectedEstado
+        ? situaciones.filter((situacion) => situacion.estado === selectedEstado)
+        : situaciones;
+
+
+
 
     const fetchSituaciones = async () => {
         setLoading(true);
@@ -54,6 +69,7 @@ const Situaciones: React.FC = () => {
         try {
             const response = await axios.get("/tipo_situaciones/activos");
             setTipoSituaciones(response.data);
+            console.log("Datos de situaciones:", response.data);
         } catch (error) {
             console.error("Error fetching tipos:", error);
             setToastMessage("Error al cargar los tipos de situaciones.");
@@ -63,16 +79,16 @@ const Situaciones: React.FC = () => {
     // * bitacora
     const logBitacora = async (descripcion: string, idCategoriaBitacora: number) => {
         const bitacoraData = {
-        descripcion,
-        idCategoriaBitacora,
-        idUsuario,
-        fechaHora: new Date().toISOString()
+            descripcion,
+            idCategoriaBitacora,
+            idUsuario,
+            fechaHora: new Date().toISOString()
         };
-    
+
         try {
-        await axios.post("/bitacora/create", bitacoraData);
+            await axios.post("/bitacora/create", bitacoraData);
         } catch (error) {
-        console.error("Error logging bitacora:", error);
+            console.error("Error logging bitacora:", error);
         }
     };
 
@@ -141,19 +157,60 @@ const Situaciones: React.FC = () => {
     return (
         <IonPage>
             <IonHeader>
-                <IonToolbar>
-                    <IonTitle>Mis Situaciones</IonTitle>
+                <IonToolbar style={{ backgroundColor: "#4B0082" }}>
+                    <IonTitle style={{ color: "#FFFFFF" }}>Mis Situaciones</IonTitle>
                 </IonToolbar>
+
             </IonHeader>
-            <IonContent>
+            <div
+                style={{
+                    padding: "20px",
+                    textAlign: "center",
+                    background: " #800080",
+                    borderRadius: "10px",
+                    margin: "10px",
+                    color: "white",
+                }}
+            >
+                <h2>Gestión de Situaciones</h2>
+                <p>Visualiza y gestiona tus situaciones reportadas.</p>
+            </div>
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "20px",  textAlign: "center" }}>
+                <IonSelect
+                    placeholder="Filtrar por estado"
+                    value={selectedEstado}
+                    onIonChange={(e) => setSelectedEstado(e.detail.value)}
+                    style={{
+                        width: "60%",
+                        maxWidth: "400px",
+                        backgroundColor: "white",
+                        borderRadius: "10px",
+                        color: "#4B0082",
+                        fontWeight: "bold",
+                        textAlign: "center",
+                    }}
+                       className="custom-ion-select"
+                >
+                    <IonSelectOption className="custom-ion-select" value="">Todos los estados</IonSelectOption>
+                    <IonSelectOption className="custom-ion-select"  value="Reportada">Reportada</IonSelectOption>
+                    <IonSelectOption className="custom-ion-select" value="Procesada">Procesada</IonSelectOption>
+                    <IonSelectOption className="custom-ion-select"  value="Resuelta">Resuelta</IonSelectOption>
+                    <IonSelectOption className="custom-ion-select"  value="Sin Solución">Sin Solución</IonSelectOption>
+                </IonSelect>
+            </div>
+
+
+            <IonContent className="page-with-background">
                 <IonButton
                     expand="block"
                     onClick={() => setShowModal(true)}
+                    className="custom-purple-button"
                     style={{
-                        margin: "20px",
-                        backgroundColor: "#4CAF50",
+                        margin: "20px auto",
+                        backgroundColor: "#800080",
                         color: "white",
                         fontWeight: "bold",
+                        width: "50%",
                     }}
                 >
                     Crear Nueva Situación
@@ -165,125 +222,88 @@ const Situaciones: React.FC = () => {
                     <>
                         {/* Situaciones Reportadas */}
                         <IonList>
-                            <IonLabel style={{ padding: "10px", fontWeight: "bold", fontSize: "1.2rem" }}>
-                                Situaciones Reportadas
+                            <IonLabel style={{ padding: "10px", fontWeight: "bold", fontSize: "30px" }}>
+                                Situaciones:
                             </IonLabel>
-                            {situacionesReportadas.length > 0 ? (
-                                situacionesReportadas.map((situacion) => (
-                                    <IonCard key={situacion.idSituacion}>
+                            {filteredSituaciones.length > 0 ? (
+                                filteredSituaciones.map((situacion) => (
+                                    <IonCard
+                                        key={situacion.idSituacion}
+                                        style={{
+                                            backgroundColor: "#F0F8FF",
+                                            margin: "10px",
+                                            borderRadius: "10px",
+                                        }}
+                                    >
                                         <IonCardHeader>
-                                            <IonCardTitle>{situacion.tipo_situacione.tipoSituacion}</IonCardTitle>
-                                            <p style={{ fontSize: "0.9rem", color: "gray" }}>
-                                                Estado: {situacion.estado} | Fecha: {situacion.fechaOcurrencia}
-                                            </p>
-                                        </IonCardHeader>
-                                        <IonCardContent>
-                                            <p>{situacion.descripcion}</p>
-                                            <IonButton
-                                                onClick={() => setSelectedSituacion(situacion)}
-                                                style={{ marginTop: "10px" }}
+                                            <IonCardTitle
+                                                style={{
+                                                    color: "#4B0082",
+                                                    fontWeight: "bold",
+                                                    fontSize: "20px",
+                                                }}
                                             >
-                                                Editar
-                                            </IonButton>
+                                                {situacion.tipo_situacione.tipoSituacion}
+                                            </IonCardTitle>
+                                        </IonCardHeader>
+                                        <IonCardContent>
+                                            <p style={{ fontSize: "20px", color: "gray" }}>
+                                                Estado: {situacion.estado} | Fecha:{" "}
+                                                {situacion.fechaOcurrencia
+                                                    ? format(
+                                                        parse(
+                                                            situacion.fechaOcurrencia,
+                                                            "dd/MM/yyyy HH:mm:ss",
+                                                            new Date()
+                                                        ),
+                                                        "dd/MM/yyyy hh:mm a"
+                                                    )
+                                                    : "Fecha no disponible"}
+                                            </p>
+                                            <p style={{ fontSize: "20px", color: "gray" }}>{situacion.descripcion}</p>
+
+                                            {situacion.estado === "Reportada" ? (
+                                                <IonButton
+                                                    onClick={() => setSelectedSituacion(situacion)}
+                                                    className="custom-purple-button"
+                                                    style={{
+                                                        marginTop: "10px",
+                                                        backgroundColor: "#800080",
+                                                    }}
+                                                >
+                                                    Editar
+                                                </IonButton>
+                                            ) : (
+                                                <>
+                                                    <p>
+                                                        <strong style={{ fontSize: "20px", color: "gray" }}>
+                                                            Respuesta:
+                                                        </strong>{" "}
+                                                        <span style={{ fontSize: "20px", color: "gray" }}>
+                                                            {situacion.respuesta || "N/A"}
+                                                        </span>
+                                                    </p>
+                                                    <p>
+                                                        <strong style={{ fontSize: "20px", color: "gray" }}>
+                                                            Observaciones:
+                                                        </strong>{" "}
+                                                        <span style={{ fontSize: "20px", color: "gray" }}>
+                                                            {situacion.observaciones || "N/A"}
+                                                        </span>
+                                                    </p>
+                                                </>
+                                            )}
                                         </IonCardContent>
                                     </IonCard>
                                 ))
                             ) : (
-                                <IonLabel style={{ padding: "10px", color: "gray" }}>
-                                    No hay situaciones reportadas.
+                                <IonLabel style={{ padding: "10px", fontWeight: "bold", fontSize: "20px", color: "white" }}>
+                                    No hay situaciones.
                                 </IonLabel>
                             )}
                         </IonList>
 
-                        {/* Situaciones Procesadas */}
-                        <IonList>
-                            <IonLabel style={{ padding: "10px", fontWeight: "bold", fontSize: "1.2rem" }}>
-                                Situaciones Procesadas
-                            </IonLabel>
-                            {situacionesProcesadas.length > 0 ? (
-                                situacionesProcesadas.map((situacion) => (
-                                    <IonCard key={situacion.idSituacion}>
-                                        <IonCardHeader>
-                                            <IonCardTitle>{situacion.tipo_situacione.tipoSituacion}</IonCardTitle>
-                                            <p style={{ fontSize: "0.9rem", color: "gray" }}>
-                                                Estado: {situacion.estado} | Fecha: {situacion.fechaOcurrencia}
-                                            </p>
-                                        </IonCardHeader>
-                                        <IonCardContent>
-                                            <p>{situacion.descripcion}</p>
-                                            <p>
-                                                <strong>Respuesta:</strong> {situacion.respuesta || "N/A"}
-                                            </p>
-                                            <p>
-                                                <strong>Observaciones:</strong> {situacion.observaciones || "N/A"}
-                                            </p>
-                                        </IonCardContent>
-                                    </IonCard>
-                                ))
-                            ) : (
-                                <IonLabel style={{ padding: "10px", color: "gray" }}>
-                                    No hay situaciones procesadas.
-                                </IonLabel>
-                            )}
-                        </IonList>
 
-                        {/* Situaciones Resueltas */}
-                        <IonList>
-                            <IonLabel style={{ padding: "10px", fontWeight: "bold", fontSize: "1.2rem" }}>
-                                Situaciones Resueltas
-                            </IonLabel>
-                            {situacionesResueltas.length > 0 ? (
-                                situacionesResueltas.map((situacion) => (
-                                    <IonCard key={situacion.idSituacion}>
-                                        <IonCardHeader>
-                                            <IonCardTitle>{situacion.tipo_situacione.tipoSituacion}</IonCardTitle>
-                                            <p style={{ fontSize: "0.9rem", color: "gray" }}>
-                                                Estado: {situacion.estado} | Fecha: {situacion.fechaOcurrencia}
-                                            </p>
-                                        </IonCardHeader>
-                                        <IonCardContent>
-                                            <p>{situacion.descripcion}</p>
-                                            <p>
-                                                <strong>Respuesta:</strong> {situacion.respuesta}
-                                            </p>
-                                        </IonCardContent>
-                                    </IonCard>
-                                ))
-                            ) : (
-                                <IonLabel style={{ padding: "10px", color: "gray" }}>
-                                    No hay situaciones resueltas.
-                                </IonLabel>
-                            )}
-                        </IonList>
-
-                        {/* Situaciones Sin Solución */}
-                        <IonList>
-                            <IonLabel style={{ padding: "10px", fontWeight: "bold", fontSize: "1.2rem" }}>
-                                Situaciones Sin Solución
-                            </IonLabel>
-                            {situacionesSinSolucion.length > 0 ? (
-                                situacionesSinSolucion.map((situacion) => (
-                                    <IonCard key={situacion.idSituacion}>
-                                        <IonCardHeader>
-                                            <IonCardTitle>{situacion.tipo_situacione.tipoSituacion}</IonCardTitle>
-                                            <p style={{ fontSize: "0.9rem", color: "gray" }}>
-                                                Estado: {situacion.estado} | Fecha: {situacion.fechaOcurrencia}
-                                            </p>
-                                        </IonCardHeader>
-                                        <IonCardContent>
-                                            <p>{situacion.descripcion}</p>
-                                            <p>
-                                                <strong>Observaciones:</strong> {situacion.observaciones}
-                                            </p>
-                                        </IonCardContent>
-                                    </IonCard>
-                                ))
-                            ) : (
-                                <IonLabel style={{ padding: "10px", color: "gray" }}>
-                                    No hay situaciones sin solución.
-                                </IonLabel>
-                            )}
-                        </IonList>
                     </>
                 )}
 
@@ -317,10 +337,10 @@ const Situaciones: React.FC = () => {
                                 }))
                             }
                         />
-                        <IonButton expand="block" onClick={handleCreateSituacion}>
+                        <IonButton expand="block" onClick={handleCreateSituacion} style={{ marginTop: "20px", color: "white" }} className="custom-purple-button">
                             Guardar
                         </IonButton>
-                        <IonButton expand="block" color="danger" onClick={() => setShowModal(false)}>
+                        <IonButton expand="block" color="danger" onClick={() => setShowModal(false)} style={{ marginTop: "10px" }} className="custom-red-button">
                             Cancelar
                         </IonButton>
                     </div>
@@ -351,13 +371,14 @@ const Situaciones: React.FC = () => {
                                         selectedSituacion.descripcion
                                     )
                                 }
-                            >
+                                className="custom-purple-button" >
                                 Guardar
                             </IonButton>
                             <IonButton
                                 expand="block"
                                 color="danger"
                                 onClick={() => setSelectedSituacion(null)}
+                                className="custom-red-button"
                             >
                                 Cancelar
                             </IonButton>
