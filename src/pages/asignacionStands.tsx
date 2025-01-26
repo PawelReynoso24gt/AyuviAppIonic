@@ -23,6 +23,7 @@ import { useHistory } from "react-router-dom";
 import axios from "../services/axios";
 import { getInfoFromToken } from "../services/authService";
 import { format } from "date-fns";
+import '../theme/variables.css';
 
 
 interface Stand {
@@ -276,12 +277,12 @@ const AsignarStands: React.FC = () => {
                     <IonTitle style={{ color: "#FFFFFF" }}>Asignación a Stands</IonTitle>
                 </IonToolbar>
             </IonHeader>
-            <IonContent style={{ backgroundColor: "#F0F8FF" }}>
+            <IonContent className="page-with-background">
                 <div
                     style={{
                         padding: "20px",
                         textAlign: "center",
-                        background: "linear-gradient(45deg, #A6BC09, #A6BC09)",
+                        background: "linear-gradient(45deg, #f36b00, #f36b00)",
                         borderRadius: "10px",
                         margin: "10px",
                         color: "white",
@@ -322,7 +323,9 @@ const AsignarStands: React.FC = () => {
                                 )}
                                 <IonButton
                                     slot="end"
-                                    color="tertiary"
+                                    shape="round"
+                                    size="small"
+                                    className="custom-orange-button"
                                     onClick={() => {
                                         setSelectedStand(stand);
                                         fetchHorarios(stand.idStand);
@@ -344,8 +347,10 @@ const AsignarStands: React.FC = () => {
                     </IonList>
                 )}
 
-                <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)}>
-                    <div style={{ padding: "20px", borderRadius: "15px" }}>
+                <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)} style={{
+                    "--border-radius": "15px",
+                }}>
+                    <div style={{ padding: "20px"}}>
                         <h3 style={{ marginBottom: "15px" }}>Seleccionar Horario</h3>
                         <IonRadioGroup
                             value={selectedHorario}
@@ -396,19 +401,23 @@ const AsignarStands: React.FC = () => {
                         <IonButton
                             expand="block"
                             fill="outline"
+                            className="custom-orange-button"
                             onClick={() => setSelectedHorario(null)}
-                            style={{ marginTop: "10px" }}
+                            style={{ marginTop: "10px", width: "50%", margin: "10px auto" }}
                         >
                             Deseleccionar Horario
                         </IonButton>
                         <IonButton
                             expand="block"
+                            className="custom-orange-button"
                             onClick={handleAsignacion}
                             disabled={selectedHorario === null} // Botón habilitado solo si hay horario seleccionado
                             style={{
-                                marginTop: "20px",
-                                backgroundColor: selectedHorario !== null ? "#4caf50" : "#9e9e9e",
+                                marginTop: "25px",
+                                margin: "10px auto",
+                                backgroundColor: selectedHorario !== null ? "#1f1f1f" : "#9e9e9e",
                                 color: "white",
+                                width: "50%",
                             }}
                         >
                             Confirmar Asignación
@@ -417,16 +426,19 @@ const AsignarStands: React.FC = () => {
                         <IonButton
                             expand="block"
                             fill="outline"
+                            className="custom-orange-button"
                             onClick={() => setShowModal(false)}
-                            style={{ marginTop: "10px" }}
+                            style={{ marginTop: "10px", width: "50%", margin: "10px auto" }}
                         >
                             Cancelar
                         </IonButton>
                     </div>
                 </IonModal>
 
-                <IonModal isOpen={showEditModal} onDidDismiss={() => setShowEditModal(false)}>
-                    <div style={{ padding: "20px", borderRadius: "15px" }}>
+                <IonModal isOpen={showEditModal} onDidDismiss={() => setShowEditModal(false)} style={{
+                    "--border-radius": "15px",
+                }}>
+                    <div style={{ padding: "20px" }}>
                         <h3>Editar Asignación</h3>
                         {selectedStand && asignacionUsuario && (
                             <>
@@ -485,23 +497,24 @@ const AsignarStands: React.FC = () => {
 
                         <IonButton
                             expand="block"
+                            className="custom-orange-button"
                             onClick={handleUpdateHorario}
                             disabled={selectedHorario === null || selectedHorario === asignacionUsuario?.idDetalleHorario}
-                            style={{ marginTop: "10px" }}
+                            style={{ marginTop: "10px", width: "50%", margin: "10px auto" }}
                         >
                             Actualizar Horario
                         </IonButton>
 
                         <IonButton
                             expand="block"
-                            color="danger"
+                            className="custom-orange-button"
                             onClick={handleDesasignacion}
-                            style={{ marginTop: "10px" }}
+                            style={{ marginTop: "10px", width: "50%", margin: "10px auto" }}
                         >
                             Desasignarme
                         </IonButton>
 
-                        <IonButton expand="block" fill="outline" onClick={() => setShowEditModal(false)} style={{ marginTop: "10px" }}>
+                        <IonButton expand="block" fill="outline" className="custom-orange-button" onClick={() => setShowEditModal(false)} style={{ marginTop: "10px", width: "50%", margin: "10px auto" }}>
                             Cancelar
                         </IonButton>
                     </div>

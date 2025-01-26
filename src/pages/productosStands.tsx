@@ -30,7 +30,7 @@ import {
 import axios from "../services/axios"; // Instancia de Axios
 import { getInfoFromToken } from "../services/authService";
 import { Camera, CameraResultType, CameraSource } from "@capacitor/camera"; // Importa el plugin de Camera
-
+import '../theme/variables.css';
 interface Producto {
   idProducto: number;
   nombreProducto: string;
@@ -365,7 +365,7 @@ const VoluntarioProductos: React.FC = () => {
             <IonTitle style={{ color: "#000000" }}>Productos del Stand</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonContent>
+        <IonContent className="page-with-background">
           <div style={{ textAlign: "center", marginTop: "20px" }}>
             <IonSpinner name="crescent" style={{ color: "#0274E5" }} />
           </div>
@@ -382,8 +382,8 @@ const VoluntarioProductos: React.FC = () => {
             <IonTitle style={{ color: "#000000" }}>Productos del Stand</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonContent>
-          <div style={{ textAlign: "center", marginTop: "20px", color: "#0274E5" }}>
+        <IonContent className="page-with-background">
+        <div style={{ textAlign: "center", marginTop: "100px", color: "#0274E5", fontSize: "20px" }}>
             <p>No se encontraron productos asignados a los stands.</p>
           </div>
         </IonContent>
@@ -398,14 +398,20 @@ const VoluntarioProductos: React.FC = () => {
           <IonTitle style={{ color: "#000000" }}>Productos del Stand</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent style={{ backgroundColor: "#F0F8FF" }}>
-        <IonCard style={{ margin: "20px", boxShadow: "0 4px 8px rgba(115, 247, 194, 0.1)" }}>
-          <IonCardHeader style={{ backgroundColor: "#0274E5" }}>
-            <IonCardTitle style={{ color: "#FFFFFF" }}>
-                Ventas de {voluntario?.persona?.nombre || "Voluntario"}
-            </IonCardTitle>
-          </IonCardHeader>
-        </IonCard>
+      <IonContent className="page-with-background">
+        <div
+            style={{
+                padding: "20px",
+                textAlign: "center",
+                background: "linear-gradient(45deg, #0B75D9, #0B75D9",
+                borderRadius: "10px",
+                margin: "10px",
+                color: "white",
+            }}
+        >
+            <h2>Stand de Venta</h2>
+            <p>Puede ver los productos en existencia de los stands a los que está asigando</p>
+        </div>
 
         {/* Botón Crear Venta */}
         <div style={{ textAlign: "center", margin: "20px" }}>
@@ -424,7 +430,7 @@ const VoluntarioProductos: React.FC = () => {
           </IonButton>
         </div>
 
-        <IonModal isOpen={showModal} onDidDismiss={handleCancel}>
+        <IonModal isOpen={showModal} onDidDismiss={handleCancel} style = {{borderRadius: "10px"}}>
         <IonHeader>
             <IonToolbar>
             <IonTitle style={{ fontWeight: "bold", fontSize: "20px" }}>Crear Venta</IonTitle>
@@ -434,10 +440,11 @@ const VoluntarioProductos: React.FC = () => {
             </IonToolbar>
         </IonHeader>
         <IonContent style={{ padding: "15px" }}>
-            {/* Selección del Stand */}
-            <IonLabel style={{ fontSize: "18px", fontWeight: "bold", marginTop: "10px" }}>Seleccionar Stand</IonLabel>
+            {/* Selección del Stand */}I
+            <IonLabel style={{ fontSize: "18px", fontWeight: "bold", marginTop: "20px", marginLeft: "50px"}}>Seleccionar Stand</IonLabel>
             <IonSelect
                 value={selectedStand?.idStand || ""}
+                placeholder="Seleccione el stand"
                 onIonChange={(e) => {
                     const standId = e.detail.value;
                     const stand = stands.find((s) => s.idStand === standId);
@@ -460,6 +467,10 @@ const VoluntarioProductos: React.FC = () => {
                       setDetallesVenta([]); // Restablecer los detalles de la venta si no hay stand seleccionado
                     }
                 }}
+                interfaceOptions={{
+                  cssClass: 'custom-alert', // Clase CSS selectItem
+                }}
+                style={{ width: "90%", marginLeft: "50px" }}
             >
                 {stands.map((stand) => (
                     <IonSelectOption key={stand.idStand} value={stand.idStand}>
@@ -470,16 +481,16 @@ const VoluntarioProductos: React.FC = () => {
             {/* Sección de Totales */}
             <IonCard>
             <IonCardHeader>
-                <IonCardTitle style={{ textAlign: "center" }}>Detalles de Venta</IonCardTitle>
+            <IonCardTitle style={{ textAlign: "center", color: "white"}}>Detalles de Venta</IonCardTitle>
             </IonCardHeader>
             <IonCardContent>
                 <IonGrid>
                 <IonRow>
-                    <IonCol size="6"><strong>Total Venta:</strong></IonCol>
+                    <IonCol size="6" style = {{color: "white"}}><strong>Total Venta:</strong></IonCol>
                     <IonCol size="6">Q{totalAPagar.toFixed(2)}</IonCol>
                 </IonRow>
                 <IonRow>
-                    <IonCol size="6"><strong>Donación:</strong></IonCol>
+                    <IonCol size="6" style = {{color: "white"}}><strong>Donación:</strong></IonCol>
                     <IonCol size="6">
                     <IonInput
                         type="number"
@@ -496,13 +507,13 @@ const VoluntarioProductos: React.FC = () => {
             </IonCard>
 
             {/* Sección de Productos */}
-            <IonLabel style={{ fontSize: "18px", fontWeight: "bold", marginTop: "10px" }}>Productos</IonLabel>
+            <IonLabel style={{ fontSize: "18px", fontWeight: "bold", marginTop: "20px", marginLeft: "50px"}}>Productos</IonLabel>
             {detallesVenta.map((detalle, index) => (
             <IonCard key={index}>
                 <IonCardContent>
                 <IonGrid>
                     <IonRow>
-                    <IonCol size="6"><strong>{detalle.nombreProducto}</strong></IonCol>
+                    <IonCol size="6" style = {{color: "white"}}><strong>{detalle.nombreProducto}</strong></IonCol>
                     <IonCol size="3">Q{detalle.precio}</IonCol>
                     <IonCol size="3">SubTotal: Q{detalle.subTotal.toFixed(2)}</IonCol>
                     </IonRow>
@@ -522,7 +533,7 @@ const VoluntarioProductos: React.FC = () => {
             ))}
 
             {/* Sección de Pagos */}
-            <IonLabel style={{ fontSize: "18px", fontWeight: "bold", marginTop: "10px" }}>Pagos</IonLabel>
+            <IonLabel style={{ fontSize: "18px", fontWeight: "bold", marginTop: "20px", marginLeft: "50px"}}>Pagos</IonLabel>
             {tiposPagos.map((pago, index) => (
             <IonCard key={index}>
                 <IonCardContent>
@@ -531,6 +542,9 @@ const VoluntarioProductos: React.FC = () => {
                     <IonSelect
                         value={pago.idProducto}
                         onIonChange={(e) => handlePagoChange(index, 'idProducto', e.detail.value)}
+                        interfaceOptions={{
+                          cssClass: 'custom-alert', // Clase CSS selectItem
+                        }}
                         >
                         <IonSelectOption value="">Seleccionar Producto</IonSelectOption>
                         {detallesVenta
@@ -548,6 +562,9 @@ const VoluntarioProductos: React.FC = () => {
                         <IonSelect
                         value={pago.idTipoPago}
                         onIonChange={(e) => handlePagoChange(index, 'idTipoPago', e.detail.value)}
+                        interfaceOptions={{
+                          cssClass: 'custom-alert', // Clase CSS selectItem
+                        }}
                         >
                         {tiposPagosOptions.map((tipo) => (
                             <IonSelectOption key={tipo.idTipoPago} value={tipo.idTipoPago}>
@@ -588,14 +605,17 @@ const VoluntarioProductos: React.FC = () => {
                 </IonCardContent>
             </IonCard>
             ))}
-            <IonButton expand="block" onClick={() => setTiposPagos([...tiposPagos, { idTipoPago: "", monto: 0, correlativo: "", imagenTransferencia: "", idProducto: "" }])}>
+            <div style={{ textAlign: "center"}}>
+            <IonButton className="custom-Blue-button" onClick={() => setTiposPagos([...tiposPagos, { idTipoPago: "", monto: 0, correlativo: "", imagenTransferencia: "", idProducto: "" }])}>
             Agregar Pago
             </IonButton>
-
-            <IonFooter>
-            <IonButton expand="block" onClick={handleCreateVenta} style={{ marginTop: "20px" }}>Crear Venta</IonButton>
-            <IonButton expand="block" color="medium" onClick={handleCancel}>Cancelar</IonButton>
-            </IonFooter>
+            </div>
+            <div style={{ textAlign: "center", marginBottom: "20px" }}>
+            <IonButton className="custom-Blue-button" onClick={handleCreateVenta} style={{ marginTop: "20px" }}>Crear Venta</IonButton>
+            </div>
+            <div style={{ textAlign: "center", marginBottom: "20px" }}>
+            <IonButton className="custom-Blue-button" onClick={handleCancel}>Cancelar</IonButton>
+            </div>
         </IonContent>
         </IonModal>
 
@@ -614,26 +634,22 @@ const VoluntarioProductos: React.FC = () => {
                         color: "#000000",
                         marginBottom: "10px",
                         borderRadius: "10px",
-                        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
                     }}
                     >
-                    <IonLabel style={{ color: "#FFFFFF", fontSize: "20px", fontWeight: "bold", backgroundColor: "#51ab31" }}>
+                    <IonLabel style={{ color: "#FFFFFF", fontSize: "20px", fontWeight: "bold", }}>
                         {stand.nombreStand}
-                    </IonLabel>
-                    <IonLabel slot="end" style={{ color: "#000000", fontSize: "18px" }}>
-                        {stand.direccion}
                     </IonLabel>
                     </IonItem>
 
                     {/* Lista de productos del stand */}
-                    <IonList slot="content" style={{ backgroundColor: "#E0E7FF" }}>
+                    <IonList slot="content">
                     {stand.detallesStands.map((detalle: any) => (
                         <IonItem
                         key={detalle.idDetalleStands}
                         style={{
                             margin: "10px",
                             borderRadius: "10px",
-                            boxShadow: "0 4px 8px rgba(99, 175, 233, 0.18)",
+                            backgroundColor: "#D6EAF8" 
                         }}
                         >
                         <IonLabel>

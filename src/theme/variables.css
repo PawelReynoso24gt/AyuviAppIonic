@@ -107,3 +107,22 @@ http://ionicframework.com/docs/theming/ */
   background: #007bff; /* Cambia el color del círculo seleccionado */
 }
 
+.custom-orange-button {
+  --background: linear-gradient(45deg, #f36b00, #f36b00) !important;
+  --background-activated: #f36b00 !important; /* Color al hacer clic */
+  --box-shadow: none !important; /* Elimina las sombras */
+  --border-radius: 40px;
+  --padding: 10px 20px;
+  color: white !important;
+  font-weight: bold;
+}
+
+.custom-Blue-button {
+  --background: linear-gradient(45deg, #0b3bd9, #0b3bd9) !important;
+  --background-activated: #0b3bd9 !important; /* Color al hacer clic */
+  --box-shadow: none !important; /* Elimina las sombras */
+  --border-radius: 40px;
+  --padding: 10px 20px;
+  color: white !important;
+  font-weight: bold;
+}

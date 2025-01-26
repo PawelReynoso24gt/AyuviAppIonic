@@ -29,6 +29,7 @@ import {
 import axios from "../services/axios"; // Instancia de Axios
 import { getInfoFromToken } from "../services/authService";
 import { Camera, CameraResultType, CameraSource } from "@capacitor/camera";
+import '../theme/variables.css';
 
 type Pago = {
   idTipoPago: string;
@@ -53,6 +54,10 @@ const VoluntarioProductos: React.FC = () => {
     const [tiposPagos, setTiposPagos] = useState<Pago[]>([]);
 const [tiposPagosOptions, setTiposPagosOptions] = useState<{ idTipoPago: string; tipo: string }[]>([]);
 const [totalVenta, setTotalVenta] = useState<number>(0);
+const [currentPage, setCurrentPage] = useState(1);
+const itemsPerPage = 5; // Número de rifas por página
+
+const currentRifas = rifas.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   // Función para obtener los datos del voluntario
   const fetchVoluntario = async (idVoluntario: number) => {
@@ -259,7 +264,7 @@ const [totalVenta, setTotalVenta] = useState<number>(0);
             <IonTitle style={{ color: "#000000" }}>Talonarios del Voluntario</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonContent>
+        <IonContent className="page-with-background">
           <div style={{ textAlign: "center", marginTop: "20px" }}>
             <IonSpinner name="crescent" style={{ color: "#0274E5" }} />
           </div>
@@ -276,9 +281,9 @@ const [totalVenta, setTotalVenta] = useState<number>(0);
             <IonTitle style={{ color: "#000000" }}>Talonarios del Voluntario</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonContent>
-          <div style={{ textAlign: "center", marginTop: "20px", color: "#0274E5" }}>
-            <p>No se encontraron datos del voluntario.</p>
+        <IonContent className="page-with-background">
+          <div style={{ textAlign: "center", marginTop: "100px", color: "#0274E5", fontSize: "20px" }}>
+            <p>No se encontraron rifas disponibles.</p>
           </div>
         </IonContent>
       </IonPage>
@@ -292,35 +297,51 @@ const [totalVenta, setTotalVenta] = useState<number>(0);
           <IonTitle style={{ color: "#000000" }}>Talonarios del Voluntario</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent style={{ backgroundColor: "#F0F8FF" }}>
-        <IonCard style={{ margin: "20px", boxShadow: "0 4px 8px rgba(115, 247, 194, 0.1)" }}>
-          <IonCardHeader style={{ backgroundColor: "#0274E5" }}>
-            <IonCardTitle style={{ color: "#FFFFFF" }}>Recaudaciones de {voluntario?.persona?.nombre}</IonCardTitle>
-          </IonCardHeader>
-        </IonCard>
+      <IonContent className="page-with-background">
+      <div
+            style={{
+                padding: "20px",
+                textAlign: "center",
+                background: "linear-gradient(45deg, rgb(12, 146, 170),rgb(12, 146, 170)",
+                borderRadius: "10px",
+                margin: "10px",
+                color: "white",
+            }}
+        >
+            <h2>Recaudaciones de Rifas</h2>
+            <p>Puede ver las rifas disponibles de las que usted haya solicitado talonario</p>
+        </div>
 
         {/* Selección de Rifa */}
-        <IonAccordionGroup>
-          <IonAccordion value="rifas">
-            <IonItem slot="header" style={{ backgroundColor: "#FF5722", color: "#FFFFFF" }}>
-              <IonLabel style={{ color: "#FFFFFF", fontSize: "24px", fontWeight: "bold", backgroundColor: "#FFC107" }}>Rifas</IonLabel>
+        <IonList>
+          {currentRifas.map((rifa) => (
+            <IonItem
+              key={rifa.idRifa}
+              style={{ margin: "10px", borderRadius: "10px", backgroundColor: "#D6EAF8" }}
+              button
+              onClick={() => handleRifaClick(rifa.idRifa)}
+            >
+              <IonLabel>
+                <h2 style={{ color: "#0274E5" }}>{rifa.nombreRifa}</h2>
+                <p><strong>Descripción:</strong> {rifa.descripcion}</p>
+                <p><strong>Precio del boleto:</strong> Q{rifa.precioBoleto}</p>
+              </IonLabel>
             </IonItem>
-            <IonList slot="content" style={{ backgroundColor: "#FFE0B2" }}>
-              {rifas.map((rifa: { idRifa: string; nombreRifa: string; descripcion: string; precioBoleto: number }) => (
-                <IonItem key={rifa.idRifa} style={{ margin: "10px", borderRadius: "10px", boxShadow: "0 4px 8px rgba(99, 175, 233, 0.18)" }} button onClick={() => handleRifaClick(rifa.idRifa)}>
-                  <IonLabel>
-                    <h2 style={{ color: "#FF5722" }}>{rifa.nombreRifa}</h2>
-                    <p><strong>Descripción:</strong> {rifa.descripcion}</p>
-                    <p><strong>Precio del boleto:</strong> Q{rifa.precioBoleto}</p>
-                  </IonLabel>
-                </IonItem>
-              ))}
-            </IonList>
-          </IonAccordion>
-        </IonAccordionGroup>
+          ))}
+        </IonList>
+
+        {/* Botones de navegación */}
+        <div style={{ textAlign: "center", marginBottom: "60px" }}>
+          <IonButton onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>
+            Anterior
+          </IonButton>
+          <IonButton onClick={() => setCurrentPage((prev) => (prev * itemsPerPage < rifas.length ? prev + 1 : prev))} disabled={currentPage * itemsPerPage >= rifas.length}>
+            Siguiente
+          </IonButton>
+        </div>
 
         {/* Modal para mostrar los talonarios */}
-        <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)}>
+        <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)} style = {{borderRadius: "10px"}}>
           <IonHeader>
             <IonToolbar>
               <IonTitle>Talonarios</IonTitle>
@@ -336,7 +357,7 @@ const [totalVenta, setTotalVenta] = useState<number>(0);
                       <h2>{`Código: ${talonario.codigoTalonario}`}</h2>
                       <p>{`Boletos disponibles: ${talonario.cantidadBoletos}`}</p>
                     </IonLabel>
-                    <IonButton onClick={() => handleVenderBoleto(talonario.idTalonario, talonario)}>
+                    <IonButton className = "custom-greenBlue-button" onClick={() => handleVenderBoleto(talonario.idTalonario, talonario)}>
                         Vender Boleto
                     </IonButton>
                   </IonItem>
@@ -351,7 +372,7 @@ const [totalVenta, setTotalVenta] = useState<number>(0);
         </IonModal>
 
         {/* Modal para vender boletos */}
-        <IonModal isOpen={showVentaModal} onDidDismiss={() => setShowVentaModal(false)}>
+        <IonModal isOpen={showVentaModal} onDidDismiss={() => setShowVentaModal(false)} style = {{borderRadius: "10px"}}>
         <IonHeader>
             <IonToolbar>
             <IonTitle>Vender Boleto</IonTitle>
@@ -360,7 +381,7 @@ const [totalVenta, setTotalVenta] = useState<number>(0);
         </IonHeader>
         <IonContent>
             <IonItem>
-            <IonLabel position="stacked">Cantidad de Boletos</IonLabel>
+            <IonLabel position="stacked" style={{ fontSize: "18px", fontWeight: "bold", marginTop: "20px", marginLeft: "20px"}}>Cantidad de Boletos</IonLabel>
             <IonInput
                 type="number"
                 value={boletosVendidos}
@@ -373,13 +394,13 @@ const [totalVenta, setTotalVenta] = useState<number>(0);
 
             {/* Mostrar el total de la venta */}
             <IonItem>
-            <IonLabel>Total a Pagar: </IonLabel>
+            <IonLabel position="stacked" style={{ fontSize: "18px", fontWeight: "bold", marginTop: "20px", marginLeft: "20px"}}>Total a Pagar: </IonLabel>
             <IonInput readonly value={`Q${(totalVenta || 0).toFixed(2)}`} />
             </IonItem>
 
 
             {/* Sección de Pagos */}
-            <IonLabel style={{ fontSize: "18px", fontWeight: "bold", marginTop: "10px" }}>Pagos</IonLabel>
+            <IonLabel style={{ fontSize: "18px", fontWeight: "bold", marginTop: "20px", marginLeft: "50px"}}>Pagos</IonLabel>
             {tiposPagos.map((pago, index) => (
             <IonCard key={index}>
                 <IonCardContent>
@@ -390,6 +411,9 @@ const [totalVenta, setTotalVenta] = useState<number>(0);
                         <IonSelect
                         value={pago.idTipoPago}
                         onIonChange={(e) => handlePagoChange(index, 'idTipoPago', e.detail.value)}
+                        interfaceOptions={{
+                          cssClass: 'custom-alert', // Clase CSS para selectItem
+                        }}
                         >
                         {tiposPagosOptions.map((tipo) => (
                             <IonSelectOption key={tipo.idTipoPago} value={tipo.idTipoPago}>
@@ -430,14 +454,17 @@ const [totalVenta, setTotalVenta] = useState<number>(0);
                 </IonCardContent>
             </IonCard>
             ))}
-            <IonButton expand="block" onClick={() => setTiposPagos([...tiposPagos, { idTipoPago: "", monto: 0, correlativo: "", imagenTransferencia: "" }])}>
+            <div style={{ textAlign: "center"}}>
+            <IonButton className = "custom-greenBlue-button" onClick={() => setTiposPagos([...tiposPagos, { idTipoPago: "", monto: 0, correlativo: "", imagenTransferencia: "" }])}>
             Agregar Pago
             </IonButton>
-
-            <IonFooter>
-            <IonButton expand="block" onClick={handleCreateRecaudacion} style={{ marginTop: "20px" }}>Confirmar Venta</IonButton>
-            <IonButton expand="block" color="medium" onClick={() => setShowVentaModal(false)}>Cancelar</IonButton>
-            </IonFooter>
+            </div>
+            <div style={{ textAlign: "center", marginBottom: "20px" }}>
+            <IonButton className = "custom-greenBlue-button" onClick={handleCreateRecaudacion} style={{ marginTop: "20px" }}>Confirmar Venta</IonButton>
+            </div>
+            <div style={{ textAlign: "center", marginBottom: "20px" }}>
+            <IonButton className = "custom-greenBlue-button" onClick={() => setShowVentaModal(false)}>Cancelar</IonButton>
+            </div>
         </IonContent>
         </IonModal>
 
