@@ -14,12 +14,17 @@ import "react-multi-carousel/lib/styles.css";
 import { useHistory } from "react-router-dom";
 import { getInfoFromToken } from "../services/authService";
 import './Home.css'; // Importa el archivo CSS
+import '../theme/variables.css';
 
 const Home: React.FC = () => {
   const [username, setUsername] = useState<string | null>(null);
   const [publicaciones, setPublicaciones] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const history = useHistory();
+
+  const colors = ["#0274E5", "#F36B00", "#49c92c", "#8500BC", "#ebe400", "#FF33A1"];
+  const randomIndex = Math.floor(Math.random() * colors.length);
+  const randomColor = colors[randomIndex];
 
   useEffect(() => {
     const info = getInfoFromToken();
@@ -74,10 +79,9 @@ const Home: React.FC = () => {
       marginBottom: "30px",
       textAlign: "center",
       fontFamily: "Arial, sans-serif",
-      backgroundColor: "#fff",
+      backgroundColor: "#1e1e1e",
       borderRadius: "10px",
       overflow: "hidden",
-      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
       cursor: "pointer", // Indica que es clickeable
     },
     photoContainer: {
@@ -86,7 +90,7 @@ const Home: React.FC = () => {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: "#0274E5",
+      backgroundColor: randomColor,
       overflow: "hidden",
     },
     photo: {
@@ -154,7 +158,7 @@ const Home: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <div style={styles.welcomeContainer}>
+        <div style={styles.welcomeContainer} className="page-with-background">
           {username ? (
             <h2 className="welcome-heading">
               Bienvenido <strong>{username}</strong>
