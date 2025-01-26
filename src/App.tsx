@@ -210,7 +210,7 @@ const Menu: React.FC = () => {
           <IonItem routerLink="/productosStands">Venta por Stands</IonItem>
           <IonItem routerLink="/recaudacionRifas">Recaudación de Rifas</IonItem>
           <IonItem routerLink="/standVirtual">Stand Virtual</IonItem>
-          <IonItem routerLink="/about">Acerca de</IonItem>
+          {/*<IonItem routerLink="/about">Acerca de</IonItem>*/}
           {/*<IonItem routerLink="/profile">Perfil</IonItem>*/}
           <IonItem routerLink="/sede">Sede</IonItem>
           <IonItem routerLink="/situaciones">Situaciones</IonItem>
