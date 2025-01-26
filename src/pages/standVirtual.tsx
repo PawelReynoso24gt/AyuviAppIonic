@@ -648,4 +648,3 @@ const recalculateTotals = (detalles: DetallesVenta[], donacion: number) => {
 };
 
 export default VoluntarioProductos;
-
