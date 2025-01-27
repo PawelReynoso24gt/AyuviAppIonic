@@ -161,7 +161,7 @@ const DetalleInscripcionActividad: React.FC = () => {
             color: "white",
           }}
         >
-          <h2>Comisiones Disponibles</h2>
+          <h2>Actividades Disponibles</h2>
           <p>Selecciona una comisión para inscribirte.</p>
         </div>
         {loading ? (
