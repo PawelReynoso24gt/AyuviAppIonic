@@ -93,7 +93,7 @@ const MainContent: React.FC = () => {
     '/situaciones': 'Situaciones',
   };
 
-  
+
 
   return (
     <>
@@ -148,19 +148,21 @@ const MainContent: React.FC = () => {
       </IonPage>
 
       {/* Modal de Advertencia */}
-      <IonModal isOpen={showModal} onDidDismiss={handleCloseModal}>
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>¡Advertencia!</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent>
-          <p>{message}</p>
-          {daysRemaining !== null}
-        </IonContent>
-        <IonButton onClick={handleCloseModal}>Entendido</IonButton>
-        <IonButton routerLink="/change-password">Cambiar contraseña</IonButton>
-      </IonModal>
+      {!isLoginPage && !isInvitadoPage && !isRegistroAspirantePage && (
+        <IonModal isOpen={showModal} onDidDismiss={handleCloseModal}>
+          <IonHeader>
+            <IonToolbar>
+              <IonTitle>¡Advertencia!</IonTitle>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent>
+            <p>{message}</p>
+            {daysRemaining !== null}
+          </IonContent>
+          <IonButton onClick={handleCloseModal}>Entendido</IonButton>
+          <IonButton routerLink="/change-password">Cambiar contraseña</IonButton>
+        </IonModal>
+      )}
     </>
   );
 };
