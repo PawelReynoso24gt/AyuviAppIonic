@@ -55,9 +55,10 @@ const InscripcionesComisiones: React.FC = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `/comisiones/porevento?eventoId=${eventoId}&idVoluntario=${idVoluntario}`
+        `/comisiones/active?eventoId=${eventoId}&idVoluntario=${idVoluntario}`
       );
       const allComisiones = response.data;
+      console.log(response.data)
   
       // Filtrar comisiones activas
       const activeComisiones = allComisiones.filter((comision: Comision) => comision.estado === 1);
