@@ -71,9 +71,8 @@ const About: React.FC = () => {
              estará sujeta a la jurisdicción exclusiva de los tribunales de Guatemala.   </p>
 
           <h3>10. Contacto</h3>
-          <p>Si tiene alguna pregunta sobre estos Términos y Condiciones, puede contactarnos a través de ayuviAWS@gmail.com o +502 12345678.   </p>
+          <p>Si tiene alguna pregunta sobre estos Términos y Condiciones, puede contactarnos a través de <a href="eduardo.godinez@ayuvi.org.gt">eduardo.godinez@ayuvi.org.gt</a> o +502 35757028. </p>
 
-          <p>Si tienes dudas, contáctanos en <a href="mailto:soporte@ejemplo.com">soporte@ejemplo.com</a>.</p>
         </div>
       </IonContent>
     </IonPage>
