@@ -154,7 +154,7 @@ useEffect(() => {
           <IonTitle style={{ color: "#FFFFFF" }}>Inscripción a Comisiones</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="page-with-background" >
+      <IonContent className="page-with-background">
         <div
           style={{
             padding: "20px",
