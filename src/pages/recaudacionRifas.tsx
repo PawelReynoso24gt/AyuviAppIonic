@@ -57,6 +57,7 @@ const [totalVenta, setTotalVenta] = useState<number>(0);
 const [currentPage, setCurrentPage] = useState(1);
 const itemsPerPage = 5; // Número de rifas por página
 
+
 const currentRifas = rifas.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   // Función para obtener los datos del voluntario

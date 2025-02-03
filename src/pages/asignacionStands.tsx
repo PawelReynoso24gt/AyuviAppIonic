@@ -282,7 +282,7 @@ const AsignarStands: React.FC = () => {
                     style={{
                         padding: "20px",
                         textAlign: "center",
-                        background: "linear-gradient(45deg, #f36b00, #f36b00)",
+                        background: "linear-gradient(45deg,rgb(173, 75, 0), #f36b00)",
                         borderRadius: "10px",
                         margin: "10px",
                         color: "white",
@@ -399,10 +399,13 @@ const AsignarStands: React.FC = () => {
                                                 <IonLabel>
                                                     {`De ${horarioInicio} a ${horarioFinal} (Cupo: ${cantidadPersonas})`}
                                                 </IonLabel>
-                                                <IonRadio
-                                                    slot="start"
-                                                    value={horario.idDetalleHorario}
-                                                />
+                                                {cantidadPersonas > 0 ? (
+                                                <IonRadio slot="start" value={horario.idDetalleHorario} />
+                                            ) : (
+                                                <p style={{ color: "red", fontWeight: "bold", marginLeft: "10px" }}>
+                                                    Cupo lleno
+                                                </p>
+                                            )}
                                             </IonItem>
                                         );
                                     })}
