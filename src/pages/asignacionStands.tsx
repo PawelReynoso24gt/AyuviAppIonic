@@ -31,6 +31,7 @@ interface Stand {
     nombreStand: string;
     direccion: string;
     idEvento: number;
+    idTipoStands: number;
     estado: number;
     evento: {
         nombreEvento: string;
@@ -88,7 +89,12 @@ const AsignarStands: React.FC = () => {
             const response = await axios.get<Stand[]>("/stand", {
                 params: { estado: 1 }, // Filtrar stands activos
             });
-            setStands(response.data);
+
+            const filteredStands = response.data.filter(
+                (stand) => stand.idTipoStands === 2
+            );
+
+            setStands(filteredStands);
         } catch (error: any) {
             console.error("Error fetching stands:", error.response || error);
             setToastMessage("Error al cargar los stands.");
