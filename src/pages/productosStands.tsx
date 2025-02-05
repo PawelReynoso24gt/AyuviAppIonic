@@ -138,10 +138,15 @@ const VoluntarioProductos: React.FC = () => {
     fetchTiposPagos();
   }, []);
 
-  const fetchTiposPagos = async () => {
+  const fetchTiposPagos = async () => { // trae solo los tipos de pago con idTipoPago del 1 al 4 que son depósito, transferencia, cheque y efectivo
     try {
       const response = await axios.get("/tipospagos");
-      setTiposPagosOptions(response.data);
+      // Filtrar los tipos de pago para incluir solo aquellos con idTipoPago del 1 al 4
+      const filteredTiposPagos = response.data.filter((tipo: any) => {
+        const id = parseInt(tipo.idTipoPago, 10);
+        return id >= 1 && id <= 4;
+      });
+      setTiposPagosOptions(filteredTiposPagos);
     } catch (error) {
       console.error("Error fetching tipos pagos:", error);
     }
@@ -684,6 +689,7 @@ const VoluntarioProductos: React.FC = () => {
                 </IonAccordion>
                 );
             })}
+            <IonItem style={{ marginBottom: "60px" }} />
         </IonAccordionGroup>
         <IonToast
           isOpen={!!toastMessage}

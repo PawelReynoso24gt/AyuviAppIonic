@@ -121,7 +121,12 @@ const VoluntarioProductos: React.FC = () => {
   const fetchTiposPagos = async () => {
     try {
       const response = await axios.get("/tipospagos");
-      setTiposPagosOptions(response.data);
+      // Filtrar los tipos de pago para incluir solo aquellos con idTipoPago del 1 al 4
+      const filteredTiposPagos = response.data.filter((tipo: any) => {
+        const id = parseInt(tipo.idTipoPago, 10);
+        return id >= 1 && id <= 4;
+      });
+      setTiposPagosOptions(filteredTiposPagos);
     } catch (error) {
       console.error("Error fetching tipos pagos:", error);
     }
