@@ -158,8 +158,8 @@ const RequestTalonario: React.FC = () => {
                     color: "white",
                 }}
             >
-                <h2>Gestión de Rifas</h2>
-                <p>Visualiza y gestiona tus situaciones reportadas.</p>
+                <h2>Gestión de Solicitudes</h2>
+                <p>Visualiza y gestiona tus solicitudes de talonarios.</p>
             </div>
 
       <IonContent className="ion-padding page-with-background">

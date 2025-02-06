@@ -35,19 +35,35 @@ const DetalleInscripcionMaterial: React.FC = () => {
   const [cantidadMaterial, setCantidadMaterial] = useState<number | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedMaterial, setSelectedMaterial] = useState<number | null>(null);
+  const [inscripcion, setInscripcion] = useState<{ idInscripcionEvento: number; idInscripcionComision: number } | null>(null);
   const userInfo = getInfoFromToken();
-
-  // Obtener el idComision desde la navegación
-  const idComision = location.state?.idComision;
+  const idVoluntario = userInfo?.idVoluntario ? Number(userInfo.idVoluntario) : null;
+  const idComision = location.state?.idComision ? Number(location.state.idComision) : null;
 
   useEffect(() => {
-    if (idComision) {
-      fetchMateriales(idComision); // Cargar materiales de la comisión
+    const numericIdVoluntario = Number(idVoluntario);
+    const numericIdComision = Number(idComision);
+
+    if (numericIdComision && numericIdVoluntario) {
+      fetchInscripciones(numericIdVoluntario); // Obtener inscripción
+      fetchMateriales(numericIdComision); // Cargar materiales de la comisión
     } else {
-      setToastMessage("No se proporcionó el ID de la comisión.");
-      history.push("/registroComisiones"); // Redirigir si no hay idComision
+      setToastMessage("Faltan datos para cargar los materiales.");
+      history.push("/registroComisiones");
     }
-  }, [idComision]);
+  }, [idComision, idVoluntario]);
+
+  const fetchInscripciones = async (idVoluntario: number) => {
+    try {
+      const response = await axios.get<{ idInscripcionEvento: number; idInscripcionComision: number }>(
+        `/inscripciones/voluntario/${idVoluntario}`
+      );
+      setInscripcion(response.data);
+    } catch (error: any) {
+      console.error("Error al cargar inscripciones:", error.response || error);
+      setToastMessage("Error al cargar inscripciones.");
+    }
+  };
 
   // Obtener lista de materiales por comisión
   const fetchMateriales = async (idComision: number) => {
@@ -76,7 +92,7 @@ const DetalleInscripcionMaterial: React.FC = () => {
 
   // Manejar inscripción a un material
   const handleIngresoMaterial = async () => {
-    if (!cantidadMaterial || !selectedMaterial || !userInfo?.idVoluntario) {
+    if (!cantidadMaterial || !selectedMaterial || !userInfo?.idVoluntario || !inscripcion) {
       setToastMessage("Faltan datos para completar el ingreso de material.");
       return;
     }
@@ -86,6 +102,8 @@ const DetalleInscripcionMaterial: React.FC = () => {
         idVoluntario: userInfo.idVoluntario,
         idMaterial: selectedMaterial,
         cantidadMaterial,
+        idInscripcionEvento: inscripcion.idInscripcionEvento,
+        idInscripcionComision: inscripcion.idInscripcionComision,
       };
   
       const response = await axios.post(
@@ -182,10 +200,13 @@ const DetalleInscripcionMaterial: React.FC = () => {
                   shape="round"
                   size="small"
                   onClick={() => {
+                    if (!inscripcion) {
+                      setToastMessage("No se encontraron datos de inscripción.");
+                      return;
+                    }
                     setSelectedMaterial(material.idMaterial);
                     setShowModal(true);
                   }}
-                
                 >
                   Inscribirse
                 </IonButton>

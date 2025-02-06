@@ -27,11 +27,15 @@ import { parse, format } from "date-fns";
 const Situaciones: React.FC = () => {
     const [situaciones, setSituaciones] = useState<any[]>([]);
     const [tipoSituaciones, setTipoSituaciones] = useState<any[]>([]);
-    const [selectedSituacion, setSelectedSituacion] = useState<any>(null);
+    const [selectedSituacion, setSelectedSituacion] = useState<any>({
+        idTipoSituacion: "",
+        descripcion: "",
+    });
     const [newSituacion, setNewSituacion] = useState({
         idTipoSituacion: "",
         descripcion: "",
     });
+    
     const [loading, setLoading] = useState(false);
     const [toastMessage, setToastMessage] = useState("");
     const [showModal, setShowModal] = useState(false);
@@ -113,10 +117,11 @@ const Situaciones: React.FC = () => {
         }
     };
 
-    const handleEditSituacion = async (id: number, descripcion: string) => {
+    const handleEditSituacion = async (id: number, descripcion: string, idTipoSituacion: string) => {
         try {
             const response = await axios.put(`/situaciones/update/reporte/${id}`, {
                 descripcion,
+                idTipoSituacion,
             });
             setToastMessage(response.data.message);
             // Log the action in the bitacora
@@ -320,6 +325,9 @@ const Situaciones: React.FC = () => {
                                     idTipoSituacion: e.detail.value,
                                 }))
                             }
+                            interfaceOptions={{
+                                cssClass: 'custom-alert', // Clase CSS selectItem
+                            }}
                         >
                             {tipoSituaciones.map((tipo) => (
                                 <IonSelectOption key={tipo.idTipoSituacion} value={tipo.idTipoSituacion}>
@@ -348,43 +356,64 @@ const Situaciones: React.FC = () => {
 
                 {/* Modal para Editar */}
                 {selectedSituacion && (
-                    <IonModal
-                        isOpen={!!selectedSituacion}
-                        onDidDismiss={() => setSelectedSituacion(null)}
-                    >
-                        <div style={{ padding: "20px" }}>
-                            <h2>Editar Situación</h2>
-                            <IonInput
-                                value={selectedSituacion?.descripcion}
-                                onIonChange={(e) =>
-                                    setSelectedSituacion((prev: typeof selectedSituacion) => ({
-                                        ...prev,
-                                        descripcion: e.detail.value,
-                                    }))
-                                }
-                            />
-                            <IonButton
-                                expand="block"
-                                onClick={() =>
-                                    handleEditSituacion(
-                                        selectedSituacion.idSituacion,
-                                        selectedSituacion.descripcion
-                                    )
-                                }
-                                className="custom-purple-button" >
-                                Guardar
-                            </IonButton>
-                            <IonButton
-                                expand="block"
-                                color="danger"
-                                onClick={() => setSelectedSituacion(null)}
-                                className="custom-red-button"
-                            >
-                                Cancelar
-                            </IonButton>
-                        </div>
-                    </IonModal>
-                )}
+                <IonModal
+                    isOpen={!!selectedSituacion}
+                    onDidDismiss={() => setSelectedSituacion(null)}
+                >
+                    <div style={{ padding: "20px" }}>
+                        <h2>Editar Situación</h2>
+                        <IonSelect
+                            placeholder="Seleccionar tipo"
+                            value={selectedSituacion.idTipoSituacion}
+                            onIonChange={(e) =>
+                                setSelectedSituacion((prev: typeof selectedSituacion) => ({
+                                    ...prev,
+                                    idTipoSituacion: e.detail.value,
+                                }))
+                            }
+                            interfaceOptions={{
+                                cssClass: 'custom-alert', // Clase CSS selectItem
+                            }}
+                        >
+                            {tipoSituaciones.map((tipo) => (
+                                <IonSelectOption key={tipo.idTipoSituacion} value={tipo.idTipoSituacion}>
+                                    {tipo.tipoSituacion}
+                                </IonSelectOption>
+                            ))}
+                        </IonSelect>
+                        <IonInput
+                            value={selectedSituacion.descripcion}
+                            onIonChange={(e) =>
+                                setSelectedSituacion((prev: typeof selectedSituacion) => ({
+                                    ...prev,
+                                    descripcion: e.detail.value,
+                                }))
+                            }
+                        />
+                        <IonButton
+                            expand="block"
+                            onClick={() =>
+                                handleEditSituacion(
+                                    selectedSituacion.idSituacion,
+                                    selectedSituacion.descripcion,
+                                    selectedSituacion.idTipoSituacion
+                                )
+                            }
+                            className="custom-purple-button"
+                        >
+                            Guardar
+                        </IonButton>
+                        <IonButton
+                            expand="block"
+                            color="danger"
+                            onClick={() => setSelectedSituacion(null)}
+                            className="custom-red-button"
+                        >
+                            Cancelar
+                        </IonButton>
+                    </div>
+                </IonModal>
+            )}
 
                 <IonToast
                     isOpen={!!toastMessage}

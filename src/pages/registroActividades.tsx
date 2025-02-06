@@ -40,28 +40,25 @@ const DetalleInscripcionActividad: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [inscripcion, setInscripcion] = useState<Inscripcion | null>(null);
 
-   // Obtener ID del voluntario desde el token
+  // Obtener ID del voluntario desde el token
   const userInfo = getInfoFromToken();
   const idVoluntario = userInfo?.idVoluntario ? Number(userInfo.idVoluntario) : null;
 
   // Obtener el idComision desde la navegación
-  
   const idComision = location.state?.idComision ? Number(location.state.idComision) : null;
 
   useEffect(() => {
     const numericIdVoluntario = Number(idVoluntario); // Asegúrate de que sea número
     const numericIdComision = Number(idComision); // Asegúrate de que sea número
-  
+
     if (numericIdComision && numericIdVoluntario) {
-      fetchInscripciones(numericIdComision); // Obtener inscripción
+      fetchInscripciones(numericIdVoluntario); // Obtener inscripción
       fetchActividades(numericIdComision); // Cargar actividades de la comisión
     } else {
       setToastMessage("Faltan datos para cargar las actividades.");
       history.push("/registroComisiones");
     }
   }, [idComision, idVoluntario]);
-  
-
 
   // Obtener los IDs de inscripción (evento y comisión)
   const fetchInscripciones = async (idVoluntario: number) => {
@@ -75,7 +72,6 @@ const DetalleInscripcionActividad: React.FC = () => {
       setToastMessage("Error al cargar inscripciones.");
     }
   };
-
 
   // Obtener lista de actividades por comisión
   const fetchActividades = async (idComision: number) => {
@@ -101,26 +97,27 @@ const DetalleInscripcionActividad: React.FC = () => {
 
   // Manejar registro de actividades
   const handleRegistroActividad = async () => {
-    if (!selectedActividad || !inscripcion) {
+    if (!selectedActividad || !inscripcion || !idVoluntario) {
       setToastMessage("Faltan datos para completar el registro de la actividad.");
       return;
     }
-
+  
     try {
       const payload = {
         estado: 1, // Activo por defecto
         idInscripcionEvento: inscripcion.idInscripcionEvento,
         idInscripcionComision: inscripcion.idInscripcionComision,
         idActividad: selectedActividad,
+        idVoluntario: idVoluntario, // Incluir el idVoluntario
       };
-
+  
       console.log("Payload enviado:", payload);
-
+  
       const response = await axios.post(
         "/detalle_inscripcion_actividades/create",
         payload
       );
-
+  
       setToastMessage(response.data.message || "¡Actividad registrada con éxito!");
       setShowModal(false);
       setSelectedActividad(null);
@@ -162,7 +159,7 @@ const DetalleInscripcionActividad: React.FC = () => {
           }}
         >
           <h2>Actividades Disponibles</h2>
-          <p>Selecciona una comisión para inscribirte.</p>
+          <p>Selecciona una actividad para inscribirte.</p>
         </div>
         {loading ? (
           <div style={{ textAlign: "center", marginTop: "20px" }}>
