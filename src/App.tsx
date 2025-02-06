@@ -150,7 +150,9 @@ const MainContent: React.FC = () => {
 
       {/* Modal de Advertencia */}
       {!isLoginPage && !isInvitadoPage && !isRegistroAspirantePage && (
-        <IonModal isOpen={showModal} onDidDismiss={handleCloseModal}>
+        <IonModal isOpen={showModal} 
+        onDidDismiss={handleCloseModal}
+        className="custom-modal">
           <IonHeader>
             <IonToolbar>
               <IonTitle>¡Advertencia!</IonTitle>

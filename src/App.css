@@ -22,3 +22,16 @@ ion-content {
 ion-header {
   display: none; /* Oculta globalmente todos los encabezados */
 }
+
+
+.custom-modal {
+  --width: 80%;
+  --height: 50%;
+  --border-radius: 10px;
+  --background: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
