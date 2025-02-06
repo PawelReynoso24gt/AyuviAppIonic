@@ -420,7 +420,7 @@ const recalculateTotals = (detalles: DetallesVenta[], donacion: number) => {
         <IonModal isOpen={showModal} onDidDismiss={handleCancel} style = {{borderRadius: "10px"}}>
         <IonHeader>
             <IonToolbar>
-            <IonTitle style={{ fontWeight: "bold", fontSize: "20px" }}>Crear Venta</IonTitle>
+            <IonTitle style={{ fontWeight: "bold", fontSize: "20px" }}>Solicitar producto</IonTitle>
             <IonButtons slot="end">
                 <IonButton onClick={handleCancel} color="danger">Cerrar</IonButton>
             </IonButtons>
@@ -588,7 +588,7 @@ const recalculateTotals = (detalles: DetallesVenta[], donacion: number) => {
         </IonButton>
         </div>
         <div style={{ textAlign: "center", marginBottom: "20px" }}>
-            <IonButton className="custom-Blue-button" onClick={handleCreateVenta} style={{ marginTop: "20px" }}>Crear Venta</IonButton>
+            <IonButton className="custom-Blue-button" onClick={handleCreateVenta} style={{ marginTop: "20px" }}>Solicitar producto</IonButton>
             </div>
             <div style={{ textAlign: "center", marginBottom: "20px" }}>
             <IonButton className="custom-Blue-button" onClick={handleCancel}>Cancelar</IonButton>
