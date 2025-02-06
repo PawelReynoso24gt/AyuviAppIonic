@@ -206,7 +206,7 @@ const DetalleInscripcionActividad: React.FC = () => {
                     setShowModal(true);
                   }}
                 >
-                  Registrar
+                  Inscribirse
                 </IonButton>
               </IonItem>
             ))}
