@@ -89,6 +89,9 @@ const Login: React.FC = () => {
                     <IonLabel className="contrasenia-label">Contraseña</IonLabel>
                     <IonItem className="password-item custom-item">
                         <IonInput 
+                        style={{
+                            color: "black",
+                          }}
                             className="password-input" 
                             type={showPassword ? "text" : "password"} 
                             value={contrasenia} 

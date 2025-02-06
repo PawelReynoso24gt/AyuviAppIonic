@@ -47,7 +47,7 @@ const NotificationsCom: React.FC = () => {
 
     try {
       const response = await axios.get<Notification[]>(
-        `http://localhost:5000/notificaciones?idPersona=${personId}`
+        `/notificaciones?idPersona=${personId}`
       );
       setNotifications(response.data);
     } catch (error: any) {
@@ -66,7 +66,7 @@ const NotificationsCom: React.FC = () => {
   // Manejar el cambio de estado (marcar como revisada)
   const handleCheckNotification = async (idNotificacion: number) => {
     try {
-      await axios.put(`http://localhost:5000/notificaciones/${idNotificacion}`, {
+      await axios.put(`/notificaciones/${idNotificacion}`, {
         estado: 0, // Cambiar el estado a 0 (marcar como revisada)
       });
 

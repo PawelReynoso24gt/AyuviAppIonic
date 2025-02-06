@@ -66,7 +66,8 @@ const Sede: React.FC = () => {
       </IonToolbar>
     </IonHeader>
   
-    <IonContent className="ion-padding">
+    <IonContent className="ion-padding page-with-background"
+    style={	{  padding: 'env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)'}}>
       {loading ? (
         <IonLoading isOpen={loading} message="Cargando..." />
       ) : error ? (
@@ -74,7 +75,13 @@ const Sede: React.FC = () => {
       ) : sedeData ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           {/* Contenedor de información */}
-          <IonCard style={{ boxShadow: 'none', border: 'none', width: '100%' }}>
+          <IonCard 
+          style={{ boxShadow: 'none',
+             border: 'none',
+              width: '100%',  
+              backgroundColor: "#F0F8FF",
+                  margin: "10px",
+                  borderRadius: "10px", }}>
             <IonCardContent
              style={{
               padding: '20px',
@@ -83,25 +90,36 @@ const Sede: React.FC = () => {
               wordBreak: 'break-word', // Asegura que palabras largas se rompan correctamente  
               }}
               >
+                 <div
+                style={{
+                    padding: "20px",
+                    textAlign: "center",
+                    background: "rgb(12, 146, 170)",
+                    borderRadius: "10px",
+                    margin: "10px",
+                    color: "white",
+                }}
+            >
               <IonText
-                color="primary"
                 style={{
                   textAlign: 'center',
-                  fontSize: '24px',
+                  fontSize: '30px',
                   fontWeight: 'bold',
                   display: 'block',
                   marginBottom: '10px',
+                  
                 }}
               >
                 {sedeData.nombreSede}
               </IonText>
-  
-              <IonTitle
+              </div>
+              <IonTitle 
                 style={{
                   textAlign: 'center',
-                  marginTop: '10px',
-                  fontSize: '20px',
-                  marginBottom: '10px',
+                  padding: "10px", 
+                  fontWeight: "bold", 
+                  fontSize: "25px",
+                  color: "black"
                 }}
               >
                 Información
@@ -110,9 +128,12 @@ const Sede: React.FC = () => {
                 style={{
                   textAlign: 'justify',
                   display: 'block',
-                  fontSize: '16px',
+                  fontSize: '20px',
                   overflowWrap: 'break-word', // Aplica también al texto interno
                   wordBreak: 'break-word',
+                  padding: "10px", 
+                  fontWeight: "bold", 
+                  color: "black"                  
                 }}
               >
                 {sedeData.informacion}
@@ -121,13 +142,22 @@ const Sede: React.FC = () => {
           </IonCard>
   
           {/* Contenedor del carrusel de fotos */}
-          <IonCard style={{ boxShadow: 'none', border: 'none', padding: '0' }}>
+          <IonCard 
+          style={{ boxShadow: 'none',
+           border: 'none', 
+           padding: '0',
+           backgroundColor: "#F0F8FF",
+           margin: "10px",
+           borderRadius: "10px", }}>
             <IonCardContent style={{ padding: '0', paddingTop: '20px' }}>
               <IonTitle
                 style={{
                   textAlign: 'center',
-                  fontSize: '20px',
-                  marginBottom: '10px',
+                  display: 'block',
+                  fontSize: '25px',
+                  padding: "10px", 
+                  fontWeight: "bold", 
+                  color: "black" 
                 }}
               >
                 Fotos de la Sede

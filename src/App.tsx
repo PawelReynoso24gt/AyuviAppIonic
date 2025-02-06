@@ -124,6 +124,7 @@ const MainContent: React.FC = () => {
                 <PrivateRoute exact path="/standVirtual" component={standVirtual} />
                 <PrivateRoute exact path="/notifications" component={Notifications} />
                 <PrivateRoute exact path="/situaciones" component={situaciones} />
+                <PrivateRoute exact path="/about" component={situaciones} />
                 <Route exact path="/">
                   <Redirect to="/login" />
                 </Route>
@@ -216,6 +217,7 @@ const Menu: React.FC = () => {
           {/*<IonItem routerLink="/profile">Perfil</IonItem>*/}
           <IonItem routerLink="/sede">Sede</IonItem>
           <IonItem routerLink="/situaciones">Situaciones</IonItem>
+          <IonItem routerLink="/about">Terminos y Condiciones</IonItem>
           <IonItem button onClick={handleLogout}>Cerrar sesión</IonItem>
         </IonList>
       </IonContent>

@@ -31,6 +31,7 @@ interface Stand {
     nombreStand: string;
     direccion: string;
     idEvento: number;
+    idTipoStands: number;
     estado: number;
     evento: {
         nombreEvento: string;
@@ -73,6 +74,7 @@ const AsignarStands: React.FC = () => {
     const [toastMessage, setToastMessage] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [showModal, setShowModal] = useState<boolean>(false);
+    const [asignacionesUsuario, setAsignacionesUsuario] = useState<AsignacionUsuario[]>([]);
     const [asignacionUsuario, setAsignacionUsuario] = useState<AsignacionUsuario | null>(null);
     const userInfo = getInfoFromToken();
     const idVoluntario = userInfo?.idVoluntario;
@@ -88,7 +90,12 @@ const AsignarStands: React.FC = () => {
             const response = await axios.get<Stand[]>("/stand", {
                 params: { estado: 1 }, // Filtrar stands activos
             });
-            setStands(response.data);
+
+            const filteredStands = response.data.filter(
+                (stand) => stand.idTipoStands === 2
+            );
+
+            setStands(filteredStands);
         } catch (error: any) {
             console.error("Error fetching stands:", error.response || error);
             setToastMessage("Error al cargar los stands.");
@@ -101,19 +108,28 @@ const AsignarStands: React.FC = () => {
         setLoading(true);
         try {
             const response = await axios.get(`/asignacion/voluntario/${idVoluntario}`);
-            const asignacion = response.data;
+            const asignaciones = response.data;
 
-            setAsignacionUsuario({
+            if (!Array.isArray(asignaciones) || asignaciones.length === 0) {
+                console.warn("No hay asignaciones activas.");
+                setAsignacionesUsuario([]);
+                return;
+            }
+
+            const asignacionesProcesadas = asignaciones.map(asignacion => ({
                 idAsignacionStands: asignacion.idAsignacionStands,
                 idStand: asignacion.idStand,
                 idDetalleHorario: asignacion.idDetalleHorario,
                 detalleHorario: {
                     horario: {
-                        horarioInicio: asignacion.detalleHorario.horario.horarioInicio,
-                        horarioFinal: asignacion.detalleHorario.horario.horarioFinal,
+                        horarioInicio: asignacion.detalleHorario?.horario?.horarioInicio || "",
+                        horarioFinal: asignacion.detalleHorario?.horario?.horarioFinal || "",
                     },
                 },
-            }); // Ajusta el estado según la estructura
+            }));
+
+            console.log(asignacionesProcesadas);
+            setAsignacionesUsuario(asignacionesProcesadas);
         } catch (error: any) {
             console.error("Error fetching asignaciones:", error.response || error);
             //setToastMessage("Error al cargar las asignaciones.");
@@ -174,7 +190,7 @@ const AsignarStands: React.FC = () => {
                 idDetalleHorario: selectedHorario, // Enviar el valor directamente
             });
 
-            setAsignacionUsuario({
+            const nuevaAsignacion = {
                 idAsignacionStands: response.data.idAsignacionStands,
                 idStand: selectedStand.idStand,
                 idDetalleHorario: selectedHorario,
@@ -184,7 +200,10 @@ const AsignarStands: React.FC = () => {
                         horarioFinal: horarios.find(h => h.idDetalleHorario === selectedHorario)?.detalle_horario.horario.horarioFinal,
                     },
                 },
-            });
+            };
+
+        
+            setAsignacionesUsuario([...asignacionesUsuario, nuevaAsignacion]);
 
             setToastMessage(response.data.message || "Asignación realizada con éxito.");
             setShowModal(false);
@@ -229,7 +248,9 @@ const AsignarStands: React.FC = () => {
         try {
             const response = await axios.delete(`/asignacion_stands/delete/${asignacionUsuario.idAsignacionStands}`);
             setToastMessage(response.data.message || "Desasignación realizada con éxito.");
-            setAsignacionUsuario(null); // Limpia la asignación del usuario
+            setAsignacionesUsuario(asignacionesUsuario.filter(
+                (asignacion) => asignacion.idAsignacionStands !== asignacionUsuario.idAsignacionStands
+            ));
             setShowEditModal(false);
         } catch (error: any) {
             console.error("Error deleting asignacion:", error.response || error);
@@ -298,70 +319,86 @@ const AsignarStands: React.FC = () => {
                     </div>
                 ) : (
                     <IonList>
-                        {stands.map((stand) => (
-                            <IonItem
-                                key={stand.idStand}
-                                style={{
-                                    backgroundColor: "#D6EAF8",
-                                    margin: "10px",
-                                    borderRadius: "10px",
-                                    flexDirection: "column", 
-                                    alignItems: "flex-start", 
-                                }}
-                            >
-                                <IonLabel style={{ padding: "10px",  }}>
-                                    <h3 style={{ color: "#4B0082", fontWeight: "bold" }}>
-                                        {stand.nombreStand}
-                                    </h3>
-                                    <p style={{ color: "#000080" }}>
-                                        Evento: {stand.evento?.nombreEvento || "Sin evento"}
-                                    </p>
-                                    <p style={{ color: "#000080" }}>Dirección: {stand.direccion}</p>
-                                </IonLabel>
-                                <div style={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    alignItems: "flex-end", // Alinea elementos al final del eje horizontal (derecha)
-                                    justifyContent: "center", // Centra verticalmente
-                                    gap: "5px", // Espaciado entre el botón y el mensaje
-                                    }}>  
-                                                                  
-                                <IonButton
-                                    slot="end"
-                                    shape="round"
-                                    size="small"
-                                    className="custom-orange-button"
-                                    onClick={() => {
-                                        setSelectedStand(stand);
-                                        fetchHorarios(stand.idStand);
- 
-                                        if (asignacionUsuario?.idStand === stand.idStand) {
-                                            setShowEditModal(true); // Abre el modal de edición
-                                        } else {
-                                            setSelectedHorario(null);
-                                            setShowModal(true); // Abre el modal de asignación
-                                        }
+                        {stands.map((stand) => {
+                            const asignado = asignacionesUsuario.some(
+                                (asignacion) => asignacion.idStand === stand.idStand
+                            );
+
+                            return (
+                                <IonItem
+                                    key={stand.idStand}
+                                    style={{
+                                        backgroundColor: asignado ? "#D6EAF8" : "#FFFFFF", // Color diferente si está asignado
+                                        margin: "10px",
+                                        borderRadius: "10px",
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        justifyContent: "space-between", // Distribuye contenido
+                                        padding: "10px"
                                     }}
                                 >
-                                    {asignacionUsuario?.idStand === stand.idStand ? "Ver asignación" : "Asignarme"}
-                                    
-                                </IonButton>
+                                    <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+                                        <IonLabel>
+                                            <h3 style={{ color: "#4B0082", fontWeight: "bold" }}>
+                                                {stand.nombreStand}
+                                            </h3>
+                                            <p style={{ color: "#000080" }}>
+                                                Evento: {stand.evento?.nombreEvento || "Sin evento"}
+                                            </p>
+                                            <p style={{ color: "#000080" }}>Dirección: {stand.direccion}</p>
+                                        </IonLabel>
+                                    </div>
 
-                                {asignacionUsuario && asignacionUsuario.idStand === stand.idStand && (
-                                    <p style={{ color: "green" , fontWeight: "bold", margin: 0 }}>
-                                        Ya estás asignado a este stand
-                                    </p>
-                                )}
-                                </div> 
-                            </IonItem>
-                        ))}
+                                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
+                                        <IonButton
+                                            shape="round"
+                                            size="small"
+                                            className="custom-orange-button"
+                                            onClick={() => {
+                                                setSelectedStand(stand);
+                                                fetchHorarios(stand.idStand);
+
+                                                if (asignado) {
+                                                    // Encontramos la asignación correspondiente a este stand
+                                                    const asignacionActual = asignacionesUsuario.find(
+                                                        (asignacion) => asignacion.idStand === stand.idStand
+                                                    );
+
+                                                    if (asignacionActual) {
+                                                        setAsignacionUsuario(asignacionActual); // Se asigna la información correcta
+                                                        setShowEditModal(true); // Abre el modal de edición
+                                                    }
+                                                } else {
+                                                    setSelectedHorario(null);
+                                                    setShowModal(true); // Abre el modal de asignación
+                                                }
+                                            }}
+                                            style={{
+                                                backgroundColor: "#FF8000",
+                                                color: "white",
+                                                fontWeight: "bold",
+                                            }}
+                                        >
+                                            {asignado ? "VER ASIGNACIÓN" : "ASIGNARME"}
+                                        </IonButton>
+
+
+                                        {asignado && (
+                                            <p style={{ color: "green", fontWeight: "bold", marginTop: "5px" }}>
+                                                Ya estás asignado a este stand
+                                            </p>
+                                        )}
+                                    </div>
+                                </IonItem>
+                            );
+                        })}
                     </IonList>
                 )}
 
                 <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)} style={{
                     "--border-radius": "15px",
                 }}>
-                    <div style={{ padding: "20px"}}>
+                    <div style={{ padding: "20px" }}>
                         <h3 style={{ marginBottom: "15px" }}>Seleccionar Horario</h3>
                         <IonRadioGroup
                             value={selectedHorario}
@@ -400,12 +437,12 @@ const AsignarStands: React.FC = () => {
                                                     {`De ${horarioInicio} a ${horarioFinal} (Cupo: ${cantidadPersonas})`}
                                                 </IonLabel>
                                                 {cantidadPersonas > 0 ? (
-                                                <IonRadio slot="start" value={horario.idDetalleHorario} />
-                                            ) : (
-                                                <p style={{ color: "red", fontWeight: "bold", marginLeft: "10px" }}>
-                                                    Cupo lleno
-                                                </p>
-                                            )}
+                                                    <IonRadio slot="start" value={horario.idDetalleHorario} />
+                                                ) : (
+                                                    <p style={{ color: "red", fontWeight: "bold", marginLeft: "10px" }}>
+                                                        Cupo lleno
+                                                    </p>
+                                                )}
                                             </IonItem>
                                         );
                                     })}

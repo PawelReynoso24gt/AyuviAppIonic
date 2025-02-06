@@ -89,7 +89,12 @@ const currentRifas = rifas.slice((currentPage - 1) * itemsPerPage, currentPage *
   const fetchTiposPagos = async () => {
     try {
       const response = await axios.get("/tipospagos");
-      setTiposPagosOptions(response.data);
+      // Filtrar los tipos de pago para incluir solo aquellos con idTipoPago del 1 al 4
+      const filteredTiposPagos = response.data.filter((tipo: any) => {
+        const id = parseInt(tipo.idTipoPago, 10);
+        return id >= 1 && id <= 4;
+      });
+      setTiposPagosOptions(filteredTiposPagos);
     } catch (error) {
       console.error("Error fetching tipos pagos:", error);
     }
@@ -350,6 +355,12 @@ const currentRifas = rifas.slice((currentPage - 1) * itemsPerPage, currentPage *
             </IonToolbar>
           </IonHeader>
           <IonContent>
+            {/* Botón CERRAR fijo en la parte superior */}
+            <div style={{ textAlign: "right", padding: "10px" }}>
+              <IonButton className = "custom-greenBlue-button" onClick={() => setShowModal(false)}>
+                CERRAR
+              </IonButton>
+            </div>
             {talonarios.length > 0 ? (
               <IonList>
                 {talonarios.map((talonario: any) => (

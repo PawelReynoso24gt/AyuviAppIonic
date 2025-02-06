@@ -120,7 +120,7 @@ const PerfilUsuario: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent className="ion-padding">
+      <IonContent className="page-with-background">
         {loading ? (
           <IonLoading isOpen={loading} message="Cargando..." />
         ) : error ? (
@@ -143,7 +143,13 @@ const PerfilUsuario: React.FC = () => {
                 id="fileInput"
                 onChange={handleFileChange}
               />
-              <button className="update-photo-btn custom-btn" onClick={() => document.getElementById('fileInput')?.click()}>
+              <button className="update-photo-btn custom-btn" onClick={() => document.getElementById('fileInput')?.click()}
+                style={{
+                  marginTop: "20px",
+                  margin: "10px auto",
+                  color: "white",
+                  width: "50%",
+                }}>
                 Actualizar mi foto
               </button>
               {selectedFile && (
@@ -179,7 +185,13 @@ const PerfilUsuario: React.FC = () => {
             </IonList>
 
             {/* Botón para Cambiar Contraseña */}
-            <IonButton expand="block" routerLink="/change-password">
+            <IonButton  expand="block" routerLink="/change-password"  
+            style={{
+                marginTop: "20px",
+                margin: "10px auto",
+                color: "white",
+                width: "50%",
+              }}>
               Cambiar Contraseña
             </IonButton>
 

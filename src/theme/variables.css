@@ -137,6 +137,16 @@ http://ionicframework.com/docs/theming/ */
   font-weight: bold;
 }
 
+.custom-turquoise-button {
+  --background: rgb(12, 146, 170)!important;
+  --background-activated: rgb(12, 146, 170)!important;
+  --box-shadow: none !important;
+  --border-radius: 40px;
+  --padding: 10px 20px;
+  color: white !important;
+  font-weight: bold;
+}
+
 .custom-red-button {
   --background: #ff0000 !important;
   --background-activated: #ff0000 !important;

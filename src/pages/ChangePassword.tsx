@@ -132,17 +132,24 @@ const ChangePassword: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
+      <IonHeader >
         <IonToolbar>
           <IonTitle>Cambiar Contraseña</IonTitle>
         </IonToolbar>
       </IonHeader>
 
-      <IonContent className="ion-padding">
-        <form onSubmit={handleSubmit}>
+      <IonContent className="page-with-background">
+        <form onSubmit={handleSubmit} style={{ marginTop: "50px" }}>
           {/* Contraseña Actual */}
           <IonItem>
-            <IonLabel position="stacked">Contraseña Actual</IonLabel>
+            <IonLabel position="stacked"
+            style={{
+              color: "#FFFFFF",
+              fontWeight: "bold",
+              marginBottom: "5px",
+              fontSize: "20px"
+            }}
+            >Contraseña Actual</IonLabel>
             <IonInput
               type={showPassword.currentPassword ? "text" : "password"}
               name="currentPassword"
@@ -152,13 +159,20 @@ const ChangePassword: React.FC = () => {
             <IonIcon
               slot="end"
               icon={showPassword.currentPassword ? eyeOff : eye}
+              style={{ color: "#0B0921", fontSize: "25px" }} 
               onClick={() => toggleShowPassword("currentPassword")}
             />
           </IonItem>
 
           {/* Nueva Contraseña */}
           <IonItem>
-            <IonLabel position="stacked">Nueva Contraseña</IonLabel>
+            <IonLabel position="stacked"  style={{
+                      color: "#FFFFFF",
+                      fontWeight: "bold",
+                      marginBottom: "5px",
+                      fontSize: "20px"
+                    }}
+                    >Nueva Contraseña</IonLabel>
             <IonInput
               type={showPassword.newPassword ? "text" : "password"}
               name="newPassword"
@@ -168,6 +182,7 @@ const ChangePassword: React.FC = () => {
             <IonIcon
               slot="end"
               icon={showPassword.newPassword ? eyeOff : eye}
+              style={{ color: "#0B0921", fontSize: "25px" }} 
               onClick={() => toggleShowPassword("newPassword")}
             />
           </IonItem>
@@ -179,7 +194,14 @@ const ChangePassword: React.FC = () => {
 
           {/* Confirmar Contraseña */}
           <IonItem>
-            <IonLabel position="stacked">Confirmar Contraseña</IonLabel>
+            <IonLabel position="stacked"
+            style={{
+              color: "#FFFFFF",
+              fontWeight: "bold",
+              marginBottom: "5px",
+              fontSize: "20px"
+            }}
+            >Confirmar Contraseña</IonLabel>
             <IonInput
               type={showPassword.confirmPassword ? "text" : "password"}
               name="confirmPassword"
@@ -189,6 +211,7 @@ const ChangePassword: React.FC = () => {
             <IonIcon
               slot="end"
               icon={showPassword.confirmPassword ? eyeOff : eye}
+              style={{ color: "#0B0921", fontSize: "25px" }} 
               onClick={() => toggleShowPassword("confirmPassword")}
             />
           </IonItem>
@@ -199,7 +222,13 @@ const ChangePassword: React.FC = () => {
           )}
 
           {/* Botón de Enviar */}
-          <IonButton expand="block" type="submit">
+          <IonButton expand="block" type="submit"
+           style={{
+            marginTop: "20px",
+            margin: "10px auto",
+            color: "white",
+            width: "50%",
+          }}>
             Actualizar Contraseña
           </IonButton>
 

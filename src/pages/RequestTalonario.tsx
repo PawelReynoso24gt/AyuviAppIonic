@@ -16,6 +16,7 @@ import {
 } from "@ionic/react";
 import axios from "../services/axios";
 import { getInfoFromToken } from "../services/authService";
+import '../theme/variables.css';
 
 const RequestTalonario: React.FC = () => {
   const [rifas, setRifas] = useState<any[]>([]);
@@ -147,13 +148,36 @@ const RequestTalonario: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent className="ion-padding">
+      <div
+                style={{
+                    padding: "20px",
+                    textAlign: "center",
+                    background: "rgb(12, 146, 170)",
+                    borderRadius: "10px",
+                    margin: "10px",
+                    color: "white",
+                }}
+            >
+                <h2>Gestión de Solicitudes</h2>
+                <p>Visualiza y gestiona tus solicitudes de talonarios.</p>
+            </div>
+
+      <IonContent className="ion-padding page-with-background">
         <IonLoading isOpen={loading} message="Cargando..." />
 
         {/* Selección de rifas */}
-        <IonItem>
-          <IonLabel>Selecciona una Rifa</IonLabel>
-          <IonSelect
+        <div style={{ display:  "flex", justifyContent: "center", alignItems: "center", padding: "20px",  textAlign: "center" }}>
+        <IonItem >
+          <IonSelect   style={{
+                        width: "60%",
+                        maxWidth: "400px",
+                        backgroundColor: "white",
+                        borderRadius: "10px",
+                        color: "rgb(9, 84, 97)",
+                        fontWeight: "bold",
+                        textAlign: "center",
+                    }}
+                       className="custom-ion-select"
             placeholder="Selecciona una rifa"
             onIonChange={(e) => {
               setSelectedRifa(e.detail.value);
@@ -161,24 +185,34 @@ const RequestTalonario: React.FC = () => {
             }}
           >
             {rifas.map((rifa) => (
-              <IonSelectOption key={rifa.idRifa} value={rifa.idRifa}>
+              <IonSelectOption className="custom-ion-select"  key={rifa.idRifa} value={rifa.idRifa}>
                 {`${rifa.nombreRifa} - Precio: ${rifa.precioBoleto} - Fecha Fin: ${rifa.fechaFin}`}
               </IonSelectOption>
             ))}
           </IonSelect>
         </IonItem>
-
+           </div>
         {/* Selección de talonarios */}
         {selectedRifa && (
-          <IonItem>
-            <IonLabel>Selecciona un Talonario</IonLabel>
+             <div style={{ display:  "flex", justifyContent: "center", alignItems: "center", padding: "20px",  textAlign: "center" }}>
+               <IonItem>
             <IonSelect
+             style={{
+              width: "60%",
+              maxWidth: "400px",
+              backgroundColor: "white",
+              borderRadius: "10px",
+              color: "rgb(9, 84, 97)",
+              fontWeight: "bold",
+              textAlign: "center",
+          }}
+             className="custom-ion-select"
               placeholder="Selecciona un talonario"
               onIonChange={(e) => setSelectedTalonario(e.detail.value)}
             >
               {getAvailableTalonarios(rifas.find((rifa) => rifa.idRifa === selectedRifa)).map(
                 (talonario: any) => (
-                  <IonSelectOption
+                  <IonSelectOption className="custom-ion-select"
                     key={talonario.idTalonario}
                     value={talonario.idTalonario}
                   >
@@ -188,9 +222,18 @@ const RequestTalonario: React.FC = () => {
               )}
             </IonSelect>
           </IonItem>
+                  </div>
         )}
 
-        <IonButton expand="block" onClick={handleSubmit}>
+
+        <IonButton expand="block" onClick={handleSubmit}  
+         className="custom-turquoise-button"
+               style={{
+                        margin: "20px auto",
+                        color: "white",
+                        fontWeight: "bold",
+                        width: "50%",
+                    }}>
           Solicitar Talonario
         </IonButton>
 
@@ -206,7 +249,7 @@ const RequestTalonario: React.FC = () => {
 
         {/* Mostrar solicitudes del voluntario */}
         <IonList>
-          <IonLabel className="ion-padding" style={{ color: 'black', background: 'white'}}>Mis Solicitudes:</IonLabel>
+          <IonLabel style={{ padding: "10px", fontWeight: "bold", fontSize: "30px" }}>Mis Solicitudes:</IonLabel>
           {solicitudes.length > 0 ? (
             solicitudes.map((solicitud, index) => {
               const estado = getEstadoSolicitud(solicitud.estado);
@@ -217,9 +260,17 @@ const RequestTalonario: React.FC = () => {
                 rifa.talonarios.some((t: any) => t.idTalonario === solicitud.idTalonario)
               );
               return (
-                <IonItem key={`${solicitud.idSolicitud}-${index}`}>
+                <IonItem key={`${solicitud.idSolicitud}-${index}`}   style={{
+                  backgroundColor: "#F0F8FF",
+                  margin: "10px",
+                  borderRadius: "10px",
+              }}>
                   <IonLabel>
-                    <h2>Talonario #{solicitud.idTalonario}</h2>
+                    <h2  style={{
+                          color: "rgb(12, 146, 170)",
+                          fontWeight: "bold",
+                          fontSize: "20px",
+                          }}>Talonario #{solicitud.idTalonario}</h2>
                     <p>
                       <strong>Código del Talonario:</strong> {talonario?.codigoTalonario}
                     </p>
