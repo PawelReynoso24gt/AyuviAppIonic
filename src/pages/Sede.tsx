@@ -4,6 +4,7 @@ import {
   IonContent,
   IonHeader,
   IonToolbar,
+  IonItem,
   IonTitle,
   IonText,
   IonLoading,
@@ -251,6 +252,7 @@ const Sede: React.FC = () => {
         </IonText>
       )}
     </IonContent>
+   <IonItem style={{ marginBottom: "60px"}}/>
   </IonPage>
   
   );

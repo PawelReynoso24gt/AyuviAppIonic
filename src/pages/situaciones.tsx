@@ -18,6 +18,7 @@ import {
     IonCardHeader,
     IonCardTitle,
     IonCardContent,
+    IonItem
 } from "@ionic/react";
 import axios from "../services/axios";
 import { getInfoFromToken } from "../services/authService";
@@ -27,10 +28,7 @@ import { parse, format } from "date-fns";
 const Situaciones: React.FC = () => {
     const [situaciones, setSituaciones] = useState<any[]>([]);
     const [tipoSituaciones, setTipoSituaciones] = useState<any[]>([]);
-    const [selectedSituacion, setSelectedSituacion] = useState<any>({
-        idTipoSituacion: "",
-        descripcion: "",
-    });
+    const [selectedSituacion, setSelectedSituacion] = useState<any>(null);
     const [newSituacion, setNewSituacion] = useState({
         idTipoSituacion: "",
         descripcion: "",
@@ -49,9 +47,10 @@ const Situaciones: React.FC = () => {
 
     const [selectedEstado, setSelectedEstado] = useState<string>("");
 
-    const filteredSituaciones = selectedEstado
-        ? situaciones.filter((situacion) => situacion.estado === selectedEstado)
-        : situaciones;
+    const filteredSituaciones = selectedEstado && selectedEstado !== ""
+    ? situaciones.filter((situacion) => situacion.estado.trim().toLowerCase() === selectedEstado.trim().toLowerCase())
+    : situaciones;
+
 
 
 
@@ -184,7 +183,7 @@ const Situaciones: React.FC = () => {
                 <IonSelect
                     placeholder="Filtrar por estado"
                     value={selectedEstado}
-                    onIonChange={(e) => setSelectedEstado(e.detail.value)}
+                    onIonChange={(e) => setSelectedEstado(e.detail.value || "")} 
                     style={{
                         width: "60%",
                         maxWidth: "400px",
@@ -307,7 +306,7 @@ const Situaciones: React.FC = () => {
                                 </IonLabel>
                             )}
                         </IonList>
-
+                        <IonItem style={{ marginBottom: "60px"}}/>
 
                     </>
                 )}

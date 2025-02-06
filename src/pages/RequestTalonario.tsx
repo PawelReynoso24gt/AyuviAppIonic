@@ -94,7 +94,7 @@ const RequestTalonario: React.FC = () => {
   // Enviar solicitud
   const handleSubmit = async () => {
     if (!selectedTalonario) {
-      setError("Por favor selecciona un talonario.");
+      setError("Por favor selecciona una rifa y un talonario.");
       return;
     }
 
