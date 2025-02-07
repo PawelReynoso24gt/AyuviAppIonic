@@ -23,6 +23,7 @@ interface Actividad {
   idActividad: number;
   nombre: string;
   descripcion: string;
+  isInscrito: boolean; // Nuevo campo para saber si ya está inscrito
 }
 
 interface Inscripcion {
@@ -36,6 +37,7 @@ const DetalleInscripcionActividad: React.FC = () => {
   const [actividades, setActividades] = useState<Actividad[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
+
   const [selectedActividad, setSelectedActividad] = useState<number | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [inscripcion, setInscripcion] = useState<Inscripcion | null>(null);
@@ -82,7 +84,11 @@ const DetalleInscripcionActividad: React.FC = () => {
       );
 
       if (Array.isArray(response.data)) {
-        setActividades(response.data); // Actualiza el estado con las actividades obtenidas
+        const actividadesConEstado = response.data.map((actividad) => ({
+          ...actividad,
+          isInscrito: actividad.idActividad === inscripcion?.idInscripcionEvento, // Verificar si ya está inscrito
+        }));
+        setActividades(actividadesConEstado); // Actualiza el estado con las actividades obtenidas
       } else {
         console.error("La respuesta no es un arreglo:", response.data);
         setToastMessage("Error: la respuesta del servidor no es válida.");
@@ -121,18 +127,25 @@ const DetalleInscripcionActividad: React.FC = () => {
       setToastMessage(response.data.message || "¡Actividad registrada con éxito!");
       setShowModal(false);
       setSelectedActividad(null);
+  
+      // Aquí actualizamos el estado de las actividades para reflejar que el voluntario está inscrito
+      setActividades((prevActividades) =>
+        prevActividades.map((actividad) =>
+          actividad.idActividad === selectedActividad
+            ? { ...actividad, isInscrito: true } // Marcamos la actividad como inscrita
+            : actividad
+        )
+      );
     } catch (error: any) {
       console.error("Error al registrar actividad:", error.response || error);
       setToastMessage("Error al registrar actividad.");
     }
   };
-
+  
 
   return (
     <IonPage>
-      <IonHeader style={{
-        paddingTop: "50px",
-      }}>
+      <IonHeader style={{ paddingTop: "50px" }}>
         <IonToolbar style={{ backgroundColor: "#4B0082" }}>
           <IonButton
             slot="start"
@@ -148,7 +161,8 @@ const DetalleInscripcionActividad: React.FC = () => {
           <IonTitle style={{ color: "#FFFFFF" }}>Registro de Actividades</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="page-with-background">\ <div
+      <IonContent className="page-with-background">
+        <div
           style={{
             padding: "20px",
             textAlign: "center",
@@ -161,6 +175,7 @@ const DetalleInscripcionActividad: React.FC = () => {
           <h2>Actividades Disponibles</h2>
           <p>Selecciona una actividad para inscribirte.</p>
         </div>
+
         {loading ? (
           <div style={{ textAlign: "center", marginTop: "20px" }}>
             <IonSpinner
@@ -205,8 +220,9 @@ const DetalleInscripcionActividad: React.FC = () => {
                     setSelectedActividad(actividad.idActividad);
                     setShowModal(true);
                   }}
+                  disabled={actividad.isInscrito} // Deshabilitar el botón si ya está inscrito
                 >
-                  Registrar
+                  {actividad.isInscrito ? "Ya inscrito" : "Inscribirse"} {/* Cambiar el texto del botón */}
                 </IonButton>
               </IonItem>
             ))}
@@ -241,15 +257,16 @@ const DetalleInscripcionActividad: React.FC = () => {
               expand="block"
               fill="outline"
               onClick={() => setShowModal(false)}
-              style={{ marginTop: "10px" }}
+              style={{
+                marginTop: "10px",
+              }}
             >
               Cancelar
             </IonButton>
           </div>
         </IonModal>
-
         <IonToast
-          isOpen={!!toastMessage}
+          isOpen={toastMessage !== ""}
           message={toastMessage}
           duration={2000}
           onDidDismiss={() => setToastMessage("")}
