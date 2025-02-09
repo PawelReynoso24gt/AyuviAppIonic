@@ -50,18 +50,35 @@ const DetalleInscripcionActividad: React.FC = () => {
   const idComision = location.state?.idComision ? Number(location.state.idComision) : null;
 
   useEffect(() => {
-    const numericIdVoluntario = Number(idVoluntario); // Asegúrate de que sea número
-    const numericIdComision = Number(idComision); // Asegúrate de que sea número
-
+    const numericIdVoluntario = Number(idVoluntario);
+    const numericIdComision = Number(idComision);
+  
     if (numericIdComision && numericIdVoluntario) {
-      fetchInscripciones(numericIdVoluntario); // Obtener inscripción
-      fetchActividades(numericIdComision); // Cargar actividades de la comisión
+      const actividadesGuardadas = localStorage.getItem('actividades');
+      if (actividadesGuardadas) {
+        setActividades(JSON.parse(actividadesGuardadas));
+      } else {
+        fetchActividades(numericIdComision);
+      }
+      
+      // Recuperar inscripciones previas guardadas en localStorage
+      const inscripcionesGuardadas = JSON.parse(localStorage.getItem('inscripciones') || "[]");
+      
+      fetchInscripciones(numericIdVoluntario);
+      
+      // Verificar inscripciones previas
+      setActividades((prevActividades) =>
+        prevActividades.map((actividad) => ({
+          ...actividad,
+          isInscrito: inscripcionesGuardadas.includes(actividad.idActividad),
+        }))
+      );
     } else {
       setToastMessage("Faltan datos para cargar las actividades.");
       history.push("/registroComisiones");
     }
   }, [idComision, idVoluntario]);
-
+  
   // Obtener los IDs de inscripción (evento y comisión)
   const fetchInscripciones = async (idVoluntario: number) => {
     try {
@@ -79,16 +96,18 @@ const DetalleInscripcionActividad: React.FC = () => {
   const fetchActividades = async (idComision: number) => {
     setLoading(true);
     try {
-      const response = await axios.get<Actividad[]>(
-        `/actividades/comision/${idComision}` // Nuevo endpoint
-      );
-
+      const response = await axios.get<Actividad[]>(`/actividades/comision/${idComision}`);
+      
       if (Array.isArray(response.data)) {
+        const inscripcionesGuardadas = JSON.parse(localStorage.getItem('inscripciones') || "[]");
+  
         const actividadesConEstado = response.data.map((actividad) => ({
           ...actividad,
-          isInscrito: actividad.idActividad === inscripcion?.idInscripcionEvento, // Verificar si ya está inscrito
+          isInscrito: inscripcionesGuardadas.includes(actividad.idActividad),
         }));
-        setActividades(actividadesConEstado); // Actualiza el estado con las actividades obtenidas
+  
+        setActividades(actividadesConEstado);
+        localStorage.setItem('actividades', JSON.stringify(actividadesConEstado));
       } else {
         console.error("La respuesta no es un arreglo:", response.data);
         setToastMessage("Error: la respuesta del servidor no es válida.");
@@ -100,6 +119,7 @@ const DetalleInscripcionActividad: React.FC = () => {
       setLoading(false);
     }
   };
+  
 
   // Manejar registro de actividades
   const handleRegistroActividad = async () => {
@@ -110,37 +130,51 @@ const DetalleInscripcionActividad: React.FC = () => {
   
     try {
       const payload = {
-        estado: 1, // Activo por defecto
+        estado: 1,
         idInscripcionEvento: inscripcion.idInscripcionEvento,
         idInscripcionComision: inscripcion.idInscripcionComision,
         idActividad: selectedActividad,
-        idVoluntario: idVoluntario, // Incluir el idVoluntario
+        idVoluntario: idVoluntario,
       };
   
-      console.log("Payload enviado:", payload);
-  
-      const response = await axios.post(
-        "/detalle_inscripcion_actividades/create",
-        payload
+      const actividadExistente = actividades.find(
+        (actividad) => actividad.idActividad === selectedActividad && actividad.isInscrito
       );
+  
+      if (actividadExistente) {
+        setToastMessage("Ya estás inscrito en esta actividad.");
+        return;
+      }
+  
+      const response = await axios.post("/detalle_inscripcion_actividades/create", payload);
   
       setToastMessage(response.data.message || "¡Actividad registrada con éxito!");
       setShowModal(false);
       setSelectedActividad(null);
   
-      // Aquí actualizamos el estado de las actividades para reflejar que el voluntario está inscrito
-      setActividades((prevActividades) =>
-        prevActividades.map((actividad) =>
-          actividad.idActividad === selectedActividad
-            ? { ...actividad, isInscrito: true } // Marcamos la actividad como inscrita
-            : actividad
-        )
+      // Actualizar la lista de actividades con el nuevo estado
+      const nuevasActividades = actividades.map((actividad) =>
+        actividad.idActividad === selectedActividad
+          ? { ...actividad, isInscrito: true }
+          : actividad
       );
+  
+      setActividades(nuevasActividades);
+      localStorage.setItem('actividades', JSON.stringify(nuevasActividades));
+  
+      // Recuperar inscripciones previas guardadas en localStorage
+      const inscripcionesGuardadas = JSON.parse(localStorage.getItem('inscripciones') || "[]");
+  
+      // Guardar la nueva inscripción en localStorage
+      localStorage.setItem('inscripciones', JSON.stringify([...inscripcionesGuardadas, selectedActividad]));
+  
     } catch (error: any) {
       console.error("Error al registrar actividad:", error.response || error);
       setToastMessage("Error al registrar actividad.");
     }
   };
+  
+  
   
 
   return (
