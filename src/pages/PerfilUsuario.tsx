@@ -167,16 +167,16 @@ const PerfilUsuario: React.FC = () => {
 
             {/* Datos del Usuario */}
             <IonList>
-              <IonItem>
+              <IonItem style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                 <IonLabel><strong>Nombre:</strong> {userData.persona.nombre}</IonLabel>
               </IonItem>
-              <IonItem>
+              <IonItem style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                 <IonLabel><strong>Email:</strong> {userData.persona.correo}</IonLabel>
               </IonItem>
-              <IonItem>
+              <IonItem style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                 <IonLabel><strong>Teléfono:</strong> {userData.persona.telefono}</IonLabel>
               </IonItem>
-              <IonItem>
+              <IonItem style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                 <IonLabel>
                   <strong>Fecha de Registro:</strong>{' '}
                   {fechaRegistro ? moment(fechaRegistro).format('DD/MM/YYYY') : 'No disponible'}

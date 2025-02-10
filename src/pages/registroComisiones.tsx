@@ -19,6 +19,7 @@ import { useHistory } from "react-router-dom";
 import axios from "../services/axios";
 import { getInfoFromToken } from "../services/authService";
 import { useLocation } from "react-router-dom";
+import { parse, format } from "date-fns";
 
 interface LocationState {
   eventoId?: number;
@@ -205,11 +206,12 @@ useEffect(() => {
                   <p style={{ color: "#000080", marginBottom: "5px" }}>
                     Descripción: {comision.descripcion}
                   </p>
+                  
                   {comision.detalleHorario?.horario && (
-                    <p style={{ color: "#000080", fontStyle: "bold" }}>
-                      Horario: {comision.detalleHorario.horario.horarioInicio} -{" "}
-                      {comision.detalleHorario.horario.horarioFinal}
-                    </p>
+                  <p style={{ color: "#000080", fontStyle: "bold" }}>
+                  Horario: {format(parse(comision.detalleHorario.horario.horarioInicio, "HH:mm:ss", new Date()), "hh:mm a")} -{" "}
+                  {format(parse(comision.detalleHorario.horario.horarioFinal, "HH:mm:ss", new Date()), "hh:mm a")}
+              </p>
                   )}
                   <p
                     style={{
@@ -272,6 +274,7 @@ useEffect(() => {
                 </div>
               </IonItem>
             ))}
+             <IonItem style={{ marginBottom: "60px" }} />
           </IonList>
 
         )}
