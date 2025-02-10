@@ -212,7 +212,7 @@ const DetalleInscripcionMaterial: React.FC = () => {
                 </IonButton>
               </IonItem>
             ))}
-             <IonItem style={{ marginBottom: "60px" }} /> <IonItem style={{ marginBottom: "60px" }} />
+             <IonItem style={{ marginBottom: "60px" }} />
           </IonList>
         )}
 
