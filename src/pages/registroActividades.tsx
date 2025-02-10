@@ -260,6 +260,7 @@ const DetalleInscripcionActividad: React.FC = () => {
                 </IonButton>
               </IonItem>
             ))}
+             <IonItem style={{ marginBottom: "60px" }} />
           </IonList>
         )}
 

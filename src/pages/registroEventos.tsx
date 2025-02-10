@@ -166,7 +166,7 @@ const InscripcionesEventos: React.FC = () => {
         ) : (
           <IonList>
             {eventos.map((evento) => (
-              <IonItem
+              <IonItem 
                 key={evento.idEvento}
                 style={{
                   backgroundColor: evento.estado === 1 ? "#D6EAF8" : "#FADBD8",
@@ -256,6 +256,7 @@ const InscripcionesEventos: React.FC = () => {
                 </div>
               </IonItem>
             ))}
+             <IonItem style={{ marginBottom: "60px" }} />
           </IonList>
         )}
 

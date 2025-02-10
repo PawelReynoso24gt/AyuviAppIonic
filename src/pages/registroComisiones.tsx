@@ -274,6 +274,7 @@ useEffect(() => {
                 </div>
               </IonItem>
             ))}
+             <IonItem style={{ marginBottom: "60px" }} />
           </IonList>
 
         )}
