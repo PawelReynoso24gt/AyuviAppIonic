@@ -12,7 +12,7 @@ const usePasswordChangeCheck = () => {
 
   useEffect(() => {
     const checkPasswordChange = async () => {
-      const excludedPaths = ['/login', '/registroAspirante', '/solicitudPendiente'];
+      const excludedPaths = ['/login', '/registroAspirante', '/solicitudPendiente', '/invitado'];
       if (excludedPaths.includes(location.pathname)) {
         return; // No realizar la solicitud si estamos en una de las rutas excluidas
       }
