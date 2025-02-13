@@ -17,7 +17,7 @@ const Login: React.FC = () => {
     const history = useHistory();
 
     useEffect(() => {
-        localStorage.removeItem('authToken');
+        localStorage.clear(); // Limpia el almacenamiento local al cargar la página
         Keyboard.addListener('keyboardWillShow', () => {
             document.body.classList.add('keyboard-visible');
         });
