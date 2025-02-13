@@ -1,8 +1,6 @@
 import axios from 'axios';
 import { getAuthToken } from './authService';
 
-//console.log('API URL cargada desde .env:', import.meta.env.VITE_API_URL);
-
 // Crear instancia de Axios
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL, // Cargar la variable de entorno
@@ -14,10 +12,14 @@ api.interceptors.request.use(
     async (config) => {
         try {
             const token = await getAuthToken();
-            //console.log('Token obtenido en el interceptor:', token);
-            if (token) {
+            const noAuthRoutes = ['/publicaciones/invitado']; // Rutas que no requieren autenticación
+
+            // Verificar si la URL incluye alguna de las rutas que no requieren autenticación
+            const requiresAuth = !noAuthRoutes.some(route => config.url?.includes(route));
+
+            if (token && requiresAuth) {
                 config.headers.Authorization = `Bearer ${token}`;
-            } else {
+            } else if (!token && requiresAuth) {
                 console.warn('No se encontró ningún token.');
             }
             return config;
