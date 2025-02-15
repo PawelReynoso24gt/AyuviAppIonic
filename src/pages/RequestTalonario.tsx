@@ -42,7 +42,10 @@ const RequestTalonario: React.FC = () => {
         const rifasWithTalonarios = await Promise.all(
           rifasData.map(async (rifa: any) => {
             const talonariosResponse = await axios.get(`/rifas/withTalonarios/${rifa.idRifa}`);
-            return { ...rifa, talonarios: talonariosResponse.data.talonarios };
+            const availableTalonarios = talonariosResponse.data.talonarios.filter(
+              (talonario: any) => talonario.solicitado === 0
+            );
+            return { ...rifa, talonarios: availableTalonarios };
           })
         );
 
