@@ -31,6 +31,7 @@ import axios from "../services/axios"; // Instancia de Axios
 import { getInfoFromToken } from "../services/authService";
 import { Camera, CameraResultType, CameraSource } from "@capacitor/camera"; // Importa el plugin de Camera
 import '../theme/variables.css';
+import imageCompression from 'browser-image-compression';
 interface Producto {
   idProducto: number;
   nombreProducto: string;
@@ -91,6 +92,7 @@ const VoluntarioProductos: React.FC = () => {
   const [totalAPagar, setTotalAPagar] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
 const itemsPerPage = 3; // Número de productos por página
+const [fileNames, setFileNames] = useState<{ [key: number]: string }>({}); // nombre de arhivos
 
 const currentProducts = selectedStand?.detallesStands.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) || [];
 
@@ -214,26 +216,84 @@ const recalculateTotals = (detalles: DetallesVenta[], donacion: number) => {
     setIsPagoValido(pagoTotal > 0 && pagoTotal >= nuevoTotalAPagar);
 };
 
-  // función para usar la cámara o la galería
+  const compressImageTo50KB = async (file: File) => {
+      try {
+          // **Opciones de compresión**
+          const options = {
+              maxSizeMB: 0.05, // 50KB = 0.05MB
+              maxWidthOrHeight: 800, // Mantener un tamaño decente
+              useWebWorker: true, // Usar un proceso en segundo plano
+              alwaysKeepResolution: true, // Evita distorsión
+          };
+  
+          let compressedFile = await imageCompression(file, options);
+  
+          console.log(`Comenzando compresión: ${file.size / 1024} KB`);
+  
+          // **Si la imagen sigue siendo mayor a 50KB, reducir calidad dinámicamente**
+          let attempts = 0;
+          while (compressedFile.size > 51200 && attempts < 3) { // 50KB = 51200 bytes
+              options.maxSizeMB *= 0.9; // Reduce calidad en cada iteración
+              compressedFile = await imageCompression(compressedFile, options);
+          }
+  
+          console.log(`Tamaño final: ${(compressedFile.size / 1024).toFixed(2)} KB`);
+          return compressedFile;
+      } catch (error) {
+          console.error("Error al comprimir la imagen:", error);
+          return file; // Devuelve el archivo original si hay error
+      }
+  };
+    
     const handleFileUpload = async (index: number) => {
-        try {
-            const photo = await Camera.getPhoto({
-                resultType: CameraResultType.Base64,
-                source: CameraSource.Photos, // Cambia esto a CameraSource.Camera si prefieres usar la cámara en lugar de la galería
-                quality: 100,
-            });
-
-            const nuevosPagos = [...tiposPagos];
-            // Guardar la cadena Base64 directamente sin el prefijo
-            nuevosPagos[index].imagenTransferencia = photo.base64String || "";
-            setTiposPagos(nuevosPagos);
-
-            // Mostrar mensaje de éxito
-            setToastMessage("Foto cargada exitosamente.");
-        } catch (error) {
-            console.error("Error uploading file:", error);
-            setToastMessage("Error al subir la imagen.");
-        }
+      try {
+        const photo = await Camera.getPhoto({
+          resultType: CameraResultType.Uri,
+          source: CameraSource.Photos,
+          quality: 100,
+        });
+    
+        if (!photo.webPath) {
+          throw new Error("No se pudo obtener la imagen.");
+      }
+  
+      // **Obtener imagen como Blob**
+      const response = await fetch(photo.webPath);
+      const blob = await response.blob();
+  
+      // **Convertir el Blob en File**
+      const file = new File([blob], `image_${index}.jpg`, { type: blob.type });
+  
+      console.log(`Imagen capturada: ${file.name}`);
+      console.log(`Tamaño original: ${(file.size / 1024).toFixed(2)} KB`);
+  
+      // **Comprimir imagen a 50KB**
+      const compressedFile = await compressImageTo50KB(file);
+  
+      console.log(`Tamaño después de compresión: ${(compressedFile.size / 1024).toFixed(2)} KB`);
+  
+      // **Convertir a HEX**
+      const arrayBuffer = await compressedFile.arrayBuffer();
+      const byteArray = new Uint8Array(arrayBuffer);
+      const hexString = Array.from(byteArray)
+          .map(byte => byte.toString(16).padStart(2, "0"))
+          .join("");
+  
+      console.log(`Longitud del HEX: ${hexString.length} caracteres`);
+  
+      // **Actualizar estado**
+      const nuevosPagos = [...tiposPagos];
+      nuevosPagos[index].imagenTransferencia = hexString;
+      setTiposPagos(nuevosPagos);
+  
+      // **Guardar el nombre del archivo**
+      setFileNames((prev) => ({ ...prev, [index]: file.name }));
+    
+        setToastMessage("Foto cargada exitosamente.");
+      } catch (error) {
+        console.error("Error uploading file:", error);
+        setToastMessage("Error al subir la imagen.");
+      }
     };
 
     const handleCreateVenta = async () => {

@@ -30,6 +30,7 @@ import axios from "../services/axios"; // Instancia de Axios
 import { getInfoFromToken } from "../services/authService";
 import { Camera, CameraResultType, CameraSource } from "@capacitor/camera";
 import '../theme/variables.css';
+import imageCompression from 'browser-image-compression';
 
 type Pago = {
   idTipoPago: string;
@@ -56,6 +57,7 @@ const [tiposPagosOptions, setTiposPagosOptions] = useState<{ idTipoPago: string;
 const [totalVenta, setTotalVenta] = useState<number>(0);
 const [currentPage, setCurrentPage] = useState(1);
 const itemsPerPage = 5; // Número de rifas por página
+const [fileNames, setFileNames] = useState<{ [key: number]: string }>({}); // nombre de arhivos
 
 
 const currentRifas = rifas.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -183,18 +185,79 @@ const currentRifas = rifas.slice((currentPage - 1) * itemsPerPage, currentPage *
   
     setTiposPagos((prevPagos) => [...prevPagos, nuevoPago]);
   };
+
+  const compressImageTo50KB = async (file: File) => {
+    try {
+        // **Opciones de compresión**
+        const options = {
+            maxSizeMB: 0.05, // 50KB = 0.05MB
+            maxWidthOrHeight: 800, // Mantener un tamaño decente
+            useWebWorker: true, // Usar un proceso en segundo plano
+            alwaysKeepResolution: true, // Evita distorsión
+        };
+
+        let compressedFile = await imageCompression(file, options);
+
+        console.log(`Comenzando compresión: ${file.size / 1024} KB`);
+
+        // **Si la imagen sigue siendo mayor a 50KB, reducir calidad dinámicamente**
+        let attempts = 0;
+        while (compressedFile.size > 51200 && attempts < 3) { // 50KB = 51200 bytes
+            options.maxSizeMB *= 0.9; // Reduce calidad en cada iteración
+            compressedFile = await imageCompression(compressedFile, options);
+        }
+
+        console.log(`Tamaño final: ${(compressedFile.size / 1024).toFixed(2)} KB`);
+        return compressedFile;
+    } catch (error) {
+        console.error("Error al comprimir la imagen:", error);
+        return file; // Devuelve el archivo original si hay error
+    }
+};
   
   const handleFileUpload = async (index: number) => {
     try {
       const photo = await Camera.getPhoto({
-        resultType: CameraResultType.Base64,
+        resultType: CameraResultType.Uri,
         source: CameraSource.Photos,
         quality: 100,
       });
   
-      const nuevosPagos = [...tiposPagos];
-      nuevosPagos[index].imagenTransferencia = photo.base64String || "";
-      setTiposPagos(nuevosPagos);
+      if (!photo.webPath) {
+        throw new Error("No se pudo obtener la imagen.");
+    }
+
+    // **Obtener imagen como Blob**
+    const response = await fetch(photo.webPath);
+    const blob = await response.blob();
+
+    // **Convertir el Blob en File**
+    const file = new File([blob], `image_${index}.jpg`, { type: blob.type });
+
+    console.log(`Imagen capturada: ${file.name}`);
+    console.log(`Tamaño original: ${(file.size / 1024).toFixed(2)} KB`);
+
+    // **Comprimir imagen a 50KB**
+    const compressedFile = await compressImageTo50KB(file);
+
+    console.log(`Tamaño después de compresión: ${(compressedFile.size / 1024).toFixed(2)} KB`);
+
+    // **Convertir a HEX**
+    const arrayBuffer = await compressedFile.arrayBuffer();
+    const byteArray = new Uint8Array(arrayBuffer);
+    const hexString = Array.from(byteArray)
+        .map(byte => byte.toString(16).padStart(2, "0"))
+        .join("");
+
+    console.log(`Longitud del HEX: ${hexString.length} caracteres`);
+
+    // **Actualizar estado**
+    const nuevosPagos = [...tiposPagos];
+    nuevosPagos[index].imagenTransferencia = hexString;
+    setTiposPagos(nuevosPagos);
+
+    // **Guardar el nombre del archivo**
+    setFileNames((prev) => ({ ...prev, [index]: file.name }));
   
       setToastMessage("Foto cargada exitosamente.");
     } catch (error) {
@@ -456,10 +519,16 @@ const currentRifas = rifas.slice((currentPage - 1) * itemsPerPage, currentPage *
                     </IonCol>
                     </IonRow>
                     <IonRow>
-                    <IonCol size="6">Imagen:</IonCol>
-                    <IonCol size="6">
-                        <IonButton onClick={() => handleFileUpload(index)}>Subir Imagen</IonButton>
-                    </IonCol>
+                        <IonCol size="6">Imagen:</IonCol>
+                        <IonCol size="6">
+                            <IonButton onClick={() => handleFileUpload(index)}>Subir Imagen</IonButton>
+                            {/* Mostrar el nombre del archivo si existe */}
+                            {fileNames[index] && (
+                                <p style={{ fontSize: "12px", color: "green", marginTop: "5px" }}>
+                                    {fileNames[index]}
+                                </p>
+                            )}
+                        </IonCol>
                     </IonRow>
                     <IonButton color="danger" onClick={() => handleRemovePago(index)}>Quitar Pago</IonButton>
                 </IonGrid>
