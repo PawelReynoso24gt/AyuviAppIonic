@@ -45,7 +45,7 @@ const Sede: React.FC = () => {
           .filter((foto: any) => foto.idSede === tokenInfo.idSede && foto.estado === 1)
           .map((foto: any) => ({
             id: foto.idFotoSede,
-            ruta: `http://localhost:5000/${foto.foto.replace(/\\/g, '/')}`,
+            ruta: `${axios.defaults.baseURL}/${foto.foto.replace(/\\/g, '/')}`,
           }));
 
         setFotosSede(fotosFiltradas);

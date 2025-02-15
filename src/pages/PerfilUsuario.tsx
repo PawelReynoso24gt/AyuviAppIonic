@@ -58,11 +58,11 @@ const PerfilUsuario: React.FC = () => {
         }
 
         setUserData(loggedUser);
-        const photoPath = loggedUser.persona.foto !== "sin foto" ? `http://localhost:5000/${loggedUser.persona.foto.replace(/\\/g, '/')}` : profileImg;
+        const photoPath = loggedUser.persona.foto !== "sin foto" ? `${axios.defaults.baseURL}/${loggedUser.persona.foto.replace(/\\/g, '/')}` : profileImg;
         setPreview(photoPath);
 
         // Generar URL del código QR
-        setQrCodeUrl(`http://localhost:5000/generateQR?data=${loggedUser.idUsuario}`);
+        setQrCodeUrl(`${axios.defaults.baseURL}/generateQR?data=${loggedUser.idUsuario}`);
       } catch (err) {
         setError('Error al cargar el perfil del usuario.');
         console.error(err);
@@ -98,7 +98,7 @@ const PerfilUsuario: React.FC = () => {
         console.log("Foto actualizada:", response.data);
         setSuccessMessage("Se han guardado los cambios correctamente.");
         setSelectedFile(null);
-        const photoPath = response.data.foto !== "sin foto" ? `http://localhost:5000/${response.data.foto.replace(/\\/g, '/')}` : profileImg;
+        const photoPath = response.data.foto !== "sin foto" ? `${axios.defaults.baseURL}/${response.data.foto.replace(/\\/g, '/')}` : profileImg;
         setPreview(photoPath);
       } catch (err) {
         console.error("Error al actualizar la foto:", err);
@@ -108,7 +108,7 @@ const PerfilUsuario: React.FC = () => {
 
   const handleDiscardChanges = () => {
     setSelectedFile(null);
-    const photoPath = userData.persona.foto !== "sin foto" ? `http://localhost:5000/${userData.persona.foto.replace(/\\/g, '/')}` : profileImg;
+    const photoPath = userData.persona.foto !== "sin foto" ? `${axios.defaults.baseURL}/${userData.persona.foto.replace(/\\/g, '/')}` : profileImg;
     setPreview(photoPath);
   };
 
