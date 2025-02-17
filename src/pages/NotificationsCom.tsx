@@ -158,6 +158,8 @@ const NotificationsCom: React.FC = () => {
                 <IonLabel>No hay notificaciones.</IonLabel>
               </IonItem>
             )}
+            {/* Agrega este IonItem aquí para empujar el contenido hacia arriba */}
+            <IonItem style={{ marginBottom: "60px"}}/>
           </IonList>
         )}
         <IonToast
