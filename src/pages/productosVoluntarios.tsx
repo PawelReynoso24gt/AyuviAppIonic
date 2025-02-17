@@ -615,7 +615,7 @@ const VoluntarioProductos: React.FC = () => {
                 <p><strong>Precio:</strong> Q{detalle.producto.precio}</p>
                 <div style={{ textAlign: "center", marginTop: "10px" }}>
                   <img
-                    src={`https://3hkpqqqv-5000.use.devtunnels.ms/${detalle.producto.foto}`}
+                    src={`https://api.voluntariadoayuvi.com/${detalle.producto.foto}`}
                     alt={detalle.producto.nombreProducto}
                     style={{ width: "100px", height: "100px", objectFit: "cover", borderRadius: "10px" }}
                   />
