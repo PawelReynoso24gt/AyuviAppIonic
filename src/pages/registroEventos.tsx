@@ -49,7 +49,7 @@ const InscripcionesEventos: React.FC = () => {
     try {
       const response = await axios.get<Evento[]>(`/eventos/activo?idVoluntario=${idVoluntario}`);
       setEventos(response.data);
-      console.log(response.data)
+      //console.log(response.data)
     } catch (error: any) {
       const errorMessage =
         error.response?.data?.message || error.message || "Error desconocido al cargar eventos.";

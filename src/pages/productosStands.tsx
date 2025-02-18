@@ -227,7 +227,7 @@ const compressImageTo50KB = async (file: File) => {
 
         let compressedFile = await imageCompression(file, options);
 
-        console.log(`Comenzando compresión: ${file.size / 1024} KB`);
+        //console.log(`Comenzando compresión: ${file.size / 1024} KB`);
 
         // **Si la imagen sigue siendo mayor a 50KB, reducir calidad dinámicamente**
         let attempts = 0;
@@ -236,7 +236,7 @@ const compressImageTo50KB = async (file: File) => {
             compressedFile = await imageCompression(compressedFile, options);
         }
 
-        console.log(`Tamaño final: ${(compressedFile.size / 1024).toFixed(2)} KB`);
+        //console.log(`Tamaño final: ${(compressedFile.size / 1024).toFixed(2)} KB`);
         return compressedFile;
     } catch (error) {
         console.error("Error al comprimir la imagen:", error);
@@ -263,13 +263,13 @@ const compressImageTo50KB = async (file: File) => {
     // **Convertir el Blob en File**
     const file = new File([blob], `image_${index}.jpg`, { type: blob.type });
 
-    console.log(`Imagen capturada: ${file.name}`);
-    console.log(`Tamaño original: ${(file.size / 1024).toFixed(2)} KB`);
+    //console.log(`Imagen capturada: ${file.name}`);
+    //console.log(`Tamaño original: ${(file.size / 1024).toFixed(2)} KB`);
 
     // **Comprimir imagen a 50KB**
     const compressedFile = await compressImageTo50KB(file);
 
-    console.log(`Tamaño después de compresión: ${(compressedFile.size / 1024).toFixed(2)} KB`);
+    //console.log(`Tamaño después de compresión: ${(compressedFile.size / 1024).toFixed(2)} KB`);
 
     // **Convertir a HEX**
     const arrayBuffer = await compressedFile.arrayBuffer();
@@ -278,7 +278,7 @@ const compressImageTo50KB = async (file: File) => {
         .map(byte => byte.toString(16).padStart(2, "0"))
         .join("");
 
-    console.log(`Longitud del HEX: ${hexString.length} caracteres`);
+    //console.log(`Longitud del HEX: ${hexString.length} caracteres`);
 
     // **Actualizar estado**
     const nuevosPagos = [...tiposPagos];

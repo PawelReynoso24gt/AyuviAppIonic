@@ -95,7 +95,7 @@ const PerfilUsuario: React.FC = () => {
             'Content-Type': 'multipart/form-data'
           }
         });
-        console.log("Foto actualizada:", response.data);
+        //console.log("Foto actualizada:", response.data);
         setSuccessMessage("Se han guardado los cambios correctamente.");
         setSelectedFile(null);
         const photoPath = response.data.foto !== "sin foto" ? `${axios.defaults.baseURL}/${response.data.foto.replace(/\\/g, '/')}` : profileImg;

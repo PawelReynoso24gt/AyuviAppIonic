@@ -128,7 +128,7 @@ const AsignarStands: React.FC = () => {
                 },
             }));
 
-            console.log(asignacionesProcesadas);
+            //console.log(asignacionesProcesadas);
             setAsignacionesUsuario(asignacionesProcesadas);
         } catch (error: any) {
             console.error("Error fetching asignaciones:", error.response || error);
@@ -147,7 +147,7 @@ const AsignarStands: React.FC = () => {
             const response = await axios.get<Inscripcion[]>(
                 `/inscripciones/${idVoluntario}`
             );
-            console.log("Inscripciones obtenidas:", response.data); // Depura la respuesta
+            //console.log("Inscripciones obtenidas:", response.data); // Depura la respuesta
             setInscripciones(response.data); // Asegúrate de que sea un array
         } catch (error: any) {
             console.error("Error fetching inscripciones:", error.response || error);
@@ -222,7 +222,7 @@ const AsignarStands: React.FC = () => {
                 idDetalleHorario: selectedHorario,
             });
             setToastMessage(response.data.message || "Horario actualizado con éxito.");
-            console.log(asignacionUsuario);
+            //console.log(asignacionUsuario);
             setAsignacionUsuario((prev) => ({
                 ...prev!,
                 idDetalleHorario: selectedHorario,
@@ -267,7 +267,7 @@ const AsignarStands: React.FC = () => {
             const response = await axios.get<Horario[]>(
                 `/standHorario/${standId}`
             );
-            console.log("Horarios recibidos del backend:", response.data);
+            //console.log("Horarios recibidos del backend:", response.data);
             setHorarios(response.data);
         } catch (error: any) {
             console.error("Error fetching horarios:", error.response || error);
@@ -403,7 +403,7 @@ const AsignarStands: React.FC = () => {
                         <IonRadioGroup
                             value={selectedHorario}
                             onIonChange={(e) => {
-                                console.log("Horario seleccionado:", e.detail.value); // Debug para confirmar el valor
+                                //console.log("Horario seleccionado:", e.detail.value); // Debug para confirmar el valor
                                 setSelectedHorario(e.detail.value); // Actualiza el estado
                             }}
                         >

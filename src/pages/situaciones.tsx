@@ -72,7 +72,7 @@ const Situaciones: React.FC = () => {
         try {
             const response = await axios.get("/tipo_situaciones/activos");
             setTipoSituaciones(response.data);
-            console.log("Datos de situaciones:", response.data);
+            //console.log("Datos de situaciones:", response.data);
         } catch (error) {
             console.error("Error fetching tipos:", error);
             setToastMessage("Error al cargar los tipos de situaciones.");
