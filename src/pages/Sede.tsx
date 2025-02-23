@@ -45,7 +45,7 @@ const Sede: React.FC = () => {
           .filter((foto: any) => foto.idSede === tokenInfo.idSede && foto.estado === 1)
           .map((foto: any) => ({
             id: foto.idFotoSede,
-            ruta: `${axios.defaults.baseURL}/${foto.foto.replace(/\\/g, '/')}`,
+            ruta: `http://localhost:5000/${foto.foto.replace(/\\/g, '/')}`,
           }));
 
         setFotosSede(fotosFiltradas);
@@ -107,24 +107,13 @@ const Sede: React.FC = () => {
                   fontSize: '30px',
                   fontWeight: 'bold',
                   display: 'block',
-                  marginBottom: '10px',
+                  marginBottom: '20px',
                   
                 }}
               >
                 {sedeData.nombreSede}
               </IonText>
               </div>
-              <IonTitle 
-                style={{
-                  textAlign: 'center',
-                  padding: "10px", 
-                  fontWeight: "bold", 
-                  fontSize: "25px",
-                  color: "black"
-                }}
-              >
-                Información
-              </IonTitle>
               <IonText
                 style={{
                   textAlign: 'justify',
