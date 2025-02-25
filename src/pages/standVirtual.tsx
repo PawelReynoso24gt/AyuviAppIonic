@@ -438,6 +438,7 @@ const recalculateTotals = (detalles: DetallesVenta[], donacion: number) => {
               borderRadius: "10px",
               margin: "10px",
               color: "white",
+              marginTop: "50px",
           }}
       >
           <h2>Stand Virtual</h2>

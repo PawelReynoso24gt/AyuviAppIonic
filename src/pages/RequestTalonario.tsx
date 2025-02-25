@@ -162,6 +162,7 @@ const RequestTalonario: React.FC = () => {
               borderRadius: "10px",
               margin: "5px",
               color: "white",
+              marginTop: "100px"
             }}
           >
             <h2>Gestión de Solicitudes</h2>

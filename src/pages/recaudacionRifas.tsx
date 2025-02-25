@@ -370,6 +370,7 @@ const currentRifas = rifas.slice((currentPage - 1) * itemsPerPage, currentPage *
                 borderRadius: "10px",
                 margin: "10px",
                 color: "white",
+                marginTop: "50px",
             }}
         >
             <h2>Recaudaciones de Rifas</h2>

@@ -156,56 +156,58 @@ const Registro: React.FC = () => {
           alignItems: 'center',
           padding: '20px',
         }}>
-          <div className="container">
+          <div className="container" style={{ marginTop: '10px' }}>
           <img src={logo} alt="Logo Ayuvi" className="logoaspirante" />
           </div>
         <IonItem
           style={{
             display: 'flex', // Habilitar flexbox
-            justifyContent: 'center', // Centrar horizontalmente
-            alignItems: 'center', // Centrar verticalmente
-            width: '100%', // Ajustar ancho
             maxWidth: '300px', // Ancho máximo
-            height: '100px', // Altura del combobox
+            height: '120px', // Altura del combobox
             margin: '16px auto', // Margen para separación y centrar horizontalmente
             textAlign: 'center', // Alinear contenido
             borderRadius: '8px', // Opcional: bordes redondeados
             backgroundColor: '#55A605', // Opcional: sombra para diseño
           }}>
-          <IonLabel position="floating">Nombre Completo</IonLabel>
-          <IonInput
-            value={formData.nombre}
-            onIonChange={(e) => handleInputChange('nombre', e.detail.value!)}
-            style={{
-              fontSize: '16px',
-              width: '50%',
-            }}
-            placeholder="Ingrese su nombre"
-            className="ion-padding-top"
-          />
+          <div style={{ justifyContent: 'center', }}>
+            <IonLabel className="custom-label">Nombre Completo</IonLabel>
+          </div>
+
+          <div style={{width: '100%', marginTop: '40px', justifyContent: 'center',}}>
+            <IonInput
+              value={formData.nombre}
+              onIonChange={(e) => handleInputChange('nombre', e.detail.value!)}
+              style={{
+                //marginBottom: '5px',
+                fontSize: '16px',
+                width: '100%',
+              }}
+              placeholder="Ingrese su nombre"
+            />
+          </div>
         </IonItem>
 
         <IonItem
           style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: '100%',
-            maxWidth: '300px',
-            height: '100px',
-            margin: '16px auto',
-            textAlign: 'center',
-            borderRadius: '8px',
+            display: 'flex', // Habilitar flexbox
+            maxWidth: '300px', // Ancho máximo
+            height: '120px', // Altura del combobox
+            margin: '16px auto', // Margen para separación y centrar horizontalmente
+            textAlign: 'center', // Alinear contenido
+            borderRadius: '8px', // Opcional: bordes redondeados
             backgroundColor: '#D62498',
           }}>
-          <IonLabel position="floating" >Fecha de Nacimiento</IonLabel>
+          <div style={{ justifyContent: 'center', }}>
+            <IonLabel className="custom-label">Fecha de Nacimiento</IonLabel>
+          </div>
+          <div style={{width: '100%', marginTop: '40px', justifyContent: 'center',}}>
           <IonInput
             value={formData.fechaNacimiento}
             readonly
             placeholder="Seleccione su fecha de nacimiento"
-            className="ion-padding-top"
             onClick={() => setIsDatePickerVisible(true)}
           />
+          </div>
         </IonItem>
 
         {/* Mostrar IonDatetime solo si isDatePickerVisible es true */}
@@ -258,93 +260,97 @@ const Registro: React.FC = () => {
 
         <IonItem
           style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: '100%',
-            maxWidth: '300px',
-            height: '100px',
-            margin: '16px auto',
-            textAlign: 'center',
-            borderRadius: '8px',
+            display: 'flex', // Habilitar flexbox
+            maxWidth: '300px', // Ancho máximo
+            height: '120px', // Altura del combobox
+            margin: '16px auto', // Margen para separación y centrar horizontalmente
+            textAlign: 'center', // Alinear contenido
+            borderRadius: '8px', // Opcional: bordes redondeados
             backgroundColor: '#28C3F9',
           }}>
-          <IonLabel position="floating"  >Teléfono</IonLabel>
-          <IonInput
-            value={formData.telefono}
-            onIonChange={(e) => handleInputChange('telefono', e.detail.value!)}
-            placeholder="Ingrese su teléfono"
-            className="ion-padding-top"
-            type="tel"
-          />
+          <div style={{ justifyContent: 'center', }}>
+            <IonLabel className="custom-label"  >Teléfono</IonLabel>
+          </div>
+
+          <div style={{width: '100%', marginTop: '40px', justifyContent: 'center',}}>
+            <IonInput
+              value={formData.telefono}
+              onIonChange={(e) => handleInputChange('telefono', e.detail.value!)}
+              placeholder="Ingrese su teléfono"
+              type="tel"
+            />
+          </div>
         </IonItem>
 
         <IonItem
           style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: '100%',
-            maxWidth: '300px',
-            height: '100px',
-            margin: '16px auto',
-            textAlign: 'center',
-            borderRadius: '8px',
+            display: 'flex', // Habilitar flexbox
+            maxWidth: '300px', // Ancho máximo
+            height: '120px', // Altura del combobox
+            margin: '16px auto', // Margen para separación y centrar horizontalmente
+            textAlign: 'center', // Alinear contenido
+            borderRadius: '8px', // Opcional: bordes redondeados
             backgroundColor: '#F77310',
           }}>
-          <IonLabel position="floating" >Domicilio</IonLabel>
-          <IonInput
-            value={formData.domicilio}
-            onIonChange={(e) => handleInputChange('domicilio', e.detail.value!)}
-            placeholder="Ingrese su domicilio"
-            className="ion-padding-top"
-          />
+          <div style={{ justifyContent: 'center', }}>
+            <IonLabel className="custom-label" >Domicilio</IonLabel>
+          </div>
+
+          <div style={{width: '100%', marginTop: '40px', justifyContent: 'center',}}>
+            <IonInput
+              value={formData.domicilio}
+              onIonChange={(e) => handleInputChange('domicilio', e.detail.value!)}
+              placeholder="Ingrese su domicilio"
+            />
+          </div>
         </IonItem>
 
         <IonItem
           style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: '100%',
-            maxWidth: '300px',
-            height: '100px',
-            margin: '16px auto',
-            textAlign: 'center',
-            borderRadius: '8px',
+            display: 'flex', // Habilitar flexbox
+            maxWidth: '300px', // Ancho máximo
+            height: '120px', // Altura del combobox
+            margin: '16px auto', // Margen para separación y centrar horizontalmente
+            textAlign: 'center', // Alinear contenido
+            borderRadius: '8px', // Opcional: bordes redondeados
             backgroundColor: '#FFBC24',
           }}>
-          <IonLabel position="floating" >CUI</IonLabel>
-          <IonInput
-            value={formData.CUI}
-            onIonChange={(e) => handleInputChange('CUI', e.detail.value!)}
-            placeholder="Ingrese su CUI"
-            className="ion-padding-top"
-            type="number"
-          />
+          <div style={{ justifyContent: 'center', }}>
+            <IonLabel className="custom-label" >CUI</IonLabel>
+          </div>
+
+          <div style={{width: '100%', marginTop: '40px', justifyContent: 'center',}}>
+            <IonInput
+              value={formData.CUI}
+              onIonChange={(e) => handleInputChange('CUI', e.detail.value!)}
+              placeholder="Ingrese su CUI"
+              type="number"
+            />
+          </div>
         </IonItem>
 
         <IonItem
           style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: '100%',
-            maxWidth: '300px',
-            height: '100px',
-            margin: '16px auto',
-            textAlign: 'center',
-            borderRadius: '8px',
+            display: 'flex', // Habilitar flexbox
+            maxWidth: '300px', // Ancho máximo
+            height: '120px', // Altura del combobox
+            margin: '16px auto', // Margen para separación y centrar horizontalmente
+            textAlign: 'center', // Alinear contenido
+            borderRadius: '8px', // Opcional: bordes redondeados
             backgroundColor: '#8500BC',
           }}>
-          <IonLabel position="floating"  >Correo Electrónico</IonLabel>
-          <IonInput
-            value={formData.correo}
-            onIonChange={(e) => handleInputChange('correo', e.detail.value!)}
-            placeholder="Ingrese su correo electrónico"
-            className="ion-padding-top"
-            type="email"
-          />
+          <div style={{ justifyContent: 'center', }}>
+            <IonLabel className="custom-label" >Correo Electrónico</IonLabel>
+          </div>
+
+          <div style={{width: '100%', marginTop: '40px', justifyContent: 'center',}}>
+            <IonInput
+              value={formData.correo}
+              onIonChange={(e) => handleInputChange('correo', e.detail.value!)}
+              placeholder="Ingrese su correo electrónico"
+              type="email"
+            />
+          </div>
         </IonItem>
 
         <IonItem 

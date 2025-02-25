@@ -106,6 +106,7 @@ const NotificationsCom: React.FC = () => {
                 borderRadius: "10px",
                 margin: "10px",
                 color: "white",
+                marginTop: "15px",
             }}
         >
             <h2>Notificaciones</h2>

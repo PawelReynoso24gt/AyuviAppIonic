@@ -114,7 +114,7 @@ const PerfilUsuario: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
+      <IonHeader style={{ marginTop: "10px" }}>
         <IonToolbar>
           <IonTitle>Perfil de Usuario</IonTitle>
         </IonToolbar>
@@ -210,6 +210,7 @@ const PerfilUsuario: React.FC = () => {
         ) : (
           <IonText color="danger">No se encontraron datos del usuario.</IonText>
         )}
+        <IonItem style={{ marginBottom: "60px"}}/>
       </IonContent>
     </IonPage>
   );

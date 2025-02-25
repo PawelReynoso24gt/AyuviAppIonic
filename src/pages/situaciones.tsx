@@ -169,6 +169,7 @@ const Situaciones: React.FC = () => {
                     borderRadius: "10px",
                     margin: "5px",
                     color: "white",
+                    marginTop: "80px",
                 }}
             >
                 <h2>Gestión de Situaciones</h2>

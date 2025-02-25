@@ -396,6 +396,7 @@ const VoluntarioProductos: React.FC = () => {
               borderRadius: "10px",
               margin: "10px",
               color: "white",
+              marginTop: "50px",
           }}
       >
           <h2>Ventas por Voluntario</h2>
