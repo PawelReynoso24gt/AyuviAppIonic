@@ -364,11 +364,6 @@ const VoluntarioProductos: React.FC = () => {
   if (loading) {
     return (
       <IonPage className="page-with-background">
-        <IonHeader>
-          <IonToolbar style={{ backgroundColor: "#0274E5" }}>
-            <IonTitle style={{ color: "#000000" }}>Productos del Voluntario</IonTitle>
-          </IonToolbar>
-        </IonHeader>
         <IonContent>
           <div style={{ textAlign: "center", marginTop: "20px" }}>
             <IonSpinner name="crescent" style={{ color: "#0274E5" }} />
@@ -381,11 +376,6 @@ const VoluntarioProductos: React.FC = () => {
   if (!voluntario) {
     return (
       <IonPage>
-        <IonHeader>
-          <IonToolbar style={{ backgroundColor: "#0274E5" }}>
-            <IonTitle style={{ color: "#000000" }}>Productos del Voluntario</IonTitle>
-          </IonToolbar>
-        </IonHeader>
         <IonContent className="page-with-background">
           <div style={{ textAlign: "center", marginTop: "100px", color: "#0274E5", fontSize: "20px" }}>
             <p>No se encontraron productos asignados a usted.</p>
@@ -397,11 +387,6 @@ const VoluntarioProductos: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar style={{ backgroundColor: "#0274E5" }}>
-          <IonTitle style={{ color: "#000000" }}>Productos del Voluntario</IonTitle>
-        </IonToolbar>
-      </IonHeader>
       <IonContent className="page-with-background">
       <div
           style={{

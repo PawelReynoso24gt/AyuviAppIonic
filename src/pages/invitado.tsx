@@ -132,11 +132,6 @@ const Home: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Invitad@</IonTitle>
-        </IonToolbar>
-      </IonHeader>
       <IonContent>
         <div style={styles.welcomeContainer} className="page-with-background">
           <h2>Bienvenid@</h2>

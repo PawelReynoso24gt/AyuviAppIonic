@@ -97,11 +97,6 @@ const NotificationsCom: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar style={{ backgroundColor: "#0274E5" }}>
-          <IonTitle style={{ color: "#FFFFFF" }}>Notificaciones</IonTitle>
-        </IonToolbar>
-      </IonHeader>
       <IonContent className="page-with-background">
       <div
             style={{

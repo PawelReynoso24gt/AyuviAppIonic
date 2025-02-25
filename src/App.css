@@ -10,17 +10,21 @@ body {
 }
 
 ion-footer {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
+  display: none; /* Oculta globalmente todos los encabezados */
 }
 
 ion-content {
-  margin-bottom: 56px; /* Espacio reservado para el footer */
+  margin-bottom: 0 !important; /* Ya no reservas espacio para footer */
+  --padding-top: 56px !important;
 }
 
 ion-header {
-  display: none; /* Oculta globalmente todos los encabezados */
+  padding-top: 0 !important;
+  height: 56px;
+  --background: #1E1E1E; /* Fondo negro */
+  --color: white; /* Texto blanco */
+  position: relative !important;
+  z-index: 10;
 }
 
 
@@ -34,4 +38,30 @@ ion-header {
   justify-content: center;
   align-items: center;
   text-align: center;
+}
+
+/* Ajustar los headers y toolbars para que se vean correctamente */
+ion-toolbar {
+  --background: #1E1E1E; /* Fondo negro */
+  --color: white; /* Texto blanco */
+  min-height: 200px !important; /* Evita que se haga más grande */
+  display: flex;
+  align-items: center;
+}
+
+/* Ajustar márgenes y ancho máximo del contenido */
+.page-content {
+  max-width: 600px; /* Ancho máximo para parecerse a la web */
+  margin: 0 auto; /* Centrar el contenido */
+  padding: 10px; /* Ajustar padding para evitar bordes excesivos */
+}
+
+@media (max-width: 768px) {
+  ion-header {
+    height: 50px !important;
+  }
+
+  ion-toolbar {
+    min-height: 50px !important;
+  }
 }

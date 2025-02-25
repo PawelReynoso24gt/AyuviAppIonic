@@ -151,44 +151,40 @@ const RequestTalonario: React.FC = () => {
   };
 
   return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Solicitar Talonario</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <IonContent className="page-with-background">
+          <IonPage>
 
-      <div
-        style={{
-          padding: "20px",
-          textAlign: "center",
-          background: "rgb(12, 146, 170)",
-          borderRadius: "10px",
-          margin: "10px",
-          color: "white",
-        }}
-      >
-        <h2>Gestión de Solicitudes</h2>
-        <p>Visualiza y gestiona tus solicitudes de talonarios.</p>
-      </div>
-
-      <IonContent className="ion-padding page-with-background">
+          <div
+            style={{
+              padding: "20px",
+              textAlign: "center",
+              background: "rgb(12, 146, 170)",
+              borderRadius: "10px",
+              margin: "5px",
+              color: "white",
+            }}
+          >
+            <h2>Gestión de Solicitudes</h2>
+            <p>Visualiza y gestiona tus solicitudes de talonarios.</p>
+          </div>
         <IonLoading isOpen={loading} message="Cargando..." />
 
         {/* Selección de rifas */}
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "20px", textAlign: "center" }}>
-          <IonItem>
             <IonSelect
               style={{
-                width: "60%",
+                width: "auto",
                 maxWidth: "400px",
                 backgroundColor: "white",
                 borderRadius: "10px",
                 color: "rgb(9, 84, 97)",
                 fontWeight: "bold",
                 textAlign: "center",
+                padding: "5px",
               }}
-              className="custom-ion-select"
+              interfaceOptions={{
+                cssClass: 'custom-alert', // Clase CSS selectItem
+              }}
               placeholder="Selecciona una rifa"
               onIonChange={(e) => {
                 setSelectedRifa(e.detail.value);
@@ -201,12 +197,10 @@ const RequestTalonario: React.FC = () => {
                 </IonSelectOption>
               ))}
             </IonSelect>
-          </IonItem>
         </div>
         {/* Selección de talonarios */}
         {selectedRifa && (
           <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "20px", textAlign: "center" }}>
-            <IonItem>
               <IonSelect
                 style={{
                   width: "60%",
@@ -217,7 +211,9 @@ const RequestTalonario: React.FC = () => {
                   fontWeight: "bold",
                   textAlign: "center",
                 }}
-                className="custom-ion-select"
+                interfaceOptions={{
+                  cssClass: 'custom-alert', // Clase CSS selectItem
+                }}
                 placeholder="Selecciona un talonario"
                 onIonChange={(e) => setSelectedTalonario(e.detail.value)}
               >
@@ -232,20 +228,27 @@ const RequestTalonario: React.FC = () => {
                   )
                 )}
               </IonSelect>
-            </IonItem>
           </div>
         )}
 
+        <div
+          style={{
+              display: "flex",
+              justifyContent: "center",
+              }}
+          >
         <IonButton expand="block" onClick={handleSubmit}
           className="custom-turquoise-button"
           style={{
-            margin: "20px auto",
+            margin: "5px",
             color: "white",
             fontWeight: "bold",
-            width: "50%",
+            width: "300px", 
           }}>
           Solicitar Talonario
         </IonButton>
+
+        </div>
 
         {error && <IonLabel color="danger">{error}</IonLabel>}
 
@@ -272,7 +275,7 @@ const RequestTalonario: React.FC = () => {
               return (
                 <IonItem key={`${solicitud.idSolicitud}-${index}`} style={{
                   backgroundColor: "#F0F8FF",
-                  margin: "10px",
+                  margin: "5px",
                   borderRadius: "10px",
                 }}>
                   <IonLabel>
@@ -300,11 +303,12 @@ const RequestTalonario: React.FC = () => {
               );
             })
           ) : (
-            <IonLabel className="ion-padding" style={{ color: 'black', background: 'white' }}>No tienes solicitudes aún.</IonLabel>
+            <IonLabel style={{ color: 'white', fontSize: 18 }}>No tienes solicitudes aún.</IonLabel>
           )}
         </IonList>
+        <IonItem style={{ marginBottom: "60px"}}/>
+        </IonPage>
       </IonContent>
-    </IonPage>
   );
 };
 

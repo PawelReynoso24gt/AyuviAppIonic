@@ -285,19 +285,6 @@ const AsignarStands: React.FC = () => {
     }, [idVoluntario]);
     return (
         <IonPage>
-            <IonHeader>
-                <IonToolbar style={{ backgroundColor: "#4B0082" }}>
-                    <IonButton
-                        slot="start"
-                        fill="clear"
-                        onClick={() => history.goBack()}
-                        style={{ marginLeft: "10px", color: "white" }}
-                    >
-                        <IonIcon icon={arrowBackOutline} slot="icon-only" />
-                    </IonButton>
-                    <IonTitle style={{ color: "#FFFFFF" }}>Asignación a Stands</IonTitle>
-                </IonToolbar>
-            </IonHeader>
             <IonContent className="page-with-background">
                 <div
                     style={{

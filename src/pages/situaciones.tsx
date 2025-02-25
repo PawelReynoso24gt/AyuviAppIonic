@@ -159,67 +159,78 @@ const Situaciones: React.FC = () => {
     );
 
     return (
-        <IonPage>
-            <IonHeader>
-                <IonToolbar style={{ backgroundColor: "#4B0082" }}>
-                    <IonTitle style={{ color: "#FFFFFF" }}>Mis Situaciones</IonTitle>
-                </IonToolbar>
-
-            </IonHeader>
+            <IonContent className="page-with-background">
+                <IonPage>
             <div
                 style={{
                     padding: "20px",
                     textAlign: "center",
                     background: " #800080",
                     borderRadius: "10px",
-                    margin: "10px",
+                    margin: "5px",
                     color: "white",
                 }}
             >
                 <h2>Gestión de Situaciones</h2>
                 <p>Visualiza y gestiona tus situaciones reportadas.</p>
             </div>
-            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "20px",  textAlign: "center" }}>
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "10px", // Espacio entre los elementos
+                    padding: "20px",
+                    textAlign: "center",
+                    }}
+                >
                 <IonSelect
                     placeholder="Filtrar por estado"
+                    selectedText={selectedEstado || "Filtrar por estado"}
                     value={selectedEstado}
-                    onIonChange={(e) => setSelectedEstado(e.detail.value || "")} 
-                    style={{
-                        width: "60%",
-                        maxWidth: "400px",
-                        backgroundColor: "white",
-                        borderRadius: "10px",
-                        color: "#4B0082",
-                        fontWeight: "bold",
-                        textAlign: "center",
+                    onIonChange={(e) => setSelectedEstado(e.detail.value || "")}
+                    interfaceOptions={{
+                        cssClass: 'custom-alert', // Clase CSS selectItem
                     }}
-                       className="custom-ion-select"
+                    style={{
+                        backgroundColor: "white",
+                        color: "#800080",
+                        borderRadius: "10px",
+                        padding: "5px",
+                        width: "auto",
+                        fontWeight: "bold",
+                      }}
                 >
-                    <IonSelectOption className="custom-ion-select" value="">Todos los estados</IonSelectOption>
-                    <IonSelectOption className="custom-ion-select"  value="Reportada">Reportada</IonSelectOption>
-                    <IonSelectOption className="custom-ion-select" value="Procesada">Procesada</IonSelectOption>
-                    <IonSelectOption className="custom-ion-select"  value="Resuelta">Resuelta</IonSelectOption>
-                    <IonSelectOption className="custom-ion-select"  value="Sin Solución">Sin Solución</IonSelectOption>
+                    <IonSelectOption value="">Todos los estados</IonSelectOption>
+                    <IonSelectOption value="Reportada">Reportada</IonSelectOption>
+                    <IonSelectOption value="Procesada">Procesada</IonSelectOption>
+                    <IonSelectOption value="Resuelta">Resuelta</IonSelectOption>
+                    <IonSelectOption value="Sin Solución">Sin Solución</IonSelectOption>
                 </IonSelect>
             </div>
-
-
-            <IonContent className="page-with-background">
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    }}
+                >
                 <IonButton
                     expand="block"
                     onClick={() => setShowModal(true)}
                     className="custom-purple-button"
                     style={{
-                        margin: "20px auto",
+                        width: "200px", 
+                        height: "80px", 
+                        padding: "10px",
                         backgroundColor: "#800080",
                         color: "white",
                         fontWeight: "bold",
-                        width: "50%",
+                        borderRadius: "10px",
                     }}
                 >
                     Crear Nueva Situación
                 </IonButton>
-
+                </div>
                 {loading ? (
                     <IonSpinner />
                 ) : (
@@ -420,8 +431,8 @@ const Situaciones: React.FC = () => {
                     duration={2000}
                     onDidDismiss={() => setToastMessage("")}
                 />
+            </IonPage>
             </IonContent>
-        </IonPage>
     );
 };
 

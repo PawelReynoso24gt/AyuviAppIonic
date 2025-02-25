@@ -361,11 +361,6 @@ const currentRifas = rifas.slice((currentPage - 1) * itemsPerPage, currentPage *
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar style={{ backgroundColor: "#0274E5" }}>
-          <IonTitle style={{ color: "#000000" }}>Talonarios del Voluntario</IonTitle>
-        </IonToolbar>
-      </IonHeader>
       <IonContent className="page-with-background">
       <div
             style={{
