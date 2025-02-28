@@ -426,11 +426,11 @@ const compressImageTo50KB = async (file: File) => {
   if (loading) {
     return (
       <IonPage>
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar style={{ backgroundColor: "#0274E5" }}>
             <IonTitle style={{ color: "#000000" }}>Productos del Stand</IonTitle>
           </IonToolbar>
-        </IonHeader>
+        </IonHeader> */}
         <IonContent className="page-with-background">
           <div style={{ textAlign: "center", marginTop: "20px" }}>
             <IonSpinner name="crescent" style={{ color: "#0274E5" }} />
@@ -443,11 +443,11 @@ const compressImageTo50KB = async (file: File) => {
   if (!stands || stands.length === 0) {
     return (
       <IonPage>
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar style={{ backgroundColor: "#0274E5" }}>
             <IonTitle style={{ color: "#000000" }}>Productos del Stand</IonTitle>
           </IonToolbar>
-        </IonHeader>
+        </IonHeader> */}
         <IonContent className="page-with-background">
         <div style={{ textAlign: "center", marginTop: "100px", color: "#0274E5", fontSize: "20px" }}>
             <p>No se encontraron productos asignados a los stands.</p>
@@ -459,11 +459,11 @@ const compressImageTo50KB = async (file: File) => {
   
   return (
     <IonPage>
-      <IonHeader>
+      {/* <IonHeader>
         <IonToolbar style={{ backgroundColor: "#0274E5" }}>
           <IonTitle style={{ color: "#000000" }}>Productos del Stand</IonTitle>
         </IonToolbar>
-      </IonHeader>
+      </IonHeader> */}
       <IonContent className="page-with-background">
         <div
             style={{

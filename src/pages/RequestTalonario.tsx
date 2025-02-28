@@ -152,13 +152,16 @@ const RequestTalonario: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
+      {/* <IonHeader>
         <IonToolbar>
           <IonTitle>Solicitar Talonario</IonTitle>
         </IonToolbar>
-      </IonHeader>
+      </IonHeader> */}
 
-      <div
+      <IonContent className="ion-padding page-with-background">
+        <IonLoading isOpen={loading} message="Cargando..." />
+
+        <div
         style={{
           padding: "20px",
           textAlign: "center",
@@ -171,9 +174,6 @@ const RequestTalonario: React.FC = () => {
         <h2>Gestión de Solicitudes</h2>
         <p>Visualiza y gestiona tus solicitudes de talonarios.</p>
       </div>
-
-      <IonContent className="ion-padding page-with-background">
-        <IonLoading isOpen={loading} message="Cargando..." />
 
         {/* Selección de rifas */}
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "20px", textAlign: "center" }}>
@@ -300,7 +300,7 @@ const RequestTalonario: React.FC = () => {
               );
             })
           ) : (
-            <IonLabel className="ion-padding" style={{ color: 'black', background: 'white' }}>No tienes solicitudes aún.</IonLabel>
+            <IonLabel style={{ color: 'white', }}>No tienes solicitudes aún.</IonLabel>
           )}
         </IonList>
       </IonContent>

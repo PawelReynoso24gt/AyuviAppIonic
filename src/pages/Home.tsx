@@ -152,12 +152,12 @@ const Home: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
+      {/* <IonHeader>
         <IonToolbar>
           <IonTitle>Inicio</IonTitle>
         </IonToolbar>
-      </IonHeader>
-      <IonContent>
+      </IonHeader> */}
+      <IonContent className="page-with-background">
         <div style={styles.welcomeContainer} className="page-with-background">
           {username ? (
             <h2 className="welcome-heading">

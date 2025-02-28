@@ -160,12 +160,13 @@ const Situaciones: React.FC = () => {
 
     return (
         <IonPage>
-            <IonHeader>
+            {/* <IonHeader>
                 <IonToolbar style={{ backgroundColor: "#4B0082" }}>
                     <IonTitle style={{ color: "#FFFFFF" }}>Mis Situaciones</IonTitle>
                 </IonToolbar>
 
-            </IonHeader>
+            </IonHeader> */}
+            <IonContent className="page-with-background">
             <div
                 style={{
                     padding: "20px",
@@ -185,7 +186,7 @@ const Situaciones: React.FC = () => {
                     value={selectedEstado}
                     onIonChange={(e) => setSelectedEstado(e.detail.value || "")} 
                     style={{
-                        width: "60%",
+                        width: "auto",
                         maxWidth: "400px",
                         backgroundColor: "white",
                         borderRadius: "10px",
@@ -202,9 +203,6 @@ const Situaciones: React.FC = () => {
                     <IonSelectOption className="custom-ion-select"  value="Sin Solución">Sin Solución</IonSelectOption>
                 </IonSelect>
             </div>
-
-
-            <IonContent className="page-with-background">
                 <IonButton
                     expand="block"
                     onClick={() => setShowModal(true)}
@@ -213,6 +211,7 @@ const Situaciones: React.FC = () => {
                         margin: "20px auto",
                         backgroundColor: "#800080",
                         color: "white",
+                        borderRadius: "10px",
                         fontWeight: "bold",
                         width: "50%",
                     }}

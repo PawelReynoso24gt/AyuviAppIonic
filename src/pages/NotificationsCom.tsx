@@ -97,11 +97,11 @@ const NotificationsCom: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
+      {/* <IonHeader>
         <IonToolbar style={{ backgroundColor: "#0274E5" }}>
           <IonTitle style={{ color: "#FFFFFF" }}>Notificaciones</IonTitle>
         </IonToolbar>
-      </IonHeader>
+      </IonHeader> */}
       <IonContent className="page-with-background">
       <div
             style={{

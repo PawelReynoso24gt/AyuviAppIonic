@@ -5,11 +5,11 @@ import './About.css';
 const About: React.FC = () => {
   return (
     <IonPage>
-      <IonHeader>
+      {/* <IonHeader>
         <IonToolbar>
           <IonTitle>Términos y Condiciones</IonTitle>
         </IonToolbar>
-      </IonHeader>
+      </IonHeader> */}
       <IonContent fullscreen >
         <div id="about-container">
           <h2>Términos y Condiciones</h2>

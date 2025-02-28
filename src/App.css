@@ -9,19 +9,19 @@ body {
   color: var(--ion-text-color);
 }
 
-ion-footer {
+/* ion-footer {
   position: fixed;
   bottom: 0;
   width: 100%;
-}
+} */
 
 ion-content {
   margin-bottom: 56px; /* Espacio reservado para el footer */
 }
 
-ion-header {
-  display: none; /* Oculta globalmente todos los encabezados */
-}
+/* ion-header {
+  display: none; /* Oculta globalmente todos los encabezados
+} */
 
 
 .custom-modal {
