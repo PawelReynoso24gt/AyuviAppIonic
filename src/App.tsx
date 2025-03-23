@@ -136,15 +136,25 @@ const MainContent: React.FC = () => {
           </IonRouterOutlet>
         </IonContent>
         {!isLoginPage && !isInvitadoPage && !isRegistroAspirantePage && (
-          <IonFooter>
-            <IonToolbar style={{ backgroundColor: "#0274E5" }}>
-              <div slot="end">
-                <NotificationBell />
-              </div>
-              <div slot='start'><IonButton fill='clear' routerLink='/home'><IonIcon icon={homeOutline} /></IonButton></div>
-              <div><IonButton fill='clear' routerLink='/profile'><IonIcon icon={person} /></IonButton></div>
-            </IonToolbar>
-          </IonFooter>
+           <IonHeader>
+           <IonToolbar style={{ backgroundColor: "#0274E5" }}>
+             <div slot="start">
+               <IonButton fill="clear" routerLink="/home">
+                 <IonIcon icon={homeOutline} />
+               </IonButton>
+             </div>
+     
+             <div slot="end">
+               <NotificationBell />
+             </div>
+     
+             <div slot="end">
+               <IonButton fill="clear" routerLink="/profile">
+                 <IonIcon icon={person} />
+               </IonButton>
+             </div>
+           </IonToolbar>
+         </IonHeader>
         )}
       </IonPage>
 

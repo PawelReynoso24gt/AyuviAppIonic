@@ -15,14 +15,21 @@ ion-footer {
   width: 100%;
 }
 
+/*ion-content {
+  margin-bottom: 56px; 
+}*/
+
+/*ion-header {
+  display: none;
+}*/
+
 ion-content {
-  margin-bottom: 56px; /* Espacio reservado para el footer */
+  margin-bottom: 0 !important; /* Ya no reservas espacio para footer */
 }
 
 ion-header {
-  display: none; /* Oculta globalmente todos los encabezados */
+  padding-top: env(safe-area-inset-top);
 }
-
 
 .custom-modal {
   --width: 80%;

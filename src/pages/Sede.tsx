@@ -68,7 +68,7 @@ const Sede: React.FC = () => {
     </IonHeader>
   
     <IonContent className="ion-padding page-with-background"
-    style={	{  padding: 'env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)'}}>
+    style={	{  padding: 'env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left) '}}>
       {loading ? (
         <IonLoading isOpen={loading} message="Cargando..." />
       ) : error ? (
