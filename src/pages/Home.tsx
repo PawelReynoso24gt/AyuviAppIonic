@@ -157,7 +157,8 @@ const Home: React.FC = () => {
           <IonTitle>Inicio</IonTitle>
         </IonToolbar>
       </IonHeader> */}
-      <IonContent className="page-with-background">
+      {/* <IonContent className="page-with-background"> */}
+      <IonContent>
         <div style={styles.welcomeContainer} className="page-with-background">
           {username ? (
             <h2 className="welcome-heading">

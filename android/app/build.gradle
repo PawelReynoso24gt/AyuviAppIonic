@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace "io.ionic.starter.ayuvi.primera"
+    namespace "io.ionic.starter.ayuvi.oficial"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "io.ionic.starter.ayuvi.primera"
+        applicationId "io.ionic.starter.ayuvi.oficial"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 2

@@ -1,4 +1,4 @@
-package io.ionic.starter.ayuvi.primera;
+package io.ionic.starter.ayuvi.oficial;
 
 import com.getcapacitor.BridgeActivity;
 
