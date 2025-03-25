@@ -102,7 +102,7 @@ const Registro: React.FC = () => {
   const handleSubmit = async () => {
     try {
       // Registrar al usuario
-      await axios.post('/personas/create', formData);
+      await axios.post('/personasAsp/create', formData);
       setToastMessage('¡Registro exitoso! Redirigiendo...');
 
       // Crear bitácora después de registrar al usuario
