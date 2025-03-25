@@ -22,12 +22,6 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSCameraUsageDescription</key>
-	<string>Esta aplicación necesita acceso a tu cámara para capturar fotos.</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Esta aplicación necesita permisos para guardar fotos en tu galería.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Esta aplicación necesita acceso a tu galería para seleccionar imágenes.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -53,5 +47,17 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+
+	<!-- Descripción de acceso a la galería -->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Esta aplicación necesita acceso a tu galería para que puedas seleccionar imágenes, ya sea para subir fotos de perfil o recibos de venta como comprobante de transacciones.</string>
+
+	<!-- Descripción de acceso a la cámara -->
+	<key>NSCameraUsageDescription</key>
+	<string>Esta aplicación necesita acceso a tu cámara para que puedas tomar fotos de perfil o capturar imágenes de recibos de venta y subirlas como evidencia de transacciones realizadas.</string>
+
+	<!-- Descripción de permisos para guardar fotos -->
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Esta aplicación necesita permisos para guardar fotos en tu galería, ya sea fotos de perfil o imágenes de recibos de venta después de capturarlas.</string>
 </dict>
 </plist>
