@@ -1,6 +1,6 @@
 /* Estilos personalizados para la página About */
 #about-container {
-    text-align: center;
+    text-align: left;
     position: absolute;
     left: 0;
     right: 0;
@@ -17,10 +17,11 @@
   }
   
   #about-container p {
+    text-align: justify; /* <-- este es el cambio clave */
     font-size: 16px;
     line-height: 22px;
     color: #8c8c8c;
-    margin: 0;
+    margin: 0 0 1em 0; /* agrega un poco de espacio entre párrafos */
   }
   
   #about-container a {

@@ -151,8 +151,9 @@ const RequestTalonario: React.FC = () => {
   };
 
   return (
+    <IonPage>
       <IonContent className="page-with-background">
-          <IonPage>
+          
 
           <div
             style={{
@@ -306,10 +307,10 @@ const RequestTalonario: React.FC = () => {
           ) : (
             <IonLabel style={{ color: 'white', fontSize: 18 }}>No tienes solicitudes aún.</IonLabel>
           )}
+          <IonItem style={{ marginBottom: "60px"}}/>
         </IonList>
-        <IonItem style={{ marginBottom: "60px"}}/>
+        </IonContent>
         </IonPage>
-      </IonContent>
   );
 };
 
