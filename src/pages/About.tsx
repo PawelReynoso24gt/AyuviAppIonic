@@ -5,11 +5,6 @@ import './About.css';
 const About: React.FC = () => {
   return (
     <IonPage>
-      {/* <IonHeader>
-        <IonToolbar>
-          <IonTitle>Términos y Condiciones</IonTitle>
-        </IonToolbar>
-      </IonHeader> */}
       <IonContent fullscreen >
         <div id="about-container">
           <h2>Términos y Condiciones</h2>
@@ -44,8 +39,7 @@ const About: React.FC = () => {
              pero no garantizamos que la aplicación sea completamente segura frente a posibles amenazas.</p>
 
           <h3>5. Propiedad Intelectual</h3>
-          <p>Todo el código y diseño de esta aplicación ha sido donado a la Fundación AYUVI por elTodo el código y diseño de esta aplicación ha sido donado a 
-            a Fundación AYUVI por el grupo de desarrollo y está disponible para su uso por el equipo de TI de la fundación. </p>
+          <p>Todo el código y diseño de esta aplicación ha sido donado a la Fundación AYUVI por el grupo de desarrollo y está disponible para su uso por el equipo de TI de la fundación.</p>
 
           <h3>6. Privacidad y Protección de Datos</h3>
           <p>Datos Personales: Recopilamos y manejamos información personal, como CUI, fecha de nacimiento, teléfonos y direcciones, 
@@ -57,9 +51,9 @@ const About: React.FC = () => {
              si te hemos advertido que esto podría pasar. Esta limitación de responsabilidad se aplicará en la medida permitida por la ley. </p>
 
           <h3>8. Desarrolladores y Licencias</h3>
-          <p>La Fundación AYUVI no será responsable por cualquier daño que pueda ocurrir al usar la aplicación o si no puedes 
-            usarla por algún problema. Esto incluye, pero no se limita a, la pérdida de dinero, datos u otros daños, incluso 
-            si te hemos advertido que esto podría pasar. Esta limitación de responsabilidad se aplicará en la medida permitida por la ley. </p>
+          <p>Los desarrolladores de la aplicación, aunque han tenido el control de la misma durante su creación, tienen la obligación de no causar daño a la aplicación.
+            Después de la entrega, los desarrolladores no son responsables de futuras actualizaciones o modificaciones, pero se les reconoce haberla creado inicialmente.
+            Toda la propiedad intelectual, incluyendo el código y diseño, ha sido donada a la Fundación AYUVI y puede ser utilizada por el equipo de TI de la fundación.</p>
           <br></br>
           <p>Todo el software y las plantillas utilizadas en la aplicación han sido adquiridos legalmente y cuentan con las licencias correspondientes. El uso de 
             este software y plantillas es exclusivamente para apoyar a la fundación en la automatización de sus procesos.</p>
