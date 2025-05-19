@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Redirect, Switch, useLocation } from 'react-router-dom';
-import { IonApp, IonMenu, IonContent, IonHeader, IonToolbar, IonTitle, IonList, IonItem, IonRouterOutlet, setupIonicReact, IonModal, IonButton, IonIcon, IonFooter, IonPage } from '@ionic/react';
+import { IonApp, IonMenu, IonContent, IonHeader, IonToolbar, IonTitle, IonList, IonItem, IonRouterOutlet, setupIonicReact, IonModal, IonButton, IonIcon, IonFooter, IonPage, IonButtons, IonMenuButton } from '@ionic/react';
 import Home from './pages/Home';
 import About from './pages/About';
 import Login from './pages/Login';
@@ -138,11 +138,29 @@ const MainContent: React.FC = () => {
         {!isLoginPage && !isInvitadoPage && !isRegistroAspirantePage && (
           <IonHeader>
             <IonToolbar style={{ backgroundColor: "#0274E5" }}>
-              <div slot="end">
+              {/* -- botón para abrir/cerrar el menú -- */}
+              <IonButtons slot="start">
+                <IonMenuButton />
+              </IonButtons>
+
+              {/* -- botón de home -- */}
+              <IonButtons slot="start">
+                <IonButton fill="clear" routerLink="/home">
+                  <IonIcon icon={homeOutline} />
+                </IonButton>
+              </IonButtons>
+
+              {/* campana de notificaciones */}
+              <IonButtons slot="end">
                 <NotificationBell />
-              </div>
-              <div slot='start'><IonButton fill='clear' routerLink='/home'><IonIcon icon={homeOutline} /></IonButton></div>
-              <div><IonButton fill='clear' routerLink='/profile'><IonIcon icon={person} /></IonButton></div>
+              </IonButtons>
+
+              {/* botón de perfil */}
+              <IonButtons slot="end">
+                <IonButton fill="clear" routerLink="/profile">
+                  <IonIcon icon={person} />
+                </IonButton>
+              </IonButtons>
             </IonToolbar>
           </IonHeader>
         )}
