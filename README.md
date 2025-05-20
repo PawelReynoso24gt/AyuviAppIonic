@@ -16,7 +16,7 @@ git clone https://github.com/PawelReynoso24gt/AyuviAppIonic.git
 ```
 2. Instala las dependencias necesarias para el proyecto:
 ```bash
-nmp install
+npm install
 ```
 3. Instalación de paquetes para usar ionic (de forma global para que se use para futuros proyectos):
 ```bash
