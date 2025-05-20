@@ -55,15 +55,14 @@ const Login: React.FC = () => {
             // Redirige al usuario al Home
             history.push('/home'); // Asegúrate de que la ruta sea '/home'
         } catch (err) {
-            console.error('Error capturado en handleLogin:', err);
-
-            // Verifica si el error tiene una respuesta (es de Axios)
-            if ((err as any).response) {
+            console.error('Error capturado en handleLogin:', JSON.stringify(err));
+            if (err instanceof Error && (err as any).response) {
                 setError((err as any).response.data.message || 'Error al iniciar sesión.');
             } else {
                 setError('Error de conexión. Inténtalo de nuevo.');
             }
         }
+
     };
 
     const handleGuestLogin = () => {
@@ -78,31 +77,29 @@ const Login: React.FC = () => {
                     <img src={logo} alt="Logo Ayuvi" className="logo" />
                     <IonLabel className="usuario-label">Usuario</IonLabel>
                     <IonItem className="ion-margin-bottom custom-item">
-                        <IonInput 
-                            className="custom-input" 
-                            value={usuario} 
-                            onIonChange={e => setUsuario(e.detail.value!)} 
-                            onFocus={handleFocus} 
-                            onBlur={handleBlur} 
+                        <IonInput
+                            className="custom-input"
+                            value={usuario}
+                            onIonChange={e => setUsuario(e.detail.value!)}
+                            onFocus={handleFocus}
+                            onBlur={handleBlur}
                         />
                     </IonItem>
                     <IonLabel className="contrasenia-label">Contraseña</IonLabel>
                     <IonItem className="password-item custom-item">
-                        <IonInput 
-                        style={{
-                            color: "black",
-                          }}
-                            className="password-input" 
-                            type={showPassword ? "text" : "password"} 
-                            value={contrasenia} 
-                            onIonChange={e => setContrasenia(e.detail.value!)} 
-                            onFocus={handleFocus} 
-                            onBlur={handleBlur} 
+                        <IonInput
+                            style={{ color: "black" }}
+                            className="password-input"
+                            type={showPassword ? "text" : "password"}
+                            value={contrasenia}
+                            onIonInput={e => setContrasenia(e.detail.value!)}
+                            onFocus={handleFocus}
+                            onBlur={handleBlur}
                         />
-                        <IonIcon 
-                            slot="end" 
-                            icon={showPassword ? eyeOff : eye} 
-                            onClick={() => setShowPassword(!showPassword)} 
+                        <IonIcon
+                            slot="end"
+                            icon={showPassword ? eyeOff : eye}
+                            onClick={() => setShowPassword(!showPassword)}
                         />
                     </IonItem>
 
@@ -110,7 +107,7 @@ const Login: React.FC = () => {
                     {error && <IonText color="danger">{error}</IonText>}
 
                     <IonText
-                        onClick={() => history.push('/registroAspirante')} 
+                        onClick={() => history.push('/registroAspirante')}
                         color="primary"
                         style={{
                             marginTop: '20px',
