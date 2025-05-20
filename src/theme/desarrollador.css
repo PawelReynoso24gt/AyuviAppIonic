@@ -1,0 +1,64 @@
+.desarrolladores-title {
+  text-align: center;
+  color: #007AC3;
+  font-weight: bold;
+  font-size: 24px;
+  margin-bottom: 16px;
+}
+
+.desarrolladores-info-card p {
+  font-weight: bold;
+  font-size: 16px;
+  text-align: justify;
+  margin: 0;
+}
+
+.desarrollador-card {
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #c3bfbf;
+  box-shadow: 0px 2px 10px rgba(228, 225, 225, 0.1);
+}
+
+.desarrollador-card {
+  width: 100%; 
+  max-width: 400px; 
+  margin: 0 auto 20px auto; 
+  border-radius: 8px;
+  background-color: #f6f6f6;
+  box-shadow: 0px 2px 10px rgba(228, 225, 225, 0.1);
+  overflow: hidden;
+}
+
+
+.desarrollador-nombre {
+  color: #007AC3;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.desarrollador-rol {
+  color: #009B85;
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+
+.desarrollador-descripcion {
+  text-align: justify;
+  color: #333;
+  font-size: 14px;
+}
+
+@media screen and (max-width: 600px) {
+  .desarrollador-img {
+    height: 180px;
+  }
+
+  .desarrollador-nombre {
+    font-size: 16px;
+  }
+
+  .desarrollador-descripcion {
+    font-size: 13px;
+  }
+}

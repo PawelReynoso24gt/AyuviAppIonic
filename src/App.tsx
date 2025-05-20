@@ -24,6 +24,7 @@ import standVirtual from '../src/pages/standVirtual';
 import Notifications from './pages/NotificationsCom';
 import NotificationBell from './components/NotificationBell';
 import situaciones from './pages/situaciones';
+import Desarrolladores from './pages/Desarrolladores';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -124,6 +125,7 @@ const MainContent: React.FC = () => {
                 <PrivateRoute exact path="/standVirtual" component={standVirtual} />
                 <PrivateRoute exact path="/notifications" component={Notifications} />
                 <PrivateRoute exact path="/situaciones" component={situaciones} />
+                <PrivateRoute exact path="/desarrolladores" component={Desarrolladores} />
                 <PrivateRoute exact path="/about" component={situaciones} />
                 <Route exact path="/">
                   <Redirect to="/login" />
@@ -237,6 +239,7 @@ const Menu: React.FC = () => {
           {/*<IonItem routerLink="/profile">Perfil</IonItem>*/}
           <IonItem routerLink="/sede">Sede</IonItem>
           <IonItem routerLink="/situaciones">Situaciones</IonItem>
+          <IonItem routerLink="/desarrolladores">Desarrolladores</IonItem>
           <IonItem routerLink="/about">Terminos y Condiciones</IonItem>
           <IonItem button onClick={handleLogout}>Cerrar sesión</IonItem>
         </IonList>
