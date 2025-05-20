@@ -163,25 +163,6 @@ const MainContent: React.FC = () => {
               </IonButtons>
             </IonToolbar>
           </IonHeader>
-           <IonHeader>
-           <IonToolbar style={{ backgroundColor: "#0274E5" }}>
-             <div slot="start">
-               <IonButton fill="clear" routerLink="/home">
-                 <IonIcon icon={homeOutline} />
-               </IonButton>
-             </div>
-     
-             <div slot="end">
-               <NotificationBell />
-             </div>
-     
-             <div slot="end">
-               <IonButton fill="clear" routerLink="/profile">
-                 <IonIcon icon={person} />
-               </IonButton>
-             </div>
-           </IonToolbar>
-         </IonHeader>
         )}
       </IonPage>
 
