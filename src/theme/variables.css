@@ -51,6 +51,16 @@ http://ionicframework.com/docs/theming/ */
     font-weight: bold;
   }
 
+  .custom-orange-button {
+    --background: linear-gradient(45deg, #f36b00, #f36b00) !important;
+    --background-activated: #f36b00 !important; /* Color al hacer clic */
+    --box-shadow: none !important; /* Elimina las sombras */
+    --border-radius: 40px;
+    --padding: 10px 20px;
+    color: white !important;
+    font-weight: bold;
+  }
+
   .custom-purple-button {
     --background: linear-gradient(45deg, #8500BC, #8500BC) !important;
     --background-activated: #8500BC !important; /* Color al hacer clic */

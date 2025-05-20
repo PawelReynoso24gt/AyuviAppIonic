@@ -97,11 +97,11 @@ const NotificationsCom: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
+      {/* <IonHeader>
         <IonToolbar style={{ backgroundColor: "#0274E5" }}>
           <IonTitle style={{ color: "#FFFFFF" }}>Notificaciones</IonTitle>
         </IonToolbar>
-      </IonHeader>
+      </IonHeader> */}
       <IonContent className="page-with-background">
       <div
             style={{
@@ -158,6 +158,8 @@ const NotificationsCom: React.FC = () => {
                 <IonLabel>No hay notificaciones.</IonLabel>
               </IonItem>
             )}
+            {/* Agrega este IonItem aquí para empujar el contenido hacia arriba */}
+            <IonItem style={{ marginBottom: "60px"}}/>
           </IonList>
         )}
         <IonToast

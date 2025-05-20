@@ -9,11 +9,11 @@ body {
   color: var(--ion-text-color);
 }
 
-ion-footer {
+/* ion-footer {
   position: fixed;
   bottom: 0;
   width: 100%;
-}
+} */
 
 /*ion-content {
   margin-bottom: 56px; 
@@ -28,8 +28,9 @@ ion-content {
 }
 
 ion-header {
-  padding-top: env(safe-area-inset-top);
+  display: none; /* Oculta globalmente todos los encabezados */
 }
+
 
 .custom-modal {
   --width: 80%;

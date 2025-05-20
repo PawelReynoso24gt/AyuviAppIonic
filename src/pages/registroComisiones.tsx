@@ -59,7 +59,7 @@ const InscripcionesComisiones: React.FC = () => {
         `/comisiones/active?eventoId=${eventoId}&idVoluntario=${idVoluntario}`
       );
       const allComisiones = response.data;
-      console.log(response.data)
+      //console.log(response.data)
   
       // Filtrar comisiones activas
       const activeComisiones = allComisiones.filter((comision: Comision) => comision.estado === 1);

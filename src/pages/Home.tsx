@@ -152,12 +152,12 @@ const Home: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
+      {/* <IonHeader>
         <IonToolbar>
           <IonTitle>Inicio</IonTitle>
         </IonToolbar>
-      </IonHeader>
-      <IonContent>
+      </IonHeader> */}
+      <IonContent className="page-with-background">
         <div style={styles.welcomeContainer} className="page-with-background">
           {username ? (
             <h2 className="welcome-heading">
@@ -201,7 +201,7 @@ const Home: React.FC = () => {
               {publicacion.fotos.map((foto: string, index: number) => (
                 <div key={`${publicacion.id}-${index}`} style={styles.photoContainer}>
                   <img
-                    src={`https://3hkpqqqv-5000.use.devtunnels.ms/${foto}`}
+                    src={`https://api.voluntariadoayuvi.com/${foto}`}
                     alt={`Foto ${index + 1}`}
                     style={styles.photo}
                   />

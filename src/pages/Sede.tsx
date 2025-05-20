@@ -45,7 +45,7 @@ const Sede: React.FC = () => {
           .filter((foto: any) => foto.idSede === tokenInfo.idSede && foto.estado === 1)
           .map((foto: any) => ({
             id: foto.idFotoSede,
-            ruta: `http://localhost:5000/${foto.foto.replace(/\\/g, '/')}`,
+            ruta: `${axios.defaults.baseURL}/${foto.foto.replace(/\\/g, '/')}`,
           }));
 
         setFotosSede(fotosFiltradas);
@@ -61,11 +61,11 @@ const Sede: React.FC = () => {
 
   return (
     <IonPage>
-    <IonHeader>
+    {/* <IonHeader>
       <IonToolbar>
         <IonTitle>Sede</IonTitle>
       </IonToolbar>
-    </IonHeader>
+    </IonHeader> */}
   
     <IonContent className="ion-padding page-with-background"
     style={	{  padding: 'env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left) '}}>
@@ -251,8 +251,8 @@ const Sede: React.FC = () => {
           No se encontraron datos de la sede.
         </IonText>
       )}
+      <IonItem style={{ marginBottom: "60px"}}/>
     </IonContent>
-   <IonItem style={{ marginBottom: "60px"}}/>
   </IonPage>
   
   );

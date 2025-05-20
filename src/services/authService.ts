@@ -42,7 +42,7 @@ export async function logoutUser(userId: number) {
         // Limpiar el almacenamiento local
         await storage.clear();
 
-        console.log('Sesión cerrada exitosamente.');
+        //console.log('Sesión cerrada exitosamente.');
     } catch (error) {
         if (error instanceof Error) {
             console.error('Error al cerrar sesión:', (error as any).response?.data || error.message);
