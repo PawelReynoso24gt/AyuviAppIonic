@@ -27,10 +27,6 @@ ion-content {
   margin-bottom: 0 !important; /* Ya no reservas espacio para footer */
 }
 
-ion-header {
-  display: none; /* Oculta globalmente todos los encabezados */
-}
-
 
 .custom-modal {
   --width: 80%;
