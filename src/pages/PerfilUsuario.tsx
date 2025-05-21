@@ -35,7 +35,7 @@ const PerfilUsuario: React.FC = () => {
       try {
         // Obtener el idUsuario desde el token
         const tokenInfo = getInfoFromToken();
-        if (!tokenInfo || !tokenInfo.idUsuario || !tokenInfo.idVoluntario) {
+        if (!tokenInfo || !tokenInfo.idUsuario || !tokenInfo.idVoluntario || !tokenInfo.codigoQR) {
           throw new Error('No se pudo obtener el ID del usuario desde el token.');
         }
         // Petición al backend para obtener la fecha de registro del voluntario
@@ -62,7 +62,8 @@ const PerfilUsuario: React.FC = () => {
         setPreview(photoPath);
 
         // Generar URL del código QR
-        setQrCodeUrl(`${axios.defaults.baseURL}/generateQR?data=${loggedUser.idUsuario}`);
+        const qrValue = encodeURIComponent(tokenInfo.codigoQR);
+        setQrCodeUrl(`${axios.defaults.baseURL}/generateQR?data=${qrValue}`);
       } catch (err) {
         setError('Error al cargar el perfil del usuario.');
         console.error(err);

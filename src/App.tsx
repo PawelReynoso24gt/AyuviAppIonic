@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Redirect, Switch, useLocation } from 'react-router-dom';
-import { IonApp, IonMenu, IonContent, IonHeader, IonToolbar, IonTitle, IonList, IonItem, IonRouterOutlet, setupIonicReact, IonModal, IonButton, IonIcon, IonFooter, IonPage } from '@ionic/react';
+import { IonApp, IonMenu, IonContent, IonHeader, IonToolbar, IonTitle, IonList, IonItem, IonRouterOutlet, setupIonicReact, IonModal, IonButton, IonIcon, IonFooter, IonPage, IonButtons,IonMenuButton } from '@ionic/react';
 import Home from './pages/Home';
 import About from './pages/About';
 import Login from './pages/Login';
@@ -24,6 +24,7 @@ import standVirtual from '../src/pages/standVirtual';
 import Notifications from './pages/NotificationsCom';
 import NotificationBell from './components/NotificationBell';
 import situaciones from './pages/situaciones';
+import Desarrolladores from './pages/Desarrolladores';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -124,6 +125,7 @@ const MainContent: React.FC = () => {
                 <PrivateRoute exact path="/standVirtual" component={standVirtual} />
                 <PrivateRoute exact path="/notifications" component={Notifications} />
                 <PrivateRoute exact path="/situaciones" component={situaciones} />
+                <PrivateRoute exact path="/desarrolladores" component={Desarrolladores} />
                 <PrivateRoute exact path="/about" component={situaciones} />
                 <Route exact path="/">
                   <Redirect to="/login" />
@@ -138,21 +140,29 @@ const MainContent: React.FC = () => {
         {!isLoginPage && !isInvitadoPage && !isRegistroAspirantePage && (
           <IonHeader>
           <IonToolbar style={{ backgroundColor: "#0274E5" }}>
-            <div slot="start">
+            {/* -- botón para abrir/cerrar el menú -- */}
+            <IonButtons slot="start">
+              <IonMenuButton style={{ color: "white" }} />
+            </IonButtons>
+
+            {/* -- botón de home -- */}
+            <IonButtons slot="start">
               <IonButton fill="clear" routerLink="/home">
-                <IonIcon icon={homeOutline} />
+                <IonIcon icon={homeOutline} style={{ color: "white" }} />
               </IonButton>
-            </div>
-    
-            <div slot="end">
+            </IonButtons>
+
+            {/* campana de notificaciones */}
+            <IonButtons slot="end">
               <NotificationBell />
-            </div>
-    
-            <div slot="end">
+            </IonButtons>
+
+            {/* botón de perfil */}
+            <IonButtons slot="end">
               <IonButton fill="clear" routerLink="/profile">
-                <IonIcon icon={person} />
+                <IonIcon icon={person} style={{ color: "white" }} />
               </IonButton>
-            </div>
+            </IonButtons>
           </IonToolbar>
         </IonHeader>
         )}
@@ -229,6 +239,7 @@ const Menu: React.FC = () => {
           {/*<IonItem routerLink="/profile">Perfil</IonItem>*/}
           <IonItem routerLink="/sede">Sede</IonItem>
           <IonItem routerLink="/situaciones">Situaciones</IonItem>
+          <IonItem routerLink='/desarrolladores'>Desarrolladores</IonItem>
           <IonItem routerLink="/about">Terminos y Condiciones</IonItem>
           <IonItem button onClick={handleLogout}>Cerrar sesión</IonItem>
         </IonList>

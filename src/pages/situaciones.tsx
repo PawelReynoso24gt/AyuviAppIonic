@@ -179,6 +179,30 @@ const Situaciones: React.FC = () => {
                 style={{
                     display: "flex",
                     justifyContent: "center",
+                    }}
+                >
+                <IonButton
+                    expand="block"
+                    onClick={() => setShowModal(true)}
+                    className="custom-purple-button"
+                    style={{
+                        width: "200px", 
+                        height: "80px", 
+                        padding: "10px",
+                        backgroundColor: "#800080",
+                        color: "white",
+                        fontWeight: "bold",
+                        borderRadius: "10px",
+                    }}
+                >
+                    Crear Nueva Situación
+                </IonButton>
+            </div>
+
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
                     alignItems: "center",
                     gap: "10px", // Espacio entre los elementos
                     padding: "20px",
@@ -202,36 +226,14 @@ const Situaciones: React.FC = () => {
                         fontWeight: "bold",
                       }}
                 >
-                    <IonSelectOption value="">Todos los estados</IonSelectOption>
+                    <IonSelectOption value="">Filtrar por estado</IonSelectOption>
                     <IonSelectOption value="Reportada">Reportada</IonSelectOption>
                     <IonSelectOption value="Procesada">Procesada</IonSelectOption>
                     <IonSelectOption value="Resuelta">Resuelta</IonSelectOption>
                     <IonSelectOption value="Sin Solución">Sin Solución</IonSelectOption>
                 </IonSelect>
             </div>
-            <div
-                style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    }}
-                >
-                <IonButton
-                    expand="block"
-                    onClick={() => setShowModal(true)}
-                    className="custom-purple-button"
-                    style={{
-                        width: "200px", 
-                        height: "80px", 
-                        padding: "10px",
-                        backgroundColor: "#800080",
-                        color: "white",
-                        fontWeight: "bold",
-                        borderRadius: "10px",
-                    }}
-                >
-                    Crear Nueva Situación
-                </IonButton>
-                </div>
+            
                 {loading ? (
                     <IonSpinner />
                 ) : (
@@ -325,10 +327,19 @@ const Situaciones: React.FC = () => {
 
                 {/* Modal para Crear */}
                 <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)}>
-                    <div style={{ padding: "20px" }}>
+                    <div style={{
+                            padding: "40px",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            gap: "16px",          
+                            borderRadius: "12px",
+                            maxWidth: "300px",
+                            margin: "0 auto"
+                            }}>
                         <h2>Crear Situación</h2>
                         <IonSelect
-                            placeholder="Seleccionar tipo"
+                            placeholder="Seleccionar tipo de situación"
                             value={newSituacion.idTipoSituacion}
                             onIonChange={(e) =>
                                 setNewSituacion((prev) => ({
@@ -339,6 +350,19 @@ const Situaciones: React.FC = () => {
                             interfaceOptions={{
                                 cssClass: 'custom-alert', // Clase CSS selectItem
                             }}
+                            style={{
+                                display: "block", // ✅ obliga a comportarse como bloque
+                                margin: "0 auto", // ✅ centra horizontalmente
+                                textAlign: "center", // ✅ centra el texto del placeholder y valor
+                                backgroundColor: "white",
+                                borderRadius: "10px",
+                                padding: "5px 10px",
+                                color: "#4B0082",
+                                fontWeight: "bold",
+                                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                                maxWidth: "100%", // ✅ evita que se pase del contenedor
+                                width: "fit-content", // ✅ pero adapta al contenido
+                              }}
                         >
                             {tipoSituaciones.map((tipo) => (
                                 <IonSelectOption key={tipo.idTipoSituacion} value={tipo.idTipoSituacion}>
@@ -355,6 +379,16 @@ const Situaciones: React.FC = () => {
                                     descripcion: e.detail.value!,
                                 }))
                             }
+                            style={{ //se cambia todo el style
+                                width: "175%",
+                                maxWidth: "330px",
+                                backgroundColor: "white",
+                                borderRadius: "10px",
+                                color: "#4B0082",
+                                fontWeight: "bold",
+                                textAlign: "center",
+                                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                            }}
                         />
                         <IonButton expand="block" onClick={handleCreateSituacion} style={{ marginTop: "20px", color: "white" }} className="custom-purple-button">
                             Guardar
@@ -371,7 +405,16 @@ const Situaciones: React.FC = () => {
                     isOpen={!!selectedSituacion}
                     onDidDismiss={() => setSelectedSituacion(null)}
                 >
-                    <div style={{ padding: "20px" }}>
+                    <div style={{
+                            padding: "40px",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            gap: "16px",          
+                            borderRadius: "12px",
+                            maxWidth: "300px",
+                            margin: "0 auto"
+                            }}>
                         <h2>Editar Situación</h2>
                         <IonSelect
                             placeholder="Seleccionar tipo"
@@ -385,6 +428,19 @@ const Situaciones: React.FC = () => {
                             interfaceOptions={{
                                 cssClass: 'custom-alert', // Clase CSS selectItem
                             }}
+                            style={{
+                                display: "block", // ✅ obliga a comportarse como bloque
+                                margin: "0 auto", // ✅ centra horizontalmente
+                                textAlign: "center", // ✅ centra el texto del placeholder y valor
+                                backgroundColor: "white",
+                                borderRadius: "10px",
+                                padding: "5px 10px",
+                                color: "#4B0082",
+                                fontWeight: "bold",
+                                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                                maxWidth: "100%", // ✅ evita que se pase del contenedor
+                                width: "fit-content", // ✅ pero adapta al contenido
+                              }}
                         >
                             {tipoSituaciones.map((tipo) => (
                                 <IonSelectOption key={tipo.idTipoSituacion} value={tipo.idTipoSituacion}>
@@ -400,6 +456,16 @@ const Situaciones: React.FC = () => {
                                     descripcion: e.detail.value,
                                 }))
                             }
+                            style={{ //se cambia todo el style
+                                width: "175%",
+                                maxWidth: "330px",
+                                backgroundColor: "white",
+                                borderRadius: "10px",
+                                color: "#4B0082",
+                                fontWeight: "bold",
+                                textAlign: "center",
+                                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                              }}
                         />
                         <IonButton
                             expand="block"
