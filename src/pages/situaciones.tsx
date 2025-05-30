@@ -340,16 +340,21 @@ const Situaciones: React.FC = () => {
                             interfaceOptions={{
                                 cssClass: 'custom-alert', // Clase CSS selectItem
                             }}
-                            style={{ //se cambia todo dentro del style
-                                width: "fit-content", 
-                                padding: "5px 10px",
+                          style={{
+                                display: "block", // ✅ obliga a comportarse como bloque
+                                margin: "0 auto", // ✅ centra horizontalmente
+                                textAlign: "center", // ✅ centra el texto del placeholder y valor
                                 backgroundColor: "white",
                                 borderRadius: "10px",
+                                padding: "5px 10px",
                                 color: "#4B0082",
                                 fontWeight: "bold",
-                                textAlign: "center",
                                 boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                                margin: "0 auto",
+                                maxWidth: "100%", // ✅ evita que se pase del contenedor
+                                width: "fit-content", // ✅ pero adapta al contenido
+                                whiteSpace: "normal",     // ✅ permite que el texto se rompa en varias líneas
+                                overflow: "visible",      // ✅ evita recortes
+                                textOverflow: "unset",    // ✅ desactiva puntos suspensivos
                               }}
                        className="custom-ion-select"
                         >
