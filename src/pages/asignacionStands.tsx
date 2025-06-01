@@ -104,17 +104,16 @@ const AsignarStands: React.FC = () => {
         }
     };
 
-    const fetchAsignacionUsuario = async () => {
+    const fetchAsignacionUsuario = async (): Promise<AsignacionUsuario[]> => {
         setLoading(true);
         try {
             const response = await axios.get(`/asignacion/voluntario/${idVoluntario}`);
             const asignaciones = response.data;
 
-            if (!Array.isArray(asignaciones) || asignaciones.length === 0) {
-                console.warn("No hay asignaciones activas.");
-                setAsignacionesUsuario([]);
-                return;
-            }
+        if (!Array.isArray(asignaciones) || asignaciones.length === 0) {
+            setAsignacionesUsuario([]);
+            return [];
+        }
 
             const asignacionesProcesadas = asignaciones.map(asignacion => ({
                 idAsignacionStands: asignacion.idAsignacionStands,
@@ -130,9 +129,11 @@ const AsignarStands: React.FC = () => {
 
             //console.log(asignacionesProcesadas);
             setAsignacionesUsuario(asignacionesProcesadas);
+            return asignacionesProcesadas;
         } catch (error: any) {
             console.error("Error fetching asignaciones:", error.response || error);
             //setToastMessage("Error al cargar las asignaciones.");
+            return[];
         } finally {
             setLoading(false);
         }
@@ -206,6 +207,7 @@ const AsignarStands: React.FC = () => {
             setAsignacionesUsuario([...asignacionesUsuario, nuevaAsignacion]);
 
             setToastMessage(response.data.message || "Asignación realizada con éxito.");
+            await fetchAsignacionUsuario();
             setShowModal(false);
             setSelectedHorario(null); // Reiniciar la selección al cerrar
         } catch (error: any) {
@@ -222,6 +224,7 @@ const AsignarStands: React.FC = () => {
                 idDetalleHorario: selectedHorario,
             });
             setToastMessage(response.data.message || "Horario actualizado con éxito.");
+            
             //console.log(asignacionUsuario);
             setAsignacionUsuario((prev) => ({
                 ...prev!,
@@ -230,6 +233,7 @@ const AsignarStands: React.FC = () => {
                 horarioFinal: horarios.find(h => h.idDetalleHorario === selectedHorario)?.detalle_horario.horario.horarioFinal,
             }));
             setShowEditModal(false);
+            await fetchAsignacionUsuario();
         } catch (error: any) {
             console.error("Error updating horario:", error.response || error);
             setToastMessage(error.response?.data?.message || "Error al actualizar el horario.");
@@ -285,6 +289,19 @@ const AsignarStands: React.FC = () => {
     }, [idVoluntario]);
     return (
         <IonPage>
+            {/* <IonHeader>
+                <IonToolbar style={{ backgroundColor: "#4B0082" }}>
+                    <IonButton
+                        slot="start"
+                        fill="clear"
+                        onClick={() => history.goBack()}
+                        style={{ marginLeft: "10px", color: "white" }}
+                        >
+                        <IonIcon icon={arrowBackOutline} slot="icon-only" />
+                    </IonButton>
+                    <IonTitle style={{ color: "#FFFFFF" }}>Asignación a Stands</IonTitle>
+                </IonToolbar>
+            </IonHeader> */}
             <IonContent className="page-with-background">
                 <div
                     style={{
@@ -342,17 +359,21 @@ const AsignarStands: React.FC = () => {
                                             shape="round"
                                             size="small"
                                             className="custom-orange-button"
-                                            onClick={() => {
+                                            onClick={async () => {
+                                                const nuevasAsignaciones = await fetchAsignacionUsuario();
                                                 setSelectedStand(stand);
-                                                fetchHorarios(stand.idStand);
+                                                await fetchHorarios(stand.idStand);
 
                                                 if (asignado) {
                                                     // Encontramos la asignación correspondiente a este stand
+                                                    
                                                     const asignacionActual = asignacionesUsuario.find(
+                                                    
                                                         (asignacion) => asignacion.idStand === stand.idStand
                                                     );
 
                                                     if (asignacionActual) {
+                                                        setSelectedHorario(asignacionActual.idDetalleHorario);
                                                         setAsignacionUsuario(asignacionActual); // Se asigna la información correcta
                                                         setShowEditModal(true); // Abre el modal de edición
                                                     }
@@ -495,7 +516,10 @@ const AsignarStands: React.FC = () => {
                         <h4>Seleccionar Nuevo Horario</h4>
                         <IonRadioGroup
                             value={selectedHorario}
-                            onIonChange={(e) => setSelectedHorario(e.detail.value)}
+                            onIonChange={(e) => {
+                               const nuevoHorario = e.detail.value;
+                                setSelectedHorario(nuevoHorario);
+                            }}
                         >
                             <IonList>
                                 {horarios.map((horario, index) => {
