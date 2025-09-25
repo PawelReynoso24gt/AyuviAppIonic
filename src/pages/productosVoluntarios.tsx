@@ -30,6 +30,8 @@ import {
 import axios from "../services/axios"; // Instancia de Axios
 import { getInfoFromToken } from "../services/authService";
 import { Camera, CameraResultType, CameraSource } from "@capacitor/camera"; // Importa el plugin de Camera
+import '../theme/variables.css';
+import imageCompression from 'browser-image-compression';
 
 interface Producto {
   idProducto: number;
@@ -74,6 +76,11 @@ const VoluntarioProductos: React.FC = () => {
   });
   const [subtotal, setSubtotal] = useState(0);
   const [totalAPagar, setTotalAPagar] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 3;
+  const [fileNames, setFileNames] = useState<{ [key: number]: string }>({}); // nombre de arhivos
+
+  const currentProducts = voluntario?.detalle_productos_voluntarios?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) || [];
 
   useEffect(() => {
     // Extraer y guardar idVoluntario desde el token
@@ -116,7 +123,12 @@ const VoluntarioProductos: React.FC = () => {
   const fetchTiposPagos = async () => {
     try {
       const response = await axios.get("/tipospagos");
-      setTiposPagosOptions(response.data);
+      // Filtrar los tipos de pago para incluir solo aquellos con idTipoPago del 1 al 4
+      const filteredTiposPagos = response.data.filter((tipo: any) => {
+        const id = parseInt(tipo.idTipoPago, 10);
+        return id >= 1 && id <= 4;
+      });
+      setTiposPagosOptions(filteredTiposPagos);
     } catch (error) {
       console.error("Error fetching tipos pagos:", error);
     }
@@ -156,27 +168,86 @@ const VoluntarioProductos: React.FC = () => {
     }));
   };
 
+  const compressImageTo50KB = async (file: File) => {
+      try {
+          // **Opciones de compresión**
+          const options = {
+              maxSizeMB: 0.05, // 50KB = 0.05MB
+              maxWidthOrHeight: 800, // Mantener un tamaño decente
+              useWebWorker: true, // Usar un proceso en segundo plano
+              alwaysKeepResolution: true, // Evita distorsión
+          };
+  
+          let compressedFile = await imageCompression(file, options);
+  
+          //console.log(`Comenzando compresión: ${file.size / 1024} KB`);
+  
+          // **Si la imagen sigue siendo mayor a 50KB, reducir calidad dinámicamente**
+          let attempts = 0;
+          while (compressedFile.size > 51200 && attempts < 3) { // 50KB = 51200 bytes
+              options.maxSizeMB *= 0.9; // Reduce calidad en cada iteración
+              compressedFile = await imageCompression(compressedFile, options);
+          }
+  
+          //console.log(`Tamaño final: ${(compressedFile.size / 1024).toFixed(2)} KB`);
+          return compressedFile;
+      } catch (error) {
+          console.error("Error al comprimir la imagen:", error);
+          return file; // Devuelve el archivo original si hay error
+      }
+  };
+
   // función para usar la cámara o la galería
-    const handleFileUpload = async (index: number) => {
-        try {
-            const photo = await Camera.getPhoto({
-                resultType: CameraResultType.Base64,
-                source: CameraSource.Photos, // Cambia esto a CameraSource.Camera si prefieres usar la cámara en lugar de la galería
-                quality: 100,
-            });
+  const handleFileUpload = async (index: number) => {
+    try {
+      const photo = await Camera.getPhoto({
+        resultType: CameraResultType.Uri,
+        source: CameraSource.Photos,
+        quality: 100,
+      });
+  
+      if (!photo.webPath) {
+        throw new Error("No se pudo obtener la imagen.");
+    }
 
-            const nuevosPagos = [...tiposPagos];
-            // Guardar la cadena Base64 directamente sin el prefijo
-            nuevosPagos[index].imagenTransferencia = photo.base64String || "";
-            setTiposPagos(nuevosPagos);
+    // **Obtener imagen como Blob**
+    const response = await fetch(photo.webPath);
+    const blob = await response.blob();
 
-            // Mostrar mensaje de éxito
-            setToastMessage("Foto cargada exitosamente.");
-        } catch (error) {
-            console.error("Error uploading file:", error);
-            setToastMessage("Error al subir la imagen.");
-        }
-    };
+    // **Convertir el Blob en File**
+    const file = new File([blob], `image_${index}.jpg`, { type: blob.type });
+
+    //console.log(`Imagen capturada: ${file.name}`);
+    //console.log(`Tamaño original: ${(file.size / 1024).toFixed(2)} KB`);
+
+    // **Comprimir imagen a 50KB**
+    const compressedFile = await compressImageTo50KB(file);
+
+    //console.log(`Tamaño después de compresión: ${(compressedFile.size / 1024).toFixed(2)} KB`);
+
+    // **Convertir a HEX**
+    const arrayBuffer = await compressedFile.arrayBuffer();
+    const byteArray = new Uint8Array(arrayBuffer);
+    const hexString = Array.from(byteArray)
+        .map(byte => byte.toString(16).padStart(2, "0"))
+        .join("");
+
+    //console.log(`Longitud del HEX: ${hexString.length} caracteres`);
+
+    // **Actualizar estado**
+    const nuevosPagos = [...tiposPagos];
+    nuevosPagos[index].imagenTransferencia = hexString;
+    setTiposPagos(nuevosPagos);
+
+    // **Guardar el nombre del archivo**
+    //setFileNames((prev) => ({ ...prev, [index]: file.name }));
+  
+      setToastMessage("Foto cargada exitosamente.");
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      setToastMessage("Error al subir la imagen.");
+    }
+  };
 
   const handleCreateVenta = async () => {
     try {
@@ -292,12 +363,12 @@ const VoluntarioProductos: React.FC = () => {
 
   if (loading) {
     return (
-      <IonPage>
-        <IonHeader>
+      <IonPage className="page-with-background">
+        {/* <IonHeader>
           <IonToolbar style={{ backgroundColor: "#0274E5" }}>
             <IonTitle style={{ color: "#000000" }}>Productos del Voluntario</IonTitle>
           </IonToolbar>
-        </IonHeader>
+        </IonHeader> */}
         <IonContent>
           <div style={{ textAlign: "center", marginTop: "20px" }}>
             <IonSpinner name="crescent" style={{ color: "#0274E5" }} />
@@ -310,14 +381,14 @@ const VoluntarioProductos: React.FC = () => {
   if (!voluntario) {
     return (
       <IonPage>
-        <IonHeader>
+        {/* <IonHeader>
           <IonToolbar style={{ backgroundColor: "#0274E5" }}>
             <IonTitle style={{ color: "#000000" }}>Productos del Voluntario</IonTitle>
           </IonToolbar>
-        </IonHeader>
-        <IonContent>
-          <div style={{ textAlign: "center", marginTop: "20px", color: "#0274E5" }}>
-            <p>No se encontraron productos asignados al voluntario.</p>
+        </IonHeader> */}
+        <IonContent className="page-with-background">
+          <div style={{ textAlign: "center", marginTop: "100px", color: "#0274E5", fontSize: "20px" }}>
+            <p>No se encontraron productos asignados a usted.</p>
           </div>
         </IonContent>
       </IonPage>
@@ -326,17 +397,25 @@ const VoluntarioProductos: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
+      {/* <IonHeader>
         <IonToolbar style={{ backgroundColor: "#0274E5" }}>
           <IonTitle style={{ color: "#000000" }}>Productos del Voluntario</IonTitle>
         </IonToolbar>
-      </IonHeader>
-      <IonContent style={{ backgroundColor: "#F0F8FF" }}>
-        <IonCard style={{ margin: "20px", boxShadow: "0 4px 8px rgba(115, 247, 194, 0.1)" }}>
-          <IonCardHeader style={{ backgroundColor: "#0274E5" }}>
-            <IonCardTitle style={{ color: "#FFFFFF" }}>Ventas de {voluntario.persona.nombre}</IonCardTitle>
-          </IonCardHeader>
-        </IonCard>
+      </IonHeader> */}
+      <IonContent className="page-with-background">
+      <div
+          style={{
+              padding: "20px",
+              textAlign: "center",
+              background: "linear-gradient(45deg, #0B75D9, #0B75D9",
+              borderRadius: "10px",
+              margin: "10px",
+              color: "white",
+          }}
+      >
+          <h2>Ventas por Voluntario</h2>
+          <p>Se le han asiganado productos para vender de forma individual.</p>
+      </div>
 
         {/* Botón Crear Venta */}
         <div style={{ textAlign: "center", margin: "20px" }}>
@@ -372,7 +451,7 @@ const VoluntarioProductos: React.FC = () => {
           </IonButton>
         </div>
 
-        <IonModal isOpen={showModal} onDidDismiss={handleCancel}>
+        <IonModal isOpen={showModal} onDidDismiss={handleCancel} style = {{borderRadius: "10px"}}>
         <IonHeader>
             <IonToolbar>
             <IonTitle style={{ fontWeight: "bold", fontSize: "20px" }}>Crear Venta</IonTitle>
@@ -385,16 +464,16 @@ const VoluntarioProductos: React.FC = () => {
             {/* Sección de Totales */}
             <IonCard>
             <IonCardHeader>
-                <IonCardTitle style={{ textAlign: "center" }}>Detalles de Venta</IonCardTitle>
+                <IonCardTitle style={{ textAlign: "center", color: "#FFFFFF" }}>Detalles de Venta</IonCardTitle>
             </IonCardHeader>
             <IonCardContent>
                 <IonGrid>
                 <IonRow>
-                    <IonCol size="6"><strong>Total Venta:</strong></IonCol>
+                    <IonCol size="6" style = {{color: "white"}}><strong>Total Venta:</strong></IonCol>
                     <IonCol size="6">Q{totalAPagar.toFixed(2)}</IonCol>
                 </IonRow>
                 <IonRow>
-                    <IonCol size="6"><strong>Donación:</strong></IonCol>
+                    <IonCol size="6" style = {{color: "white"}}><strong>Donación:</strong></IonCol>
                     <IonCol size="6">
                     <IonInput
                         type="number"
@@ -411,14 +490,14 @@ const VoluntarioProductos: React.FC = () => {
             </IonCard>
 
             {/* Sección de Productos */}
-            <IonLabel style={{ fontSize: "18px", fontWeight: "bold", marginTop: "10px" }}>Productos</IonLabel>
+            <IonLabel style={{ fontSize: "18px", fontWeight: "bold", marginTop: "20px", marginLeft: "50px"}}>Productos</IonLabel>
             {detallesVenta.map((detalle, index) => (
             <IonCard key={index}>
                 <IonCardContent>
                 <IonGrid>
                     <IonRow>
-                    <IonCol size="6"><strong>{detalle.nombreProducto}</strong></IonCol>
-                    <IonCol size="3">Q{detalle.precio}</IonCol>
+                    <IonCol size="6" style = {{color: "white"}}><strong>{detalle.nombreProducto}</strong></IonCol>
+                    <IonCol size="3" >Q{detalle.precio}</IonCol>
                     <IonCol size="3">SubTotal: Q{detalle.subTotal.toFixed(2)}</IonCol>
                     </IonRow>
                     <IonRow>
@@ -437,7 +516,7 @@ const VoluntarioProductos: React.FC = () => {
             ))}
 
             {/* Sección de Pagos */}
-            <IonLabel style={{ fontSize: "18px", fontWeight: "bold", marginTop: "10px" }}>Pagos</IonLabel>
+            <IonLabel style={{ fontSize: "18px", fontWeight: "bold", marginTop: "20px", marginLeft: "50px"}}>Pagos</IonLabel>
             {tiposPagos.map((pago, index) => (
             <IonCard key={index}>
                 <IonCardContent>
@@ -446,6 +525,9 @@ const VoluntarioProductos: React.FC = () => {
                     <IonSelect
                         value={pago.idProducto}
                         onIonChange={(e) => handlePagoChange(index, 'idProducto', e.detail.value)}
+                        interfaceOptions={{
+                          cssClass: 'custom-alert', // Clase CSS selectItem
+                        }}
                         >
                         <IonSelectOption value="">Seleccionar Producto</IonSelectOption>
                         {detallesVenta
@@ -463,6 +545,9 @@ const VoluntarioProductos: React.FC = () => {
                         <IonSelect
                         value={pago.idTipoPago}
                         onIonChange={(e) => handlePagoChange(index, 'idTipoPago', e.detail.value)}
+                        interfaceOptions={{
+                          cssClass: 'custom-alert', // Clase CSS selectItem
+                        }}
                         >
                         {tiposPagosOptions.map((tipo) => (
                             <IonSelectOption key={tipo.idTipoPago} value={tipo.idTipoPago}>
@@ -503,42 +588,53 @@ const VoluntarioProductos: React.FC = () => {
                 </IonCardContent>
             </IonCard>
             ))}
-            <IonButton expand="block" onClick={() => setTiposPagos([...tiposPagos, { idTipoPago: "", monto: 0, correlativo: "", imagenTransferencia: "", idProducto: "" }])}>
+            <div style={{ textAlign: "center"}}>
+            <IonButton className="custom-Blue-button" style={{marginBottom: "10px"}} onClick={() => setTiposPagos([...tiposPagos, { idTipoPago: "", monto: 0, correlativo: "", imagenTransferencia: "", idProducto: "" }])}>
             Agregar Pago
             </IonButton>
+            </div>
 
-            <IonFooter>
-            <IonButton expand="block" onClick={handleCreateVenta} style={{ marginTop: "20px" }}>Crear Venta</IonButton>
-            <IonButton expand="block" color="medium" onClick={handleCancel}>Cancelar</IonButton>
-            </IonFooter>
+              <div style={{ textAlign: "center", marginBottom: "20px" }}>
+            <IonButton  className="custom-Blue-button" onClick={handleCreateVenta} style={{ marginTop: "20px" }}>Crear Venta</IonButton>
+            </div>
+            <div style={{ textAlign: "center", marginBottom: "20px" }}>
+            <IonButton  className="custom-Blue-button" onClick={handleCancel}>Cancelar</IonButton>
+            </div>
         </IonContent>
         </IonModal>
 
-        <IonAccordionGroup>
-          <IonAccordion value="productos">
-            <IonItem slot="header" style={{ backgroundColor: "#0274E5", color: "#FFFFFF" }}>
-              <IonLabel style={{ color: "#FFFFFF", fontSize: "24px", fontWeight: "bold", backgroundColor: "#9575FF"}}>Productos</IonLabel>
+        <IonList>
+          {voluntario?.detalle_productos_voluntarios?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((detalle: any) => (
+            <IonItem
+              key={detalle.idProducto}
+              style={{ margin: "30px", borderRadius: "10px", backgroundColor: "#D6EAF8" }}
+            >
+              <IonLabel>
+                <h2 style={{ color: "#0274E5" }}>{detalle.producto.nombreProducto}</h2>
+                <p><strong>Cantidad:</strong> {detalle.cantidad}</p>
+                <p><strong>Precio:</strong> Q{detalle.producto.precio}</p>
+                <div style={{ textAlign: "center", marginTop: "10px" }}>
+                  <img
+                    src={`https://api.voluntariadoayuvi.com/${detalle.producto.foto}`}
+                    alt={detalle.producto.nombreProducto}
+                    style={{ width: "100px", height: "100px", objectFit: "cover", borderRadius: "10px" }}
+                  />
+                </div>
+              </IonLabel>
             </IonItem>
-            <IonList slot="content" style={{ backgroundColor: "#E0E7FF" }}>
-              {voluntario.detalle_productos_voluntarios.map((detalle: { idProducto: number; producto: { nombreProducto: string; precio: number; foto: string }; cantidad: number }) => (
-                <IonItem key={detalle.idProducto} style={{ margin: "10px", borderRadius: "10px", boxShadow: "0 4px 8px rgba(99, 175, 233, 0.18)" }}>
-                  <IonLabel>
-                    <h2 style={{ color: "#0274E5" }}>{detalle.producto.nombreProducto}</h2>
-                    <p><strong>Cantidad:</strong> {detalle.cantidad}</p>
-                    <p><strong>Precio:</strong> Q{detalle.producto.precio}</p>
-                    <div style={{ textAlign: "center", marginTop: "10px" }}>
-                      <img
-                        src={`https://3hkpqqqv-5000.use.devtunnels.ms/${detalle.producto.foto}`}
-                        alt={detalle.producto.nombreProducto}
-                        style={{ width: "100px", height: "100px", objectFit: "cover", borderRadius: "10px" }}
-                      />
-                    </div>
-                  </IonLabel>
-                </IonItem>
-              ))}
-            </IonList>
-          </IonAccordion>
-        </IonAccordionGroup>
+          ))}
+        </IonList>
+
+        {/* Botones de navegación */}
+        <div style={{ textAlign: "center", marginBottom: "60px" }}>
+          <IonButton onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>
+            Anterior
+          </IonButton>
+          <IonButton onClick={() => setCurrentPage((prev) => (voluntario?.detalle_productos_voluntarios && prev * itemsPerPage < voluntario.detalle_productos_voluntarios.length ? prev + 1 : prev))} disabled={!voluntario?.detalle_productos_voluntarios || currentPage * itemsPerPage >= voluntario.detalle_productos_voluntarios.length}>
+            Siguiente
+          </IonButton>
+        </div>
+
         <IonToast
           isOpen={!!toastMessage}
           message={toastMessage}

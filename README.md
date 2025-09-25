@@ -16,7 +16,7 @@ git clone https://github.com/PawelReynoso24gt/AyuviAppIonic.git
 ```
 2. Instala las dependencias necesarias para el proyecto:
 ```bash
-nmp install
+npm install
 ```
 3. Instalación de paquetes para usar ionic (de forma global para que se use para futuros proyectos):
 ```bash
@@ -97,12 +97,17 @@ npm install @capacitor/camera
 ```
 
 ```bash
-npm install @ionic-native/firebase
+npm install moment
 ```
 
 ```bash
-npm i cordova-plugin-firebasex
+npm install @capacitor/keyboard
 ```
+
+```bash
+npm install react-datepicker
+```
+
 
 # DESARROLLADORES
 

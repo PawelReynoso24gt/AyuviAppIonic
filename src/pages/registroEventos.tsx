@@ -18,6 +18,8 @@ import { arrowBackOutline } from 'ionicons/icons';
 import { useHistory } from "react-router-dom";
 import axios from "../services/axios";
 import { getInfoFromToken } from "../services/authService";
+import '../theme/variables.css';
+import { parseISO, format } from "date-fns";
 
 interface Evento {
   idEvento: number;
@@ -45,8 +47,9 @@ const InscripcionesEventos: React.FC = () => {
   const fetchEventos = async () => {
     setLoading(true);
     try {
-      const response = await axios.get<Evento[]>( `http://localhost:5000/eventos/activo?idVoluntario=${idVoluntario}`);
+      const response = await axios.get<Evento[]>(`/eventos/activo?idVoluntario=${idVoluntario}`);
       setEventos(response.data);
+      //console.log(response.data)
     } catch (error: any) {
       const errorMessage =
         error.response?.data?.message || error.message || "Error desconocido al cargar eventos.";
@@ -69,7 +72,7 @@ const InscripcionesEventos: React.FC = () => {
       idUsuario,
       fechaHora: new Date().toISOString()
     };
-  
+
     try {
       await axios.post("/bitacora/create", bitacoraData);
     } catch (error) {
@@ -89,32 +92,32 @@ const InscripcionesEventos: React.FC = () => {
 
 
     try {
-      const response = await axios.post("http://localhost:5000/inscripcion_eventos/create", {
+      const response = await axios.post("/inscripcion_eventos/create", {
         fechaHoraInscripcion,
         idVoluntario,
         idEvento: selectedEvento,
       });
       setToastMessage(response.data.message || "¡Inscripción registrada con éxito!");
-      fetchEventos(); 
+      fetchEventos();
 
-       // Log the action in the bitacora
-      await logBitacora(`Voluntario ${idVoluntario} inscrito en el evento ${selectedEvento}`,38);
+      // Log the action in the bitacora
+      await logBitacora(`Voluntario ${idVoluntario} inscrito en el evento ${selectedEvento}`, 38);
 
-     } catch (error: any) {
-        const errorMessage =
-          error.response?.data?.message || error.message || "Error desconocido al registrar inscripción.";
-        console.error("Error al registrar inscripción:", error.response || error);
-        setToastMessage(errorMessage);
-      } finally {
-        setProcessingInscripcion(false); // Reactivar botones
-        setShowModal(false); // Cerrar modal
-        setSelectedEvento(null);
-      }
-    };
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message || error.message || "Error desconocido al registrar inscripción.";
+      console.error("Error al registrar inscripción:", error.response || error);
+      setToastMessage(errorMessage);
+    } finally {
+      setProcessingInscripcion(false); // Reactivar botones
+      setShowModal(false); // Cerrar modal
+      setSelectedEvento(null);
+    }
+  };
 
-      const handleIrAComision = (idEvento: number) => {
-        history.push(`/registroComisiones?eventoId=${idEvento}`);
-      };
+  const handleIrAComision = (idEvento: number) => {
+    history.push("/registroComisiones", { eventoId: idEvento });
+  };
 
   return (
     <IonPage>
@@ -125,8 +128,8 @@ const InscripcionesEventos: React.FC = () => {
             fill="clear"
             onClick={() => history.goBack()} // Acción para regresar
             style={{
-            marginLeft: '10px',
-            color: 'white',
+              marginLeft: '10px',
+              color: 'white',
             }}
           >
             <IonIcon icon={arrowBackOutline} slot="icon-only" />
@@ -134,12 +137,12 @@ const InscripcionesEventos: React.FC = () => {
           <IonTitle style={{ color: "#FFFFFF" }}>Inscripción a Eventos</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent style={{ backgroundColor: "#F0F8FF" }}>
+      <IonContent className="page-with-background">
         <div
           style={{
             padding: "20px",
             textAlign: "center",
-            background: "linear-gradient(45deg, #A6BC09, #A6BC09)",
+            background: "linear-gradient(45deg, #0B75D9, #0B75D9)",
             borderRadius: "10px",
             margin: "10px",
             color: "white",
@@ -163,7 +166,7 @@ const InscripcionesEventos: React.FC = () => {
         ) : (
           <IonList>
             {eventos.map((evento) => (
-              <IonItem
+              <IonItem 
                 key={evento.idEvento}
                 style={{
                   backgroundColor: evento.estado === 1 ? "#D6EAF8" : "#FADBD8",
@@ -186,10 +189,10 @@ const InscripcionesEventos: React.FC = () => {
                     Descripción: {evento.descripcion}
                   </p>
                   <p style={{ color: "#000080" }}>
-                    Fecha Inicio: {new Date(evento.fechaHoraInicio).toLocaleDateString()}
+                    Fecha Inicio: {format(parseISO(evento.fechaHoraInicio), "dd/MM/yyyy hh:mm a")}
                   </p>
                   <p style={{ color: "#000080" }}>
-                    Fecha Finalización: {new Date(evento.fechaHoraFin).toLocaleDateString()}
+                    Fecha Finalización: {format(parseISO(evento.fechaHoraFin), "dd/MM/yyyy hh:mm a")}
                   </p>
                   <p
                     style={{
@@ -201,10 +204,19 @@ const InscripcionesEventos: React.FC = () => {
                     Estado del evento: {evento.estado === 1 ? "Activo" : "Inactivo"}
                   </p>
                 </IonLabel>
-                <div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "10px",
+                    marginLeft: "auto",
+                    marginRight: "10px",
+                    width: "50%",
+                    alignItems: "flex-end",
+                  }}>
                   <IonButton
                     slot="end"
-                    color="tertiary"
                     shape="round"
                     size="small"
                     onClick={() => {
@@ -215,10 +227,9 @@ const InscripcionesEventos: React.FC = () => {
                     style={{
                       background: evento.isInscrito
                         ? "#A9A9A9"
-                        : "linear-gradient(45deg, #6A5ACD, #7B68EE)",
+                        : "linear-gradient(45deg, #4556FF, #4556FF)",
                       color: "white",
                       fontWeight: "bold",
-                      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3)",
                       marginBottom: "10px",
                     }}
                   >
@@ -227,14 +238,16 @@ const InscripcionesEventos: React.FC = () => {
                   {evento.isInscrito && (
                     <IonButton
                       slot="end"
-                      color="success"
                       shape="round"
                       size="small"
                       onClick={() => handleIrAComision(evento.idEvento)}
                       style={{
-                        background: "linear-gradient(45deg, #28a745, #218838)",
+                        background: evento.isInscrito
+                          ? "#A9A9A9"
+                          : "linear-gradient(45deg, #4556FF, #4556FF)",
                         color: "white",
                         fontWeight: "bold",
+                        marginBottom: "10px",
                       }}
                     >
                       Ir a Comisión
@@ -243,6 +256,7 @@ const InscripcionesEventos: React.FC = () => {
                 </div>
               </IonItem>
             ))}
+             <IonItem style={{ marginBottom: "60px" }} />
           </IonList>
         )}
 

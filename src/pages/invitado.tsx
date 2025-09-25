@@ -13,6 +13,10 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { useHistory } from "react-router-dom";
 
+const colors = ["#0274E5", "#F36B00", "#49c92c", "#8500BC", "#ebe400", "#FF33A1"];
+const randomIndex = Math.floor(Math.random() * colors.length);
+const randomColor = colors[randomIndex];
+
 const Home: React.FC = () => {
   const [publicaciones, setPublicaciones] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -22,7 +26,7 @@ const Home: React.FC = () => {
     const fetchPublicaciones = async () => {
       try {
         const response = await axios.get(
-          "/publicaciones/completas"
+          "/publicaciones/invitado"
         );
         const publicaciones = response.data.map((publicacion: any) => ({
           id: publicacion.id,
@@ -69,10 +73,9 @@ const Home: React.FC = () => {
       marginBottom: "30px",
       textAlign: "center",
       fontFamily: "Arial, sans-serif",
-      backgroundColor: "#fff",
+      backgroundColor: "#1e1e1e",
       borderRadius: "10px",
       overflow: "hidden",
-      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
       cursor: "pointer", // Cambia el cursor al pasar sobre la publicación
     },
     photoContainer: {
@@ -81,7 +84,7 @@ const Home: React.FC = () => {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: "#0274E5",
+      backgroundColor: randomColor,
       overflow: "hidden",
     },
     photo: {
@@ -129,13 +132,13 @@ const Home: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
+      {/* <IonHeader>
         <IonToolbar>
           <IonTitle>Invitad@</IonTitle>
         </IonToolbar>
-      </IonHeader>
-      <IonContent>
-        <div style={styles.welcomeContainer}>
+      </IonHeader> */}
+      <IonContent className="page-with-background">
+        <div style={styles.welcomeContainer} className="page-with-background">
           <h2>Bienvenid@</h2>
         </div>
 
@@ -172,7 +175,7 @@ const Home: React.FC = () => {
               {publicacion.fotos.map((foto: string, index: number) => (
                 <div key={`${publicacion.id}-${index}`} style={styles.photoContainer}>
                   <img
-                    src={`https://lrr4gb41-5001.use.devtunnels.ms/${foto}`}
+                    src={`https://api.voluntariadoayuvi.com/${foto}`}
                     alt={`Foto ${index + 1}`}
                     style={styles.photo}
                   />

@@ -20,7 +20,10 @@ import {
 import { arrowBackOutline } from 'ionicons/icons';
 import axios from '../services/axios';
 import { useHistory } from 'react-router-dom';
-import '../theme/variables.css'; 
+import '../theme/variables.css';
+import ReactDatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import logo from '../img/LogoAyuvi3.png'; // Importa la imagen
 
 const Registro: React.FC = () => {
   const history = useHistory();
@@ -38,7 +41,7 @@ const Registro: React.FC = () => {
   });
   const [municipios, setMunicipios] = useState([]); // Lista de municipios
   const [allMunicipios, setAllMunicipios] = useState([]);
-  const [departamentos, setDepartamentos] = useState([]); 
+  const [departamentos, setDepartamentos] = useState([]);
   const [toastMessage, setToastMessage] = useState(''); // Mensajes de error o éxito
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false); // Control para abrir/cerrar el DatePicker
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -46,51 +49,51 @@ const Registro: React.FC = () => {
   // Obtener los municipios al cargar la pantalla
   useEffect(() => {
     const fetchData = async () => {
-        try {
-          const departamentosResponse = await axios.get('http://localhost:5000/departamentos');
-          const municipiosResponse = await axios.get('http://localhost:5000/municipios');
-          setDepartamentos(departamentosResponse.data);
-          setAllMunicipios(municipiosResponse.data); // Guardar todos los municipios
-        } catch (error) {
-          console.error('Error al cargar los datos:', error);
-          setToastMessage('No se pudieron cargar los datos.');
-        }
-      };
-      fetchData();
-    }, []);
-
-
-    const handleDepartamentoChange = (idDepartamento: string) => {
-        setFormData({ ...formData, idDepartamento, idMunicipio: '' }); // Limpiar el municipio seleccionado
-        const filteredMunicipios = allMunicipios.filter(
-          (municipio: any) => municipio.idDepartamento === idDepartamento
-        );
-        setMunicipios(filteredMunicipios); // Actualizar los municipios filtrados
-    };
-
-    interface BitacoraData {
-      descripcion: string;
-      idCategoriaBitacora: number;
-      idUsuario: number;
-      fechaHora: Date;
-    }
-
-    const logBitacora = async (descripcion: string, idCategoriaBitacora: number): Promise<boolean> => {
-      const bitacoraData = {
-        descripcion,
-        idCategoriaBitacora: 7,
-        idUsuario: null,
-        fechaHora: new Date(),
-      };
-    
       try {
-        const response = await axios.post("/bitacora/create", bitacoraData);
-        return !!response.data.idBitacora; // Retorna true si idBitacora está presente
+        const departamentosResponse = await axios.get('/departamentos');
+        const municipiosResponse = await axios.get('/municipios');
+        setDepartamentos(departamentosResponse.data);
+        setAllMunicipios(municipiosResponse.data); // Guardar todos los municipios
       } catch (error) {
-        console.error("Error logging bitacora:", error);
-        return false; // Retorna false si hay un error
+        console.error('Error al cargar los datos:', error);
+        setToastMessage('No se pudieron cargar los datos.');
       }
     };
+    fetchData();
+  }, []);
+
+
+  const handleDepartamentoChange = (idDepartamento: string) => {
+    setFormData({ ...formData, idDepartamento, idMunicipio: '' }); // Limpiar el municipio seleccionado
+    const filteredMunicipios = allMunicipios.filter(
+      (municipio: any) => municipio.idDepartamento === idDepartamento
+    );
+    setMunicipios(filteredMunicipios); // Actualizar los municipios filtrados
+  };
+
+  interface BitacoraData {
+    descripcion: string;
+    idCategoriaBitacora: number;
+    idUsuario: number;
+    fechaHora: Date;
+  }
+
+  const logBitacora = async (descripcion: string, idCategoriaBitacora: number): Promise<boolean> => {
+    const bitacoraData = {
+      descripcion,
+      idCategoriaBitacora: 7,
+      idUsuario: null,
+      fechaHora: new Date(),
+    };
+
+    try {
+      const response = await axios.post("/bitacora/create", bitacoraData);
+      return !!response.data.idBitacora; // Retorna true si idBitacora está presente
+    } catch (error) {
+      console.error("Error logging bitacora:", error);
+      return false; // Retorna false si hay un error
+    }
+  };
 
   const handleInputChange = (key: string, value: string) => {
     setFormData({ ...formData, [key]: value });
@@ -99,16 +102,16 @@ const Registro: React.FC = () => {
   const handleSubmit = async () => {
     try {
       // Registrar al usuario
-      await axios.post('http://localhost:5000/personas/create', formData);
+      await axios.post('/personasAsp/create', formData);
       setToastMessage('¡Registro exitoso! Redirigiendo...');
-      
+
       // Crear bitácora después de registrar al usuario
       try {
         await logBitacora(`Registro de aspirante: ${formData.nombre}`, 1);
       } catch (bitacoraError) {
         console.error('Error al registrar en la bitácora:', bitacoraError);
       }
-  
+
       // Redirigir después de un registro exitoso y la bitácora
       history.push('/solicitudPendiente'); // Cambia al componente correspondiente
     } catch (error: any) {
@@ -118,7 +121,7 @@ const Registro: React.FC = () => {
       setToastMessage(errorMessage);
     }
   };
-  
+
 
   const handleDateConfirm = (event: any) => {
     setFormData({ ...formData, fechaNacimiento: event.detail.value }); // Guardar fecha seleccionada
@@ -127,9 +130,9 @@ const Registro: React.FC = () => {
 
   return (
     <IonPage >
-      <IonHeader>
+      <IonHeader >
         <IonToolbar color="primary">
-        <IonButton
+          <IonButton
             slot="start"
             fill="clear"
             onClick={() => history.goBack()} // Acción para regresar
@@ -143,18 +146,21 @@ const Registro: React.FC = () => {
           <IonTitle>Registro de Aspirantes</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent  className="custom-content" 
-      style={{
-        backgroundColor: 'var(--main-bg-color)', // Fondo verde
-        minHeight: '50vh',        // Altura completa
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: '20px',
-     }}>
-        <IonItem
+      <IonContent 
         style={{
+          backgroundColor: 'var(--main-bg-color)', // Fondo verde
+          minHeight: '50vh',        // Altura completa
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: '20px',
+        }}>
+          <div className="container">
+          <img src={logo} alt="Logo Ayuvi" className="logoaspirante" />
+          </div>
+        <IonItem
+          style={{
             display: 'flex', // Habilitar flexbox
             justifyContent: 'center', // Centrar horizontalmente
             alignItems: 'center', // Centrar verticalmente
@@ -164,33 +170,33 @@ const Registro: React.FC = () => {
             margin: '16px auto', // Margen para separación y centrar horizontalmente
             textAlign: 'center', // Alinear contenido
             borderRadius: '8px', // Opcional: bordes redondeados
-            backgroundColor: '#107bc1', // Opcional: sombra para diseño
+            backgroundColor: '#55A605', // Opcional: sombra para diseño
           }}>
           <IonLabel position="floating">Nombre Completo</IonLabel>
           <IonInput
             value={formData.nombre}
             onIonChange={(e) => handleInputChange('nombre', e.detail.value!)}
             style={{
-                fontSize: '16px', 
-                width: '50%', 
-              }}
+              fontSize: '16px',
+              width: '50%',
+            }}
             placeholder="Ingrese su nombre"
             className="ion-padding-top"
           />
         </IonItem>
 
         <IonItem
-        style={{
-            display: 'flex', 
-            justifyContent: 'center', 
-            alignItems: 'center', 
-            width: '100%', 
-            maxWidth: '300px', 
-            height: '100px', 
-            margin: '16px auto', 
-            textAlign: 'center', 
-            borderRadius: '8px', 
-            backgroundColor: '#107bc1', 
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            maxWidth: '300px',
+            height: '100px',
+            margin: '16px auto',
+            textAlign: 'center',
+            borderRadius: '8px',
+            backgroundColor: '#D62498',
           }}>
           <IonLabel position="floating" >Fecha de Nacimiento</IonLabel>
           <IonInput
@@ -203,59 +209,65 @@ const Registro: React.FC = () => {
         </IonItem>
 
         {/* Mostrar IonDatetime solo si isDatePickerVisible es true */}
-      {/* Mostrar IonDatetime solo si isDatePickerVisible es true */}
-            {isDatePickerVisible && (
-            <div
-                style={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                backgroundColor: '#fff', // Fondo blanco para que destaque
-                borderRadius: '8px',
-                padding: '16px',
-                boxShadow: '0 2px 10px rgba(173, 22, 211, 0.2)', // Sombra para resaltar el calendario
-                zIndex: 1000, // Asegurarte de que esté por encima de otros elementos
-                }}
+        {/* Mostrar IonDatetime solo si isDatePickerVisible es true */}
+        {isDatePickerVisible && (
+          <div
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              backgroundColor: '#262626',
+              borderRadius: '8px',
+              padding: '16px',
+              boxShadow: '0 2px 10px rgba(173, 22, 211, 0.2)',
+              zIndex: 1000,
+            }}
+          >
+          <IonDatetime
+            value={formData.fechaNacimiento || ''} // Siempre usar una cadena válida
+            onIonChange={(e) => {
+              const value = Array.isArray(e.detail.value) ? e.detail.value[0] : e.detail.value; // Convertir a string
+              if (value) {
+                setFormData({ ...formData, fechaNacimiento: value });
+              }
+            }}
+            presentation="date"
+            showDefaultButtons={false}
+            style={{
+              maxWidth: '100%',
+              textAlign: 'center',
+              backgroundColor: '#262626',
+            }}
+          />
+            <IonButton
+              color="success"
+              style={{
+                marginTop: '16px',
+                display: 'block',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                width: '200px',
+              }}
+              onClick={() => setIsDatePickerVisible(false)}
             >
-                <IonDatetime
-                value={formData.fechaNacimiento}
-                onIonChange={handleDateConfirm}
-                presentation="date" // Propiedad para presentación moderna
-                style={{
-                    maxWidth: '100%', 
-                    textAlign: 'center', 
-                }}
-                />
-                <IonButton
-                color="danger"
-                style={{
-                    marginTop: '16px',
-                    display: 'block', 
-                    marginLeft: 'auto', 
-                    marginRight: 'auto', 
-                    width: '200px'                               
-                }}
-                onClick={() => setIsDatePickerVisible(false)}
-                >
-                Cerrar
-                </IonButton>
-            </div>
-)}
+              Aceptar
+            </IonButton>
+          </div>
+        )}
 
-
-        <IonItem 
-        style={{
+        <IonItem
+          style={{
             display: 'flex',
-            justifyContent: 'center', 
-            alignItems: 'center', 
-            width: '100%', 
-            maxWidth: '300px', 
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            maxWidth: '300px',
             height: '100px',
-            margin: '16px auto', 
-            textAlign: 'center', 
-            borderRadius: '8px', 
-            backgroundColor: '#107bc1',
+            margin: '16px auto',
+            textAlign: 'center',
+            borderRadius: '8px',
+            backgroundColor: '#28C3F9',
           }}>
           <IonLabel position="floating"  >Teléfono</IonLabel>
           <IonInput
@@ -268,17 +280,17 @@ const Registro: React.FC = () => {
         </IonItem>
 
         <IonItem
-        style={{
+          style={{
             display: 'flex',
             justifyContent: 'center',
-            alignItems: 'center', 
-            width: '100%', 
-            maxWidth: '300px', 
-            height: '100px', 
-            margin: '16px auto', 
-            textAlign: 'center', 
-            borderRadius: '8px', 
-            backgroundColor: '#107bc1',
+            alignItems: 'center',
+            width: '100%',
+            maxWidth: '300px',
+            height: '100px',
+            margin: '16px auto',
+            textAlign: 'center',
+            borderRadius: '8px',
+            backgroundColor: '#F77310',
           }}>
           <IonLabel position="floating" >Domicilio</IonLabel>
           <IonInput
@@ -290,17 +302,17 @@ const Registro: React.FC = () => {
         </IonItem>
 
         <IonItem
-        style={{
-            display: 'flex', 
-            justifyContent: 'center', 
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
             alignItems: 'center',
-            width: '100%', 
+            width: '100%',
             maxWidth: '300px',
             height: '100px',
             margin: '16px auto',
-            textAlign: 'center', 
-            borderRadius: '8px', 
-            backgroundColor: '#107bc1',
+            textAlign: 'center',
+            borderRadius: '8px',
+            backgroundColor: '#FFBC24',
           }}>
           <IonLabel position="floating" >CUI</IonLabel>
           <IonInput
@@ -313,17 +325,17 @@ const Registro: React.FC = () => {
         </IonItem>
 
         <IonItem
-        style={{
-            display: 'flex', 
-            justifyContent: 'center', 
-            alignItems: 'center', 
-            width: '100%', 
-            maxWidth: '300px', 
-            height: '100px', 
-            margin: '16px auto', 
-            textAlign: 'center', 
-            borderRadius: '8px', 
-            backgroundColor: '#107bc1',
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            maxWidth: '300px',
+            height: '100px',
+            margin: '16px auto',
+            textAlign: 'center',
+            borderRadius: '8px',
+            backgroundColor: '#8500BC',
           }}>
           <IonLabel position="floating"  >Correo Electrónico</IonLabel>
           <IonInput
@@ -336,48 +348,54 @@ const Registro: React.FC = () => {
         </IonItem>
 
         <IonItem 
-        style={{
-            display: 'flex', 
-            justifyContent: 'center', 
-            alignItems: 'center', 
-            width: '100%', 
-            maxWidth: '300px', 
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            maxWidth: '300px',
             height: '100px',
-            margin: '16px auto', 
-            textAlign: 'center', 
-            borderRadius: '8px', 
-            backgroundColor: '#107bc1',
+            margin: '16px auto',
+            textAlign: 'center',
+            borderRadius: '8px',
+            backgroundColor: '#0896A6',
           }}>
           <IonSelect
             value={formData.idDepartamento}
             placeholder="Seleccione su departamento"
-            onIonChange={(e) => handleDepartamentoChange(e.detail.value!)}
+            onIonChange={(e) => handleDepartamentoChange(e.detail.value!)}  
+            interfaceOptions={{
+              cssClass: 'custom-alert', // Clase CSS selectItem
+            }}
           >
             {departamentos.map((departamento: any) => (
-              <IonSelectOption key={departamento.idDepartamento} value={departamento.idDepartamento}>
+              <IonSelectOption  key={departamento.idDepartamento} value={departamento.idDepartamento}>
                 {departamento.departamento}
               </IonSelectOption>
             ))}
           </IonSelect>
         </IonItem>
 
-        <IonItem style={{
-            display: 'flex', 
-            justifyContent: 'center', 
-            alignItems: 'center', 
-            width: '100%', 
-            maxWidth: '300px', 
-            height: '100px', 
-            margin: '16px auto', 
-            textAlign: 'center', 
-            borderRadius: '8px', 
-            backgroundColor: '#107bc1',
-          }}>
+        <IonItem  style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: '100%',
+          maxWidth: '300px',
+          height: '100px',
+          margin: '16px auto',
+          textAlign: 'center',
+          borderRadius: '8px',
+          backgroundColor: '#55A605',
+        }}>
           <IonSelect
             value={formData.idMunicipio}
             placeholder="Seleccione su municipio"
             onIonChange={(e) => handleInputChange('idMunicipio', e.detail.value!)}
             disabled={!municipios.length} // Deshabilitar si no hay municipios disponibles
+            interfaceOptions={{
+              cssClass: 'custom-alert', // Clase CSS para selectItem
+            }}
           >
             {municipios.map((municipio: any) => (
               <IonSelectOption key={municipio.idMunicipio} value={municipio.idMunicipio}>
@@ -388,7 +406,7 @@ const Registro: React.FC = () => {
         </IonItem>
 
 
-        <IonButton expand="block" onClick={handleSubmit} color="primary" style={{ marginTop: '16px', width: '200px',  margin: '30px auto', }}>
+        <IonButton expand="block" onClick={handleSubmit} color="primary" style={{ marginTop: '16px', width: '200px', margin: '30px auto', }}>
           Registrarse
         </IonButton>
 

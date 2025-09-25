@@ -13,43 +13,48 @@ import {
   IonLoading,
   IonAlert,
   IonList,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardContent,
 } from "@ionic/react";
 import axios from "../services/axios";
 import { getInfoFromToken } from "../services/authService";
+import '../theme/variables.css';
 
 const RequestTalonario: React.FC = () => {
-  const [talonarios, setTalonarios] = useState<any[]>([]);
-  const [selectedTalonario, setSelectedTalonario] = useState<number | null>(
-    null
-  );
-  const [solicitudes, setSolicitudes] = useState<any[]>([]); // Para almacenar solicitudes del voluntario
+  const [rifas, setRifas] = useState<any[]>([]);
+  const [selectedRifa, setSelectedRifa] = useState<number | null>(null);
+  const [selectedTalonario, setSelectedTalonario] = useState<number | null>(null);
+  const [solicitudes, setSolicitudes] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const userInfo = getInfoFromToken();
-  const idVoluntario = userInfo?.idVoluntario; // Extraer idVoluntario del token
-  const idUsuario = userInfo?.idUsuario; // Extraer idUsuario del token
+  const idVoluntario = userInfo?.idVoluntario;
+  const idUsuario = userInfo?.idUsuario;
 
-  // Cargar talonarios disponibles
+  // Cargar rifas con talonarios disponibles
   useEffect(() => {
-    const fetchTalonarios = async () => {
+    const fetchRifas = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("/talonarios");
-        setTalonarios(response.data);
+        const response = await axios.get("/rifas");
+        const rifasData = response.data;
+
+        const rifasWithTalonarios = await Promise.all(
+          rifasData.map(async (rifa: any) => {
+            const talonariosResponse = await axios.get(`/rifas/withTalonarios/${rifa.idRifa}`);
+            return { ...rifa, talonarios: talonariosResponse.data.talonarios };
+          })
+        );
+
+        setRifas(rifasWithTalonarios);
       } catch (err) {
-        setError("Error al cargar los talonarios.");
+        setError("Error al cargar las rifas.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchTalonarios();
+    fetchRifas();
   }, []);
 
   // Cargar solicitudes del voluntario
@@ -68,7 +73,7 @@ const RequestTalonario: React.FC = () => {
     };
 
     if (idVoluntario) fetchSolicitudes();
-  }, [idVoluntario, showSuccess]); // Se vuelve a cargar cuando hay una nueva solicitud
+  }, [idVoluntario, showSuccess]);
 
   // * bitacora
   const logBitacora = async (descripcion: string, idCategoriaBitacora: number) => {
@@ -78,7 +83,7 @@ const RequestTalonario: React.FC = () => {
       idUsuario,
       fechaHora: new Date().toISOString()
     };
-  
+
     try {
       await axios.post("/bitacora/create", bitacoraData);
     } catch (error) {
@@ -89,7 +94,17 @@ const RequestTalonario: React.FC = () => {
   // Enviar solicitud
   const handleSubmit = async () => {
     if (!selectedTalonario) {
-      setError("Por favor selecciona un talonario.");
+      setError("Por favor selecciona una rifa y un talonario.");
+      return;
+    }
+
+    // Verificar si el talonario ya está solicitado
+    const talonarioSolicitado = rifas
+      .flatMap((rifa) => rifa.talonarios)
+      .find((talonario: any) => talonario.idTalonario === selectedTalonario && talonario.solicitado === 1);
+
+    if (talonarioSolicitado) {
+      setError("Este talonario ya se encuentra solicitado, por favor selecciona otro.");
       return;
     }
 
@@ -124,36 +139,111 @@ const RequestTalonario: React.FC = () => {
     }
   };
 
+  // Filtrar talonarios disponibles
+  const getAvailableTalonarios = (rifa: any) => {
+    const talonariosSolicitados = solicitudes
+      .filter((solicitud) => solicitud.estado !== 0 || solicitud.idVoluntario !== idVoluntario)
+      .map((solicitud) => solicitud.idTalonario);
+
+    return rifa.talonarios.filter(
+      (talonario: any) => !talonariosSolicitados.includes(talonario.idTalonario)
+    );
+  };
+
   return (
     <IonPage>
-      <IonHeader>
+      {/* <IonHeader>
         <IonToolbar>
           <IonTitle>Solicitar Talonario</IonTitle>
         </IonToolbar>
-      </IonHeader>
+      </IonHeader> */}
 
-      <IonContent className="ion-padding">
+      <IonContent className="ion-padding page-with-background">
         <IonLoading isOpen={loading} message="Cargando..." />
 
-        {/* Selección de talonarios */}
-        <IonItem>
-          <IonLabel>Selecciona un Talonario</IonLabel>
-          <IonSelect
-            placeholder="Selecciona uno"
-            onIonChange={(e) => setSelectedTalonario(e.detail.value)}
-          >
-            {talonarios.map((talonario) => (
-              <IonSelectOption
-                key={talonario.idTalonario}
-                value={talonario.idTalonario}
-              >
-                {`Código: ${talonario.codigoTalonario} - Cantidad: ${talonario.cantidadBoletos}`}
-              </IonSelectOption>
-            ))}
-          </IonSelect>
-        </IonItem>
+        <div
+        style={{
+          padding: "20px",
+          textAlign: "center",
+          background: "rgb(12, 146, 170)",
+          borderRadius: "10px",
+          margin: "10px",
+          color: "white",
+        }}
+      >
+        <h2>Gestión de Solicitudes</h2>
+        <p>Visualiza y gestiona tus solicitudes de talonarios.</p>
+      </div>
 
-        <IonButton expand="block" onClick={handleSubmit}>
+        {/* Selección de rifas */}
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "20px", textAlign: "center" }}>
+          <IonItem>
+            <IonSelect
+              style={{
+                width: "60%",
+                maxWidth: "400px",
+                backgroundColor: "white",
+                borderRadius: "10px",
+                color: "rgb(9, 84, 97)",
+                fontWeight: "bold",
+                textAlign: "center",
+              }}
+              className="custom-ion-select"
+              placeholder="Selecciona una rifa"
+              onIonChange={(e) => {
+                setSelectedRifa(e.detail.value);
+                setSelectedTalonario(null); // Reset talonario selection
+              }}
+            >
+              {rifas.map((rifa) => (
+                <IonSelectOption className="custom-ion-select" key={rifa.idRifa} value={rifa.idRifa}>
+                  {`${rifa.nombreRifa} - Precio: ${rifa.precioBoleto} - Fecha Fin: ${rifa.fechaFin}`}
+                </IonSelectOption>
+              ))}
+            </IonSelect>
+          </IonItem>
+        </div>
+        {/* Selección de talonarios */}
+        {selectedRifa && (
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "20px", textAlign: "center" }}>
+            <IonItem>
+              <IonSelect
+                style={{
+                  width: "60%",
+                  maxWidth: "400px",
+                  backgroundColor: "white",
+                  borderRadius: "10px",
+                  color: "rgb(9, 84, 97)",
+                  fontWeight: "bold",
+                  textAlign: "center",
+                }}
+                className="custom-ion-select"
+                placeholder="Selecciona un talonario"
+                onIonChange={(e) => setSelectedTalonario(e.detail.value)}
+              >
+                {getAvailableTalonarios(rifas.find((rifa) => rifa.idRifa === selectedRifa)).map(
+                  (talonario: any) => (
+                    <IonSelectOption className="custom-ion-select"
+                      key={talonario.idTalonario}
+                      value={talonario.idTalonario}
+                    >
+                      {`Código: ${talonario.codigoTalonario} - Cantidad: ${talonario.cantidadBoletos}`}
+                    </IonSelectOption>
+                  )
+                )}
+              </IonSelect>
+            </IonItem>
+          </div>
+        )}
+
+        <IonButton expand="block" onClick={handleSubmit}
+          className="custom-turquoise-button"
+          style={{
+            margin: "20px auto",
+            color: "white",
+            fontWeight: "bold",
+            width: "50%",
+          }}>
           Solicitar Talonario
         </IonButton>
 
@@ -169,18 +259,34 @@ const RequestTalonario: React.FC = () => {
 
         {/* Mostrar solicitudes del voluntario */}
         <IonList>
-          <IonLabel className="ion-padding">Mis Solicitudes</IonLabel>
+          <IonLabel style={{ padding: "10px", fontWeight: "bold", fontSize: "30px" }}>Mis Solicitudes:</IonLabel>
           {solicitudes.length > 0 ? (
-            solicitudes.map((solicitud) => {
+            solicitudes.map((solicitud, index) => {
               const estado = getEstadoSolicitud(solicitud.estado);
+              const talonario = rifas
+                .flatMap((rifa) => rifa.talonarios)
+                .find((talonario: any) => talonario.idTalonario === solicitud.idTalonario);
+              const rifa = rifas.find((rifa) =>
+                rifa.talonarios.some((t: any) => t.idTalonario === solicitud.idTalonario)
+              );
               return (
-                <IonCard key={solicitud.idSolicitud}>
-                  <IonCardHeader>
-                    <IonCardTitle>
-                      Talonario #{solicitud.idTalonario}
-                    </IonCardTitle>
-                  </IonCardHeader>
-                  <IonCardContent>
+                <IonItem key={`${solicitud.idSolicitud}-${index}`} style={{
+                  backgroundColor: "#F0F8FF",
+                  margin: "10px",
+                  borderRadius: "10px",
+                }}>
+                  <IonLabel>
+                    <h2 style={{
+                      color: "rgb(12, 146, 170)",
+                      fontWeight: "bold",
+                      fontSize: "20px",
+                    }}>Talonario #{solicitud.idTalonario}</h2>
+                    <p>
+                      <strong>Código del Talonario:</strong> {talonario?.codigoTalonario}
+                    </p>
+                    <p>
+                      <strong>Rifa:</strong> {rifa?.nombreRifa}
+                    </p>
                     <p>
                       <strong>Fecha de Solicitud:</strong>{" "}
                       {solicitud.fechaSolicitud}
@@ -189,12 +295,12 @@ const RequestTalonario: React.FC = () => {
                       <strong>Estado:</strong>{" "}
                       <IonLabel color={estado.color}>{estado.text}</IonLabel>
                     </p>
-                  </IonCardContent>
-                </IonCard>
+                  </IonLabel>
+                </IonItem>
               );
             })
           ) : (
-            <IonLabel className="ion-padding">No tienes solicitudes aún.</IonLabel>
+            <IonLabel style={{ color: 'white', }}>No tienes solicitudes aún.</IonLabel>
           )}
         </IonList>
       </IonContent>

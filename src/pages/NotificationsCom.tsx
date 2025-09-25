@@ -16,7 +16,7 @@ import {
 import axios from "../services/axios";
 import { getInfoFromToken } from "../services/authService";
 import { star, checkmarkCircleOutline, checkmarkCircle } from 'ionicons/icons';
-
+import '../theme/variables.css';
 interface Notification {
   idNotificacion: number;
   tipo_notificacione: {
@@ -47,7 +47,7 @@ const NotificationsCom: React.FC = () => {
 
     try {
       const response = await axios.get<Notification[]>(
-        `http://localhost:5000/notificaciones?idPersona=${personId}`
+        `/notificaciones?idPersona=${personId}`
       );
       setNotifications(response.data);
     } catch (error: any) {
@@ -66,7 +66,7 @@ const NotificationsCom: React.FC = () => {
   // Manejar el cambio de estado (marcar como revisada)
   const handleCheckNotification = async (idNotificacion: number) => {
     try {
-      await axios.put(`http://localhost:5000/notificaciones/${idNotificacion}`, {
+      await axios.put(`/notificaciones/${idNotificacion}`, {
         estado: 0, // Cambiar el estado a 0 (marcar como revisada)
       });
 
@@ -97,12 +97,24 @@ const NotificationsCom: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
+      {/* <IonHeader>
         <IonToolbar style={{ backgroundColor: "#0274E5" }}>
           <IonTitle style={{ color: "#FFFFFF" }}>Notificaciones</IonTitle>
         </IonToolbar>
-      </IonHeader>
-      <IonContent>
+      </IonHeader> */}
+      <IonContent className="page-with-background">
+      <div
+            style={{
+                padding: "20px",
+                textAlign: "center",
+                background: "linear-gradient(45deg, #79A637, #79A637)",
+                borderRadius: "10px",
+                margin: "10px",
+                color: "white",
+            }}
+        >
+            <h2>Notificaciones</h2>
+          </div>
         {loading ? (
           <div style={{ textAlign: "center", marginTop: "20px" }}>
             <IonSpinner name="crescent" style={{ color: "#0274E5" }} />
@@ -111,15 +123,15 @@ const NotificationsCom: React.FC = () => {
           <IonList>
             {notifications.length > 0 ? (
               notifications.map((notification) => (
-                <IonItem key={notification.idNotificacion} style={{ alignItems: "flex-start" }}>
-                  <div style={{ display: "flex", alignItems: "center", width: "100%" }}>
+                <IonItem key={notification.idNotificacion} style={{  margin: "10px", borderRadius: "100px", marginBottom: "10px" }}>
+                  <div style={{ display: "flex", alignItems: "center", width: "100%", backgroundColor: "#D6EAF8"}}>
                     <IonIcon icon={star} style={{ fontSize: "24px", color: "#0274E5", marginRight: "15px" }} />
                     <IonLabel style={{ flex: 1 , marginTop: "15px" }}>
                       <h2 style={{ color: "#0274E5", marginBottom: "5px" }}>
                         {notification.tipo_notificacione.tipoNotificacion}
                       </h2>
                       <p style={{ marginBottom: "5px" }}>{notification.bitacora.descripcion}</p>
-                      <p style={{ fontSize: "12px", color: "#999" }}>
+                      <p style={{ fontSize: "12px"}}>
                         {new Date(notification.bitacora.fechaHora).toLocaleString("es-ES", {
                           day: "2-digit",
                           month: "2-digit",
@@ -146,6 +158,8 @@ const NotificationsCom: React.FC = () => {
                 <IonLabel>No hay notificaciones.</IonLabel>
               </IonItem>
             )}
+            {/* Agrega este IonItem aquí para empujar el contenido hacia arriba */}
+            <IonItem style={{ marginBottom: "60px"}}/>
           </IonList>
         )}
         <IonToast

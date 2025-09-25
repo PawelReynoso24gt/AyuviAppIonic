@@ -1,0 +1,41 @@
+/* filepath: /src/App.css */
+body {
+  background-color: var(--ion-background-color);
+  color: var(--ion-text-color);
+}
+
+.ion-page {
+  background-color: var(--ion-background-color);
+  color: var(--ion-text-color);
+}
+
+/* ion-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+} */
+
+/*ion-content {
+  margin-bottom: 56px; 
+}*/
+
+/*ion-header {
+  display: none;
+}*/
+
+ion-content {
+  margin-bottom: 0 !important; /* Ya no reservas espacio para footer */
+}
+
+
+.custom-modal {
+  --width: 80%;
+  --height: 50%;
+  --border-radius: 10px;
+  --background: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}

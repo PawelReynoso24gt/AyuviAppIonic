@@ -15,7 +15,7 @@ import {
   IonIcon,
 } from "@ionic/react";
 import { arrowBackOutline } from 'ionicons/icons';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import axios from "../services/axios";
 import { getInfoFromToken } from "../services/authService";
 
@@ -23,40 +23,67 @@ interface Actividad {
   idActividad: number;
   nombre: string;
   descripcion: string;
+  isInscrito: boolean; // Nuevo campo para saber si ya está inscrito
 }
 
 interface Inscripcion {
-  idInscripcionEvento: number;
   idInscripcionComision: number;
+  idInscripcionEvento: number;
 }
 
 const DetalleInscripcionActividad: React.FC = () => {
   const history = useHistory();
+  const location = useLocation<{ idComision: number | string }>();
   const [actividades, setActividades] = useState<Actividad[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
-  const [selectedActividad, setSelectedActividad] = useState<number | null>(null);
-  const [inscripcion, setInscripcion] = useState<Inscripcion | null>(null);
-  const [showModal, setShowModal] = useState<boolean>(false);
 
-  // Obtener información del voluntario autenticado
+  const [selectedActividad, setSelectedActividad] = useState<number | null>(null);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [inscripcion, setInscripcion] = useState<Inscripcion | null>(null);
+
+  // Obtener ID del voluntario desde el token
   const userInfo = getInfoFromToken();
   const idVoluntario = userInfo?.idVoluntario ? Number(userInfo.idVoluntario) : null;
 
-  useEffect(() => {
-    if (idVoluntario) {
-      fetchInscripciones(idVoluntario); // Obtener IDs de inscripción
-      fetchActividades(); // Obtener lista de actividades
-    } else {
-      setToastMessage("No se encontró información del voluntario.");
-    }
-  }, [idVoluntario]);
+  // Obtener el idComision desde la navegación
+  const idComision = location.state?.idComision ? Number(location.state.idComision) : null;
 
+  useEffect(() => {
+    const numericIdVoluntario = Number(idVoluntario);
+    const numericIdComision = Number(idComision);
+  
+    if (numericIdComision && numericIdVoluntario) {
+      const actividadesGuardadas = localStorage.getItem('actividades');
+      if (actividadesGuardadas) {
+        setActividades(JSON.parse(actividadesGuardadas));
+      } else {
+        fetchActividades(numericIdComision);
+      }
+      
+      // Recuperar inscripciones previas guardadas en localStorage
+      const inscripcionesGuardadas = JSON.parse(localStorage.getItem('inscripciones') || "[]");
+      
+      fetchInscripciones(numericIdVoluntario);
+      
+      // Verificar inscripciones previas
+      setActividades((prevActividades) =>
+        prevActividades.map((actividad) => ({
+          ...actividad,
+          isInscrito: inscripcionesGuardadas.includes(actividad.idActividad),
+        }))
+      );
+    } else {
+      setToastMessage("Faltan datos para cargar las actividades.");
+      history.push("/registroComisiones");
+    }
+  }, [idComision, idVoluntario]);
+  
   // Obtener los IDs de inscripción (evento y comisión)
   const fetchInscripciones = async (idVoluntario: number) => {
     try {
       const response = await axios.get<Inscripcion>(
-        `http://localhost:5000/inscripciones/voluntario/${idVoluntario}`
+        `/inscripciones/voluntario/${idVoluntario}`
       );
       setInscripcion(response.data);
     } catch (error: any) {
@@ -65,14 +92,22 @@ const DetalleInscripcionActividad: React.FC = () => {
     }
   };
 
-  // Obtener lista de actividades
-  const fetchActividades = async () => {
+  // Obtener lista de actividades por comisión
+  const fetchActividades = async (idComision: number) => {
     setLoading(true);
     try {
-      const response = await axios.get<Actividad[]>("http://localhost:5000/actividades");
-
+      const response = await axios.get<Actividad[]>(`/actividades/comision/${idComision}`);
+      
       if (Array.isArray(response.data)) {
-        setActividades(response.data);
+        const inscripcionesGuardadas = JSON.parse(localStorage.getItem('inscripciones') || "[]");
+  
+        const actividadesConEstado = response.data.map((actividad) => ({
+          ...actividad,
+          isInscrito: inscripcionesGuardadas.includes(actividad.idActividad),
+        }));
+  
+        setActividades(actividadesConEstado);
+        localStorage.setItem('actividades', JSON.stringify(actividadesConEstado));
       } else {
         console.error("La respuesta no es un arreglo:", response.data);
         setToastMessage("Error: la respuesta del servidor no es válida.");
@@ -84,57 +119,97 @@ const DetalleInscripcionActividad: React.FC = () => {
       setLoading(false);
     }
   };
+  
 
   // Manejar registro de actividades
   const handleRegistroActividad = async () => {
-    if (!selectedActividad || !inscripcion) {
+    if (!selectedActividad || !inscripcion || !idVoluntario) {
       setToastMessage("Faltan datos para completar el registro de la actividad.");
       return;
     }
-
+  
     try {
       const payload = {
-        estado: 1, // Activo por defecto
+        estado: 1,
         idInscripcionEvento: inscripcion.idInscripcionEvento,
         idInscripcionComision: inscripcion.idInscripcionComision,
         idActividad: selectedActividad,
+        idVoluntario: idVoluntario,
       };
-
-      console.log("Payload enviado:", payload);
-
-      const response = await axios.post(
-        "http://localhost:5000/detalle_inscripcion_actividades/create",
-        payload
+  
+      const actividadExistente = actividades.find(
+        (actividad) => actividad.idActividad === selectedActividad && actividad.isInscrito
       );
-
+  
+      if (actividadExistente) {
+        setToastMessage("Ya estás inscrito en esta actividad.");
+        return;
+      }
+  
+      const response = await axios.post("/detalle_inscripcion_actividades/create", payload);
+  
       setToastMessage(response.data.message || "¡Actividad registrada con éxito!");
       setShowModal(false);
       setSelectedActividad(null);
+  
+      // Actualizar la lista de actividades con el nuevo estado
+      const nuevasActividades = actividades.map((actividad) =>
+        actividad.idActividad === selectedActividad
+          ? { ...actividad, isInscrito: true }
+          : actividad
+      );
+  
+      setActividades(nuevasActividades);
+      localStorage.setItem('actividades', JSON.stringify(nuevasActividades));
+  
+      // Recuperar inscripciones previas guardadas en localStorage
+      const inscripcionesGuardadas = JSON.parse(localStorage.getItem('inscripciones') || "[]");
+  
+      // Guardar la nueva inscripción en localStorage
+      localStorage.setItem('inscripciones', JSON.stringify([...inscripcionesGuardadas, selectedActividad]));
+  
     } catch (error: any) {
       console.error("Error al registrar actividad:", error.response || error);
       setToastMessage("Error al registrar actividad.");
     }
   };
+  
+  
+  
 
   return (
     <IonPage>
-      <IonHeader>
+      <IonHeader style={{ paddingTop: "50px" }}>
         <IonToolbar style={{ backgroundColor: "#4B0082" }}>
           <IonButton
             slot="start"
             fill="clear"
-            onClick={() => history.push('/registroMateriales')}  // Acción para regresar
+            onClick={() => history.push('/registroMateriales')} // Acción para regresar
             style={{
-            marginLeft: '10px',
-            color: 'white',
+              marginLeft: '10px',
+              color: 'white',
             }}
           >
-        <IonIcon icon={arrowBackOutline} slot="icon-only" />
+            <IonIcon icon={arrowBackOutline} slot="icon-only" />
           </IonButton>
           <IonTitle style={{ color: "#FFFFFF" }}>Registro de Actividades</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent style={{ backgroundColor: "#F0F8FF" }}>
+      <IonContent className="page-with-background">
+        <div
+          style={{
+            padding: "20px",
+            textAlign: "center",
+            background: "linear-gradient(45deg, #1DA6AD, #1DA6AD)",
+            borderRadius: "10px",
+            margin: "10px",
+            color: "white",
+          }}
+        >
+          <h2>Actividades Disponibles</h2>
+          <p>Selecciona una actividad para inscribirte.</p>
+        </div>
+
         {loading ? (
           <div style={{ textAlign: "center", marginTop: "20px" }}>
             <IonSpinner
@@ -170,25 +245,22 @@ const DetalleInscripcionActividad: React.FC = () => {
                   </h3>
                   <p style={{ color: "#000080" }}>{actividad.descripcion}</p>
                 </IonLabel>
-                <IonButton
+                <IonButton     
                   slot="end"
-                  color="tertiary"
                   shape="round"
                   size="small"
+                  className="tom-greenBlue-button"
                   onClick={() => {
                     setSelectedActividad(actividad.idActividad);
                     setShowModal(true);
                   }}
-                  style={{
-                    background: "linear-gradient(45deg, #6A5ACD, #7B68EE)",
-                    color: "white",
-                    fontWeight: "bold",
-                  }}
+                  disabled={actividad.isInscrito} // Deshabilitar el botón si ya está inscrito
                 >
-                  Registrar
+                  {actividad.isInscrito ? "Ya inscrito" : "Inscribirse"} {/* Cambiar el texto del botón */}
                 </IonButton>
               </IonItem>
             ))}
+             <IonItem style={{ marginBottom: "60px" }} />
           </IonList>
         )}
 
@@ -204,29 +276,32 @@ const DetalleInscripcionActividad: React.FC = () => {
           <div style={{ padding: "20px", borderRadius: "30px" }}>
             <h3>Registrar Actividad</h3>
             <IonButton
+              className="tom-greenBlue-button"
               expand="block"
               onClick={handleRegistroActividad}
               style={{
                 marginTop: "10px",
-                background: "linear-gradient(45deg, #6A5ACD, #7B68EE)",
+                background: "linear-gradient(45deg, #1DA6AD, #1DA6AD)",
                 color: "white",
               }}
             >
               Confirmar
             </IonButton>
             <IonButton
+              className="tom-greenBlue-button"
               expand="block"
               fill="outline"
               onClick={() => setShowModal(false)}
-              style={{ marginTop: "10px" }}
+              style={{
+                marginTop: "10px",
+              }}
             >
               Cancelar
             </IonButton>
           </div>
         </IonModal>
-
         <IonToast
-          isOpen={!!toastMessage}
+          isOpen={toastMessage !== ""}
           message={toastMessage}
           duration={2000}
           onDidDismiss={() => setToastMessage("")}

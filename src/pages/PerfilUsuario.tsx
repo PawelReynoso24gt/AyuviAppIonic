@@ -16,6 +16,9 @@ import {
 import axios from '../services/axios'; // Instancia de Axios
 import { getInfoFromToken } from '../services/authService';
 import profileImg from '../img/LOGOAYUVI.png'; // Importa la imagen de perfil por defecto
+import moment from 'moment';
+import 'moment/locale/es';
+import './perfilUsuario.css';
 
 const PerfilUsuario: React.FC = () => {
   const [userData, setUserData] = useState<any>(null);
@@ -24,16 +27,26 @@ const PerfilUsuario: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [preview, setPreview] = useState(profileImg);
   const [successMessage, setSuccessMessage] = useState('');
+  const [fechaRegistro, setFechaRegistro] = useState<string | null>(null);
+  const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         // Obtener el idUsuario desde el token
         const tokenInfo = getInfoFromToken();
-        if (!tokenInfo || !tokenInfo.idUsuario) {
-          throw new Error('No se pudo obtener el ID del usuario desde el token.');
+        if (!tokenInfo || !tokenInfo.idUsuario || !tokenInfo.idVoluntario || !tokenInfo.codigoQR) {
+          throw new Error('No se pudo obtener el ID del usuario o el código QR desde el token.');
+        }
+        // Petición al backend para obtener la fecha de registro del voluntario
+        const volunteerResponse = await axios.get(`/voluntarios/${tokenInfo.idVoluntario}`);
+        const volunteerData = volunteerResponse.data;
+
+        if (!volunteerData || !volunteerData.fechaRegistro) {
+          throw new Error('No se pudo obtener la fecha de registro del voluntario.');
         }
 
+        setFechaRegistro(volunteerData.fechaRegistro);
         // Petición al backend para obtener los usuarios activos
         const response = await axios.get('/usuarios/activos');
         const loggedUser = response.data.find(
@@ -45,8 +58,12 @@ const PerfilUsuario: React.FC = () => {
         }
 
         setUserData(loggedUser);
-        const photoPath = loggedUser.persona.foto !== "sin foto" ? `http://localhost:5000/${loggedUser.persona.foto.replace(/\\/g, '/')}` : profileImg;
+        const photoPath = loggedUser.persona.foto !== "sin foto" ? `${axios.defaults.baseURL}/${loggedUser.persona.foto.replace(/\\/g, '/')}` : profileImg;
         setPreview(photoPath);
+
+        // Generar URL del código QR
+        const qrValue = encodeURIComponent(tokenInfo.codigoQR);
+        setQrCodeUrl(`${axios.defaults.baseURL}/generateQR?data=${qrValue}`);
       } catch (err) {
         setError('Error al cargar el perfil del usuario.');
         console.error(err);
@@ -79,10 +96,10 @@ const PerfilUsuario: React.FC = () => {
             'Content-Type': 'multipart/form-data'
           }
         });
-        console.log("Foto actualizada:", response.data);
+        //console.log("Foto actualizada:", response.data);
         setSuccessMessage("Se han guardado los cambios correctamente.");
         setSelectedFile(null);
-        const photoPath = response.data.foto !== "sin foto" ? `http://localhost:5000/${response.data.foto.replace(/\\/g, '/')}` : profileImg;
+        const photoPath = response.data.foto !== "sin foto" ? `${axios.defaults.baseURL}/${response.data.foto.replace(/\\/g, '/')}` : profileImg;
         setPreview(photoPath);
       } catch (err) {
         console.error("Error al actualizar la foto:", err);
@@ -92,7 +109,7 @@ const PerfilUsuario: React.FC = () => {
 
   const handleDiscardChanges = () => {
     setSelectedFile(null);
-    const photoPath = userData.persona.foto !== "sin foto" ? `http://localhost:5000/${userData.persona.foto.replace(/\\/g, '/')}` : profileImg;
+    const photoPath = userData.persona.foto !== "sin foto" ? `${axios.defaults.baseURL}/${userData.persona.foto.replace(/\\/g, '/')}` : profileImg;
     setPreview(photoPath);
   };
 
@@ -104,7 +121,7 @@ const PerfilUsuario: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent className="ion-padding">
+      <IonContent className="page-with-background">
         {loading ? (
           <IonLoading isOpen={loading} message="Cargando..." />
         ) : error ? (
@@ -127,45 +144,69 @@ const PerfilUsuario: React.FC = () => {
                 id="fileInput"
                 onChange={handleFileChange}
               />
-              <button className="update-photo-btn" onClick={() => document.getElementById('fileInput')?.click()}>
+              <button className="update-photo-btn custom-btn" onClick={() => document.getElementById('fileInput')?.click()}
+                style={{
+                  marginTop: "20px",
+                  margin: "10px auto",
+                  color: "white",
+                  width: "50%",
+                }}>
                 Actualizar mi foto
               </button>
               {selectedFile && (
-                <>
-                  <button className="save-photo-btn" onClick={handleSaveChanges}>
+                <div className="button-group">
+                  <button className="save-photo-btn custom-btn save-btn" onClick={handleSaveChanges}>
                     Guardar cambios
                   </button>
-                  <button className="discard-photo-btn" onClick={handleDiscardChanges}>
+                  <button className="discard-photo-btn custom-btn discard-btn" onClick={handleDiscardChanges}>
                     Descartar cambios
                   </button>
-                </>
+                </div>
               )}
               {successMessage && <p>{successMessage}</p>}
             </div>
 
             {/* Datos del Usuario */}
             <IonList>
-              <IonItem>
+              <IonItem style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                 <IonLabel><strong>Nombre:</strong> {userData.persona.nombre}</IonLabel>
               </IonItem>
-              <IonItem>
+              <IonItem style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                 <IonLabel><strong>Email:</strong> {userData.persona.correo}</IonLabel>
               </IonItem>
-              <IonItem>
+              <IonItem style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                 <IonLabel><strong>Teléfono:</strong> {userData.persona.telefono}</IonLabel>
               </IonItem>
-              <IonItem>
+              <IonItem style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                 <IonLabel>
                   <strong>Fecha de Registro:</strong>{' '}
-                  {new Date(userData.persona.createdAt).toLocaleDateString()}
+                  {fechaRegistro ? moment(fechaRegistro).format('DD/MM/YYYY') : 'No disponible'}
                 </IonLabel>
               </IonItem>
             </IonList>
 
             {/* Botón para Cambiar Contraseña */}
-            <IonButton expand="block" routerLink="/change-password">
+            <IonButton  expand="block" routerLink="/change-password"  
+            style={{
+                marginTop: "20px",
+                margin: "10px auto",
+                color: "white",
+                width: "50%",
+              }}>
               Cambiar Contraseña
             </IonButton>
+
+            {/* Código QR */}
+            <div style={{ textAlign: "center", marginTop: "20px" }}>
+              <div><IonLabel style={{ width: "100%" }}><strong>Mi Código QR</strong></IonLabel></div>
+              {qrCodeUrl && (
+                <img
+                  src={qrCodeUrl}
+                  alt="Código QR"
+                  style={{ width: "100%", maxWidth: "300px", marginTop: "10px" }}
+                />
+              )}
+            </div>
           </>
         ) : (
           <IonText color="danger">No se encontraron datos del usuario.</IonText>

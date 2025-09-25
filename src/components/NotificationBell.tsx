@@ -41,7 +41,7 @@ const NotificationBell: React.FC = () => {
 
   return (
     <div style={{ position: "relative", cursor: "pointer", marginRight: "30px", marginTop: "10px" }} onClick={handleIconClick}>
-      <IonIcon icon={notificationsOutline} style={{ fontSize: "30px" }} />
+      <IonIcon icon={notificationsOutline} style={{ fontSize: "30px", color: "white" }} />
       {hasNotifications && (
         <span
           style={{

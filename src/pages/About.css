@@ -1,26 +1,33 @@
 /* Estilos personalizados para la página About */
 #about-container {
-    text-align: center;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-  
-  #about-container strong {
-    font-size: 20px;
-    line-height: 26px;
-  }
-  
-  #about-container p {
-    font-size: 16px;
-    line-height: 22px;
-    color: #8c8c8c;
-    margin: 0;
-  }
-  
-  #about-container a {
-    text-decoration: none;
-  }
-  
+  text-align: left;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 16px;
+  max-height: 80%;
+  overflow-y: auto;
+}
+
+#about-container strong {
+  font-size: 20px;
+  line-height: 26px;
+}
+
+#about-container p {
+  text-align: justify; /* <-- este es el cambio clave */
+  font-size: 16px;
+  line-height: 22px;
+  color: #8c8c8c;
+  margin: 0 0 1em 0; /* agrega un poco de espacio entre párrafos */
+}
+
+#about-container a {
+  text-decoration: none;
+}
+
+ion-content {
+  --overflow: auto;
+}
