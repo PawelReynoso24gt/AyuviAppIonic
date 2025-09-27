@@ -405,6 +405,28 @@ const Registro: React.FC = () => {
           </IonSelect>
         </IonItem>
 
+<IonItem
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            maxWidth: '300px',
+            height: '100px',
+            margin: '16px auto',
+            textAlign: 'center',
+            borderRadius: '8px',
+            backgroundColor: '#2809c3ff',
+          }}>
+          <IonLabel position="floating"  >Talla</IonLabel>
+          <IonInput
+            value={formData.correo}
+            //onIonChange={(e) => handleInputChange('correo', e.detail.value!)}
+            placeholder="Ingrese su talla de playera"
+            className="ion-padding-top"
+            //type="email"
+          />
+        </IonItem>
 
         <IonButton expand="block" onClick={handleSubmit} color="primary" style={{ marginTop: '16px', width: '200px', margin: '30px auto', }}>
           Registrarse
