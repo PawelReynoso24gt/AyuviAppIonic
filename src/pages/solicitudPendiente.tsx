@@ -21,7 +21,7 @@
                         <IonIcon icon={arrowBackOutline} slot="icon-only" />
                       </IonButton>
             <IonToolbar style={{ backgroundColor: '#6A5ACD' }}>              
-            <IonTitle style={{ color: 'white', fontWeight: 'bold', fontSize: '24px' }}>
+            <IonTitle style={{ color: 'black', fontWeight: 'bold', fontSize: '24px' }}>
                 Solicitud Pendiente
             </IonTitle>
             </IonToolbar>
