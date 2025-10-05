@@ -210,7 +210,6 @@ const Registro: React.FC = () => {
         </IonItem>
 
         {/* Mostrar IonDatetime solo si isDatePickerVisible es true */}
-        {/* Mostrar IonDatetime solo si isDatePickerVisible es true */}
         {isDatePickerVisible && (
           <div
             style={{
