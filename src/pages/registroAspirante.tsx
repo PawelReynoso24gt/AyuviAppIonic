@@ -38,6 +38,7 @@ const Registro: React.FC = () => {
     estado: 1,
     idDepartamento: '',
     idMunicipio: '',
+    talla: '',
   });
   const [municipios, setMunicipios] = useState([]); // Lista de municipios
   const [allMunicipios, setAllMunicipios] = useState([]);
@@ -146,7 +147,7 @@ const Registro: React.FC = () => {
           <IonTitle>Registro de Aspirantes</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent 
+      <IonContent
         style={{
           backgroundColor: 'var(--main-bg-color)', // Fondo verde
           minHeight: '50vh',        // Altura completa
@@ -156,9 +157,9 @@ const Registro: React.FC = () => {
           alignItems: 'center',
           padding: '20px',
         }}>
-          <div className="container">
+        <div className="container">
           <img src={logo} alt="Logo Ayuvi" className="logoaspirante" />
-          </div>
+        </div>
         <IonItem
           style={{
             display: 'flex', // Habilitar flexbox
@@ -224,22 +225,22 @@ const Registro: React.FC = () => {
               zIndex: 1000,
             }}
           >
-          <IonDatetime
-            value={formData.fechaNacimiento || ''} // Siempre usar una cadena válida
-            onIonChange={(e) => {
-              const value = Array.isArray(e.detail.value) ? e.detail.value[0] : e.detail.value; // Convertir a string
-              if (value) {
-                setFormData({ ...formData, fechaNacimiento: value });
-              }
-            }}
-            presentation="date"
-            showDefaultButtons={false}
-            style={{
-              maxWidth: '100%',
-              textAlign: 'center',
-              backgroundColor: '#262626',
-            }}
-          />
+            <IonDatetime
+              value={formData.fechaNacimiento || ''} // Siempre usar una cadena válida
+              onIonChange={(e) => {
+                const value = Array.isArray(e.detail.value) ? e.detail.value[0] : e.detail.value; // Convertir a string
+                if (value) {
+                  setFormData({ ...formData, fechaNacimiento: value });
+                }
+              }}
+              presentation="date"
+              showDefaultButtons={false}
+              style={{
+                maxWidth: '100%',
+                textAlign: 'center',
+                backgroundColor: '#262626',
+              }}
+            />
             <IonButton
               color="success"
               style={{
@@ -347,7 +348,7 @@ const Registro: React.FC = () => {
           />
         </IonItem>
 
-        <IonItem 
+        <IonItem
           style={{
             display: 'flex',
             justifyContent: 'center',
@@ -363,20 +364,20 @@ const Registro: React.FC = () => {
           <IonSelect
             value={formData.idDepartamento}
             placeholder="Seleccione su departamento"
-            onIonChange={(e) => handleDepartamentoChange(e.detail.value!)}  
+            onIonChange={(e) => handleDepartamentoChange(e.detail.value!)}
             interfaceOptions={{
               cssClass: 'custom-alert', // Clase CSS selectItem
             }}
           >
             {departamentos.map((departamento: any) => (
-              <IonSelectOption  key={departamento.idDepartamento} value={departamento.idDepartamento}>
+              <IonSelectOption key={departamento.idDepartamento} value={departamento.idDepartamento}>
                 {departamento.departamento}
               </IonSelectOption>
             ))}
           </IonSelect>
         </IonItem>
 
-        <IonItem  style={{
+        <IonItem style={{
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
@@ -405,7 +406,7 @@ const Registro: React.FC = () => {
           </IonSelect>
         </IonItem>
 
-<IonItem
+        <IonItem
           style={{
             display: 'flex',
             justifyContent: 'center',
@@ -420,11 +421,11 @@ const Registro: React.FC = () => {
           }}>
           <IonLabel position="floating"  >Talla</IonLabel>
           <IonInput
-            value={formData.correo}
-            //onIonChange={(e) => handleInputChange('correo', e.detail.value!)}
+            value={formData.talla}
+            onIonChange={(e) => handleInputChange('talla', e.detail.value!)}
             placeholder="Ingrese su talla de playera"
             className="ion-padding-top"
-            //type="email"
+            type="text"
           />
         </IonItem>
 
