@@ -38,6 +38,7 @@ const Registro: React.FC = () => {
     estado: 1,
     idDepartamento: '',
     idMunicipio: '',
+    talla: ''
   });
   const [municipios, setMunicipios] = useState([]); // Lista de municipios
   const [allMunicipios, setAllMunicipios] = useState([]);
@@ -352,6 +353,34 @@ const Registro: React.FC = () => {
             />
           </div>
         </IonItem>
+
+        {/* NUEVO CAMPO PARA TALLA */}
+        <IonItem
+          style={{
+            display: 'flex', // Habilitar flexbox
+            maxWidth: '300px', // Ancho máximo
+            height: '120px', // Altura del combobox
+            margin: '16px auto', // Margen para separación y centrar horizontalmente
+            textAlign: 'center', // Alinear contenido
+            borderRadius: '8px', // Opcional: bordes redondeados
+            backgroundColor: '#3880ff', // Opcional: color azul
+          }}>
+          <div style={{ justifyContent: 'center', }}>
+            <IonLabel className="custom-label" >Talla</IonLabel>
+          </div>
+
+          <div style={{width: '100%', marginTop: '40px', justifyContent: 'center',}}>
+            <IonInput
+              // Vincula el valor al estado
+              value={formData.talla}
+              // Llama a handleInputChange con la clave 'talla'
+              onIonChange={(e) => handleInputChange('talla', e.detail.value!.toUpperCase())}
+              placeholder="Ingrese su talla de playera"
+              type="text"
+            />
+          </div>
+        </IonItem>
+        {/* FIN DEL NUEVO CAMPO PARA TALLA */}
 
         <IonItem 
           style={{
