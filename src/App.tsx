@@ -95,7 +95,6 @@ const MainContent: React.FC = () => {
   };
 
 
-
   return (
     <>
       <IonPage>
