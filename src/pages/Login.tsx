@@ -115,7 +115,7 @@ const Login: React.FC = () => {
                             textAlign: 'center',
                             textDecoration: 'underline',
                             cursor: 'pointer',
-                            fontSize: '14px',
+                            fontSize: '18px',
                         }}
                     >
                         ¿No tienes una cuenta? Regístrate aquí!

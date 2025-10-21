@@ -25,6 +25,7 @@ import Notifications from './pages/NotificationsCom';
 import NotificationBell from './components/NotificationBell';
 import situaciones from './pages/situaciones';
 import Desarrolladores from './pages/Desarrolladores';
+import MaintenanceScreen from './pages/MaintenanceScreen';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -65,6 +66,7 @@ const MainContent: React.FC = () => {
   const isLoginPage = location.pathname === '/login';
   const isInvitadoPage = location.pathname === '/invitado';
   const isRegistroAspirantePage = location.pathname === '/registroAspirante';
+  const isMaintenancePage = location.pathname === '/maintenance';
   const { showModal, message, daysRemaining, handleCloseModal } = usePasswordChangeCheck();
 
   const routesWithBackground = ['/registroEventos'];
@@ -126,17 +128,18 @@ const MainContent: React.FC = () => {
                 <PrivateRoute exact path="/situaciones" component={situaciones} />
                 <PrivateRoute exact path="/desarrolladores" component={Desarrolladores} />
                 <PrivateRoute exact path="/about" component={situaciones} />
+                <Route exact path="/maintenance" component={MaintenanceScreen} />
                 <Route exact path="/">
-                  <Redirect to="/login" />
+                  <Redirect to="/maintenance" /> {/* Cambiar de /maintenance a /login */}
                 </Route>
                 <Route path="*">
-                  <Redirect to="/login" />
+                  <Redirect to="/maintenance" /> {/* Cambiar de /maintenance a /login */}
                 </Route>
               </Switch>
             </Switch>
           </IonRouterOutlet>
         </IonContent>
-        {!isLoginPage && !isInvitadoPage && !isRegistroAspirantePage && (
+        {!isLoginPage && !isInvitadoPage && !isRegistroAspirantePage && !isMaintenancePage && (
           <IonHeader>
             <IonToolbar style={{ backgroundColor: "#0274E5" }}>
               {/* -- botón para abrir/cerrar el menú -- */}
@@ -236,7 +239,7 @@ const Menu: React.FC = () => {
           <IonItem routerLink="/standVirtual">Stand Virtual</IonItem>
           {/*<IonItem routerLink="/about">Acerca de</IonItem>*/}
           {/*<IonItem routerLink="/profile">Perfil</IonItem>*/}
-          <IonItem routerLink="/sede">Sede</IonItem>
+          <IonItem routerLink="/sede">Comité</IonItem>
           <IonItem routerLink="/situaciones">Situaciones</IonItem>
           <IonItem routerLink="/desarrolladores">Desarrolladores</IonItem>
           <IonItem routerLink="/about">Terminos y Condiciones</IonItem>

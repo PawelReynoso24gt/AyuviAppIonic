@@ -49,6 +49,11 @@ npx cap sync
 npx cap open android
 ```
 
+Cuando se quiera poner en **producción** para **Android** la aplicación debe cambiar las versiones en los guientes archivos de la carpeta **android**:
+- output-metadata.json
+- carpeta src, en el archivo build.gradle
+Luego podra cambiar el **versionCode** y el **versionName**
+
 **iOS:**
 ```bash
 npx cap open ios

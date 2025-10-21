@@ -1,0 +1,110 @@
+/* Fondo y tipografía */
+.maintenance-page {
+    --background: #ffffff;
+    font-family: Arial, sans-serif;
+}
+
+/* Contenedor principal centrado */
+.maintenance-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+/* Imagen */
+.maintenance-image {
+    display: flex;
+    max-width: 850px;
+    width: 100%;
+    height: auto;
+}
+
+/* Columna de texto */
+.maintenance-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* Estilos tipográficos (equivalentes al HTML original) */
+.maintenance-emoji {
+    font-size: 300px;
+    margin: 0;
+    line-height: 0.8;
+    text-align: left;
+    color: black;
+}
+
+.maintenance-title {
+    margin: 0;
+    line-height: 1;
+    font-size: 60px;
+    text-align: left;
+    color: black;
+}
+
+.maintenance-subtitle {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 30px;
+    align-self: stretch;
+    /* centra el texto en todo el ancho */
+    color: black;
+}
+
+/* Responsividad */
+@media (max-width: 1200px) {
+    .maintenance-emoji {
+        font-size: 220px;
+    }
+
+    .maintenance-title {
+        font-size: 48px;
+    }
+
+    .maintenance-subtitle {
+        font-size: 26px;
+    }
+}
+
+@media (max-width: 900px) {
+    .maintenance-container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .maintenance-text {
+        align-items: center;
+    }
+
+    .maintenance-emoji {
+        font-size: 160px;
+    }
+
+    .maintenance-title {
+        font-size: 40px;
+        text-align: center;
+    }
+
+    .maintenance-subtitle {
+        font-size: 22px;
+    }
+}
+
+@media (max-width: 500px) {
+    .maintenance-emoji {
+        font-size: 120px;
+    }
+
+    .maintenance-title {
+        font-size: 32px;
+    }
+
+    .maintenance-subtitle {
+        font-size: 18px;
+    }
+}
