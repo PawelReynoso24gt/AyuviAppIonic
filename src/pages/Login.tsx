@@ -118,7 +118,7 @@ const Login: React.FC = () => {
                             fontSize: '14px',
                         }}
                     >
-                        ¿No tienes una cuenta? Regístrate como aspirante
+                        ¿No tienes una cuenta? Regístrate aquí!
                     </IonText>
 
                     <IonButton

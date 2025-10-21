@@ -38,6 +38,9 @@ const Registro: React.FC = () => {
     estado: 1,
     idDepartamento: '',
     idMunicipio: '',
+    usuario: '',
+    contrasenia: '',
+    talla: '',
   });
   const [municipios, setMunicipios] = useState([]); // Lista de municipios
   const [allMunicipios, setAllMunicipios] = useState([]);
@@ -64,11 +67,13 @@ const Registro: React.FC = () => {
 
 
   const handleDepartamentoChange = (idDepartamento: string) => {
-    setFormData({ ...formData, idDepartamento, idMunicipio: '' }); // Limpiar el municipio seleccionado
+    const depIdNum = Number(idDepartamento);
+    setFormData({ ...formData, idDepartamento: depIdNum as any, idMunicipio: '' as any });
+
     const filteredMunicipios = allMunicipios.filter(
-      (municipio: any) => municipio.idDepartamento === idDepartamento
+      (municipio: any) => Number(municipio.idDepartamento) === depIdNum
     );
-    setMunicipios(filteredMunicipios); // Actualizar los municipios filtrados
+    setMunicipios(filteredMunicipios);
   };
 
   interface BitacoraData {
@@ -99,28 +104,75 @@ const Registro: React.FC = () => {
     setFormData({ ...formData, [key]: value });
   };
 
-  const handleSubmit = async () => {
+ const handleSubmit = async () => {
+  try {
+    const toDateOnly = (v?: string | Date) => {
+      const d = v ? new Date(v) : new Date();
+      return d.toISOString().split("T")[0];
+    };
+
+    const fechaNac = formData.fechaNacimiento
+      ? toDateOnly(formData.fechaNacimiento)
+      : "";
+
+    const hoy = toDateOnly();
+
+    const idMunicipioNum = Number(formData.idMunicipio);
+
+    const payload = {
+      persona: {
+        nombre: formData.nombre,
+        fechaNacimiento: fechaNac,          
+        telefono: formData.telefono,
+        domicilio: formData.domicilio,
+        CUI: formData.CUI,
+        correo: formData.correo,
+        foto: formData.foto || 'SIN FOTO',
+        estado: 1,
+        idMunicipio: idMunicipioNum,        
+        talla: formData.talla || null,
+      },
+      aspirante: {
+        fechaRegistro: hoy,                 
+      },
+      usuario: {
+        usuario: formData.usuario,
+        contrasenia: formData.contrasenia,
+        idRol: 3,
+        idSede: 1,
+        estado: 1,
+      },
+      voluntario: {
+        fechaRegistro: hoy,                
+        estado: 1,
+      },
+    };
+
+    console.log("Payload que se enviará:", payload);
+
+    await axios.post('/personas/crear-completo', payload, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    setToastMessage('¡Registro exitoso! Redirigiendo...');
+
+    // Bitácora (no bloquea el flujo si falla)
     try {
-      // Registrar al usuario
-      await axios.post('/personasAsp/create', formData);
-      setToastMessage('¡Registro exitoso! Redirigiendo...');
-
-      // Crear bitácora después de registrar al usuario
-      try {
-        await logBitacora(`Registro de aspirante: ${formData.nombre}`, 1);
-      } catch (bitacoraError) {
-        console.error('Error al registrar en la bitácora:', bitacoraError);
-      }
-
-      // Redirigir después de un registro exitoso y la bitácora
-      history.push('/solicitudPendiente'); // Cambia al componente correspondiente
-    } catch (error: any) {
-      // Verifica si es un error de Axios y maneja el mensaje
-      const errorMessage = error?.response?.data?.message || 'Error al registrar. Por favor, intenta de nuevo.';
-      console.error('Error durante el registro:', errorMessage);
-      setToastMessage(errorMessage);
+      await logBitacora(`Registro de aspirante: ${formData.nombre}`, 1);
+    } catch (bitErr) {
+      console.error('Error al registrar en la bitácora:', bitErr);
     }
-  };
+
+    history.push('/login');
+  } catch (error: any) {
+    // Te muestra lo que responde el backend para depurar mejor
+    console.error('Error durante el registro (response.data):', error?.response?.data);
+    const errorMessage =
+      error?.response?.data?.message ||
+      'Error al registrar. Por favor, intenta de nuevo.';
+    setToastMessage(errorMessage);
+  }
+};
 
 
   const handleDateConfirm = (event: any) => {
@@ -146,7 +198,10 @@ const Registro: React.FC = () => {
           <IonTitle>Registro de Aspirantes</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent 
+
+
+
+      <IonContent
         style={{
           backgroundColor: 'var(--main-bg-color)', // Fondo verde
           minHeight: '50vh',        // Altura completa
@@ -156,9 +211,57 @@ const Registro: React.FC = () => {
           alignItems: 'center',
           padding: '20px',
         }}>
-          <div className="container">
+        <div className="container">
           <img src={logo} alt="Logo Ayuvi" className="logoaspirante" />
-          </div>
+        </div>
+
+
+        <IonItem
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            maxWidth: '300px',
+            height: '100px',
+            margin: '16px auto',
+            textAlign: 'center',
+            borderRadius: '8px',
+            backgroundColor: '#cc630cff',
+          }}>
+          <IonLabel position="floating"  >Usuario</IonLabel>
+          <IonInput
+            value={formData.usuario}
+            onIonChange={(e) => handleInputChange('usuario', e.detail.value!)}
+            placeholder="Ingrese su Usuario"
+            className="ion-padding-top"
+            type="tel"
+          />
+        </IonItem>
+
+        <IonItem
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            maxWidth: '300px',
+            height: '100px',
+            margin: '16px auto',
+            textAlign: 'center',
+            borderRadius: '8px',
+            backgroundColor: '#28C3F9',
+          }}>
+          <IonLabel position="floating"  >Contraseña</IonLabel>
+          <IonInput
+            value={formData.contrasenia}
+            onIonChange={(e) => handleInputChange('contrasenia', e.detail.value!)}
+            placeholder="Ingrese su contraseña"
+            className="ion-padding-top"
+            type="password"
+          />
+        </IonItem>
+
         <IonItem
           style={{
             display: 'flex', // Habilitar flexbox
@@ -224,22 +327,22 @@ const Registro: React.FC = () => {
               zIndex: 1000,
             }}
           >
-          <IonDatetime
-            value={formData.fechaNacimiento || ''} // Siempre usar una cadena válida
-            onIonChange={(e) => {
-              const value = Array.isArray(e.detail.value) ? e.detail.value[0] : e.detail.value; // Convertir a string
-              if (value) {
-                setFormData({ ...formData, fechaNacimiento: value });
-              }
-            }}
-            presentation="date"
-            showDefaultButtons={false}
-            style={{
-              maxWidth: '100%',
-              textAlign: 'center',
-              backgroundColor: '#262626',
-            }}
-          />
+            <IonDatetime
+              value={formData.fechaNacimiento || ''} // Siempre usar una cadena válida
+              onIonChange={(e) => {
+                const value = Array.isArray(e.detail.value) ? e.detail.value[0] : e.detail.value; // Convertir a string
+                if (value) {
+                  setFormData({ ...formData, fechaNacimiento: value });
+                }
+              }}
+              presentation="date"
+              showDefaultButtons={false}
+              style={{
+                maxWidth: '100%',
+                textAlign: 'center',
+                backgroundColor: '#262626',
+              }}
+            />
             <IonButton
               color="success"
               style={{
@@ -347,7 +450,7 @@ const Registro: React.FC = () => {
           />
         </IonItem>
 
-        <IonItem 
+        <IonItem
           style={{
             display: 'flex',
             justifyContent: 'center',
@@ -363,20 +466,20 @@ const Registro: React.FC = () => {
           <IonSelect
             value={formData.idDepartamento}
             placeholder="Seleccione su departamento"
-            onIonChange={(e) => handleDepartamentoChange(e.detail.value!)}  
+            onIonChange={(e) => handleDepartamentoChange(e.detail.value!)}
             interfaceOptions={{
               cssClass: 'custom-alert', // Clase CSS selectItem
             }}
           >
             {departamentos.map((departamento: any) => (
-              <IonSelectOption  key={departamento.idDepartamento} value={departamento.idDepartamento}>
+              <IonSelectOption key={departamento.idDepartamento} value={departamento.idDepartamento}>
                 {departamento.departamento}
               </IonSelectOption>
             ))}
           </IonSelect>
         </IonItem>
 
-        <IonItem  style={{
+        <IonItem style={{
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
@@ -405,6 +508,28 @@ const Registro: React.FC = () => {
           </IonSelect>
         </IonItem>
 
+        <IonItem
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            maxWidth: '300px',
+            height: '100px',
+            margin: '16px auto',
+            textAlign: 'center',
+            borderRadius: '8px',
+            backgroundColor: '#28C3F9',
+          }}>
+          <IonLabel position="floating"  >Talla</IonLabel>
+          <IonInput
+            value={formData.talla}
+            onIonChange={(e) => handleInputChange('talla', e.detail.value!)}
+            placeholder="Ingrese su talla"
+            className="ion-padding-top"
+            type="tel"
+          />
+        </IonItem>
 
         <IonButton expand="block" onClick={handleSubmit} color="primary" style={{ marginTop: '16px', width: '200px', margin: '30px auto', }}>
           Registrarse
