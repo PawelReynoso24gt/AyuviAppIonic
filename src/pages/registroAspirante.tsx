@@ -235,7 +235,7 @@ const Registro: React.FC = () => {
             onIonChange={(e) => handleInputChange('usuario', e.detail.value!)}
             placeholder="Ingrese su Usuario"
             className="ion-padding-top"
-            type="tel"
+            type="text"
           />
         </IonItem>
 
