@@ -130,10 +130,10 @@ const MainContent: React.FC = () => {
                 <PrivateRoute exact path="/about" component={situaciones} />
                 <Route exact path="/maintenance" component={MaintenanceScreen} />
                 <Route exact path="/">
-                  <Redirect to="/maintenance" /> {/* Cambiar de /maintenance a /login */}
+                  <Redirect to="/login" /> {/* Cambiar de /maintenance a /login */}
                 </Route>
                 <Route path="*">
-                  <Redirect to="/maintenance" /> {/* Cambiar de /maintenance a /login */}
+                  <Redirect to="/login" /> {/* Cambiar de /maintenance a /login */}
                 </Route>
               </Switch>
             </Switch>

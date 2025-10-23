@@ -104,75 +104,75 @@ const Registro: React.FC = () => {
     setFormData({ ...formData, [key]: value });
   };
 
- const handleSubmit = async () => {
-  try {
-    const toDateOnly = (v?: string | Date) => {
-      const d = v ? new Date(v) : new Date();
-      return d.toISOString().split("T")[0];
-    };
-
-    const fechaNac = formData.fechaNacimiento
-      ? toDateOnly(formData.fechaNacimiento)
-      : "";
-
-    const hoy = toDateOnly();
-
-    const idMunicipioNum = Number(formData.idMunicipio);
-
-    const payload = {
-      persona: {
-        nombre: formData.nombre,
-        fechaNacimiento: fechaNac,          
-        telefono: formData.telefono,
-        domicilio: formData.domicilio,
-        CUI: formData.CUI,
-        correo: formData.correo,
-        foto: formData.foto || 'SIN FOTO',
-        estado: 1,
-        idMunicipio: idMunicipioNum,        
-        talla: formData.talla || null,
-      },
-      aspirante: {
-        fechaRegistro: hoy,                 
-      },
-      usuario: {
-        usuario: formData.usuario,
-        contrasenia: formData.contrasenia,
-        idRol: 3,
-        idSede: 1,
-        estado: 1,
-      },
-      voluntario: {
-        fechaRegistro: hoy,                
-        estado: 1,
-      },
-    };
-
-    console.log("Payload que se enviará:", payload);
-
-    await axios.post('/personas/crear-completo', payload, {
-      headers: { 'Content-Type': 'application/json' }
-    });
-
-    setToastMessage('¡Registro exitoso! Redirigiendo...');
-
-    // Bitácora (no bloquea el flujo si falla)
+  const handleSubmit = async () => {
     try {
-      await logBitacora(`Registro de aspirante: ${formData.nombre}`, 1);
-    } catch (bitErr) {
-      console.error('Error al registrar en la bitácora:', bitErr);
-    }
+      const toDateOnly = (v?: string | Date) => {
+        const d = v ? new Date(v) : new Date();
+        return d.toISOString().split("T")[0];
+      };
 
-    history.push('/login');
-  } catch (error: any) {
-    // Te muestra lo que responde el backend para depurar mejor
-    console.error('Error durante el registro (response.data):', error?.response?.data);
-    const errorMessage =
-      error?.response?.data?.message ||
-      'Error al registrar. Por favor, intenta de nuevo.';
-    setToastMessage(errorMessage);
-  }
-};
+      const fechaNac = formData.fechaNacimiento
+        ? toDateOnly(formData.fechaNacimiento)
+        : "";
+
+      const hoy = toDateOnly();
+
+      const idMunicipioNum = Number(formData.idMunicipio);
+
+      const payload = {
+        persona: {
+          nombre: formData.nombre,
+          fechaNacimiento: fechaNac,
+          telefono: formData.telefono,
+          domicilio: formData.domicilio,
+          CUI: formData.CUI,
+          correo: formData.correo,
+          foto: formData.foto || 'SIN FOTO',
+          estado: 1,
+          idMunicipio: idMunicipioNum,
+          talla: formData.talla || null,
+        },
+        aspirante: {
+          fechaRegistro: hoy,
+        },
+        usuario: {
+          usuario: formData.usuario,
+          contrasenia: formData.contrasenia,
+          idRol: 3,
+          idSede: 1,
+          estado: 1,
+        },
+        voluntario: {
+          fechaRegistro: hoy,
+          estado: 1,
+        },
+      };
+
+      console.log("Payload que se enviará:", payload);
+
+      await axios.post('/personas/crear-completo', payload, {
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      setToastMessage('¡Registro exitoso! Redirigiendo...');
+
+      // Bitácora (no bloquea el flujo si falla)
+      try {
+        await logBitacora(`Registro de aspirante: ${formData.nombre}`, 1);
+      } catch (bitErr) {
+        console.error('Error al registrar en la bitácora:', bitErr);
+      }
+
+      history.push('/login');
+    } catch (error: any) {
+      // Te muestra lo que responde el backend para depurar mejor
+      console.error('Error durante el registro (response.data):', error?.response?.data);
+      const errorMessage =
+        error?.response?.data?.message ||
+        'Error al registrar. Por favor, intenta de nuevo.';
+      setToastMessage(errorMessage);
+    }
+  };
 
 
   const handleDateConfirm = (event: any) => {
