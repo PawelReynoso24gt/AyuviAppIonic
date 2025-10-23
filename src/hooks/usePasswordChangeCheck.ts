@@ -36,7 +36,7 @@ const usePasswordChangeCheck = () => {
         if (isAxiosError(error) && error.response && error.response.status === 403) {
           // Eliminar el token y redirigir al login
           localStorage.removeItem("token");
-          history.push("/maintenance"); // pasar a login para que lo muestre 
+          history.push("/login"); // pasar a login para que lo muestre 
         }
       }
     };

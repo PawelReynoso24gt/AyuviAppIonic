@@ -17,7 +17,7 @@ import {
   IonDatetime,
   IonIcon,
 } from '@ionic/react';
-import { arrowBackOutline } from 'ionicons/icons';
+import { arrowBackOutline, eyeOff, eye } from 'ionicons/icons';
 import axios from '../services/axios';
 import { useHistory } from 'react-router-dom';
 import '../theme/variables.css';
@@ -38,8 +38,43 @@ const Registro: React.FC = () => {
     estado: 1,
     idDepartamento: '',
     idMunicipio: '',
+    usuario: '',
+    contrasenia: '',
     talla: ''
   });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [confirmContrasenia, setConfirmContrasenia] = useState('');
+  // Estado derivado para validaciones en tiempo real
+  const [pwdChecks, setPwdChecks] = useState({
+    minLength: false,
+    hasNumber: false,
+    startsUpper: false,
+    hasSpecial: false,
+  });
+
+  // Valida la contraseña con las reglas solicitadas y actualiza pwdChecks
+  const validatePasswordRules = (pwd: string) => {
+    const checks = {
+      minLength: pwd.length >= 8,
+      hasNumber: /\d/.test(pwd),
+      startsUpper: /^[A-Z]/.test(pwd),
+      hasSpecial: /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(pwd),
+    };
+    setPwdChecks(checks);
+    return checks;
+  };
+
+  // Comprueba que contrasenia y confirmContrasenia coincidan
+  const passwordsMatch = () => {
+    return formData.contrasenia === confirmContrasenia && confirmContrasenia.length > 0;
+  };
+
+  // Actualizar checks en tiempo real cuando cambie la contraseña o la confirmación
+  useEffect(() => {
+    validatePasswordRules(formData.contrasenia || '');
+    // no hacemos set de passwordsMatch porque es una función derivada; el UI la lee directamente
+  }, [formData.contrasenia, confirmContrasenia]);
   const [municipios, setMunicipios] = useState([]); // Lista de municipios
   const [allMunicipios, setAllMunicipios] = useState([]);
   const [departamentos, setDepartamentos] = useState([]);
@@ -102,23 +137,70 @@ const Registro: React.FC = () => {
 
   const handleSubmit = async () => {
     try {
-      // Registrar al usuario
-      await axios.post('/personasAsp/create', formData);
+      const toDateOnly = (v?: string | Date) => {
+        const d = v ? new Date(v) : new Date();
+        return d.toISOString().split("T")[0];
+      };
+  
+      const fechaNac = formData.fechaNacimiento
+        ? toDateOnly(formData.fechaNacimiento)
+        : "";
+  
+      const hoy = toDateOnly();
+  
+      const idMunicipioNum = Number(formData.idMunicipio);
+  
+      const payload = {
+        persona: {
+          nombre: formData.nombre,
+          fechaNacimiento: fechaNac,          
+          telefono: formData.telefono,
+          domicilio: formData.domicilio,
+          CUI: formData.CUI,
+          correo: formData.correo,
+          foto: formData.foto || 'SIN FOTO',
+          estado: 1,
+          idMunicipio: idMunicipioNum,        
+          talla: formData.talla || null,
+        },
+        aspirante: {
+          fechaRegistro: hoy,                 
+        },
+        usuario: {
+          usuario: formData.usuario,
+          contrasenia: formData.contrasenia,
+          idRol: 3,
+          idSede: 1,
+          estado: 1,
+        },
+        voluntario: {
+          fechaRegistro: hoy,                
+          estado: 1,
+        },
+      };
+  
+      // console.log("Payload que se enviará:", payload);
+  
+      await axios.post('/personas/crear-completo', payload, {
+        headers: { 'Content-Type': 'application/json' }
+      });
+  
       setToastMessage('¡Registro exitoso! Redirigiendo...');
-
-      // Crear bitácora después de registrar al usuario
+  
+      // Bitácora (no bloquea el flujo si falla)
       try {
         await logBitacora(`Registro de aspirante: ${formData.nombre}`, 1);
-      } catch (bitacoraError) {
-        console.error('Error al registrar en la bitácora:', bitacoraError);
+      } catch (bitErr) {
+        console.error('Error al registrar en la bitácora:', bitErr);
       }
-
-      // Redirigir después de un registro exitoso y la bitácora
-      history.push('/solicitudPendiente'); // Cambia al componente correspondiente
+  
+      history.push('/login');
     } catch (error: any) {
-      // Verifica si es un error de Axios y maneja el mensaje
-      const errorMessage = error?.response?.data?.message || 'Error al registrar. Por favor, intenta de nuevo.';
-      console.error('Error durante el registro:', errorMessage);
+      // Te muestra lo que responde el backend para depurar mejor
+      console.error('Error durante el registro (response.data):', error?.response?.data);
+      const errorMessage =
+        error?.response?.data?.message ||
+        'Error al registrar. Por favor, intenta de nuevo.';
       setToastMessage(errorMessage);
     }
   };
@@ -160,6 +242,117 @@ const Registro: React.FC = () => {
           <div className="container" style={{ marginTop: '10px' }}>
           <img src={logo} alt="Logo Ayuvi" className="logoaspirante" />
           </div>
+
+          {/* NUEVO CAMPO PARA USUARIO */}
+        <IonItem
+          style={{
+            display: 'flex', // Habilitar flexbox
+            maxWidth: '300px', // Ancho máximo
+            height: '120px', // Altura del combobox
+            margin: '16px auto', // Margen para separación y centrar horizontalmente
+            textAlign: 'center', // Alinear contenido
+            borderRadius: '8px', // Opcional: bordes redondeados
+            backgroundColor: '#FF6347', // Un color distintivo, por ejemplo, tomate
+          }}>
+          <div style={{ justifyContent: 'center', }}>
+            <IonLabel className="custom-label" >Usuario</IonLabel>
+          </div>
+
+          <div style={{width: '100%', marginTop: '40px', justifyContent: 'center',}}>
+            <IonInput
+              // Vincula el valor al estado
+              value={formData.usuario}
+              // Llama a handleInputChange con la clave 'usuario'
+              onIonChange={(e) => handleInputChange('usuario', e.detail.value!)}
+              placeholder="Ingrese su nombre de usuario"
+              type="text"
+            />
+          </div>
+        </IonItem>
+        {/* FIN DEL CAMPO PARA USUARIO */}
+
+        {/* NUEVO CAMPO PARA CONTRASEÑA CON TOGGLE */}
+        <IonItem
+          style={{
+            display: 'flex', // Habilitar flexbox
+            maxWidth: '300px', // Ancho máximo
+            height: '120px', // Altura del combobox
+            margin: '16px auto', // Margen para separación y centrar horizontalmente
+            textAlign: 'center', // Alinear contenido
+            borderRadius: '8px', // Opcional: bordes redondeados
+            backgroundColor: '#9370DB', // Un color distintivo, por ejemplo, púrpura
+          }}>
+          <div style={{ justifyContent: 'center', }}>
+            <IonLabel className="custom-label" >Contraseña</IonLabel>
+          </div>
+
+          <div style={{width: '100%', marginTop: '40px', justifyContent: 'center',}}>
+            <IonInput
+              value={formData.contrasenia}
+              onIonChange={(e) => handleInputChange('contrasenia', e.detail.value!)}
+              placeholder="Ingrese su contraseña"
+              // Define el tipo de input según el estado showPassword
+              type={showPassword ? 'text' : 'password'}
+            >
+              {/* Ícono de 'ojito' al final del input */}
+              <IonIcon
+                icon={showPassword ? eyeOff : eye}
+                slot="end"
+                style={{ cursor: 'pointer', color: 'white' }}
+                onClick={() => setShowPassword(!showPassword)}
+              />
+            </IonInput>
+          </div>
+        </IonItem>
+        {/* FIN DEL CAMPO PARA CONTRASEÑA */}
+
+        {/* CONFIRMAR CONTRASEÑA CON TOGGLE */}
+        <IonItem
+          style={{
+            display: 'flex', // Habilitar flexbox
+            maxWidth: '300px', // Ancho máximo
+            height: '120px', // Altura del combobox
+            margin: '16px auto', // Margen para separación y centrar horizontalmente
+            textAlign: 'center', // Alinear contenido
+            borderRadius: '8px', // Opcional: bordes redondeados
+            backgroundColor: '#9370DB', // Mismo color para coherencia
+          }}>
+          <div style={{ justifyContent: 'center', }}>
+            <IonLabel className="custom-label" >Confirmar Contraseña</IonLabel>
+          </div>
+
+          <div style={{width: '100%', marginTop: '40px', justifyContent: 'center',}}>
+            <IonInput
+              value={confirmContrasenia} // Nota: Usar confirmContrasenia aquí
+              onIonChange={(e) => setConfirmContrasenia(e.detail.value!)}
+              placeholder="Confirme su contraseña"
+              // Define el tipo de input según el estado showConfirmPassword
+              type={showConfirmPassword ? 'text' : 'password'}
+            >
+               {/* Ícono de 'ojito' al final del input */}
+              <IonIcon
+                icon={showConfirmPassword ? eyeOff : eye}
+                slot="end"
+                style={{ cursor: 'pointer', color: 'white' }}
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              />
+            </IonInput>
+          </div>
+        </IonItem>
+        {/*FIN DE CONFIRMACIÓN*/}
+
+        {/* Checklist de validaciones de contraseña */}
+        <div style={{ maxWidth: 320, margin: '4px auto 8px', color: '#fff' }}>
+          <p style={{ margin: '6px 0', fontWeight: 600 }}>La contraseña debe:</p>
+          <ul style={{ paddingLeft: 20, marginTop: 4 }}>
+            <li style={{ color: pwdChecks.minLength ? '#8ee08e' : '#ffb3b3' }}>Mínimo 8 caracteres</li>
+            <li style={{ color: pwdChecks.hasNumber ? '#8ee08e' : '#ffb3b3' }}>Incluir al menos un número</li>
+            <li style={{ color: pwdChecks.startsUpper ? '#8ee08e' : '#ffb3b3' }}>Iniciar con mayúscula</li>
+            <li style={{ color: pwdChecks.hasSpecial ? '#8ee08e' : '#ffb3b3' }}>Incluir un signo especial</li>
+            <li style={{ color: passwordsMatch() ? '#8ee08e' : '#ffb3b3' }}>Las contraseñas deben coincidir</li>
+          </ul>
+        </div>
+        
         <IonItem
           style={{
             display: 'flex', // Habilitar flexbox
@@ -441,7 +634,7 @@ const Registro: React.FC = () => {
         </IonItem>
 
 
-        <IonButton expand="block" onClick={handleSubmit} color="primary" style={{ marginTop: '16px', width: '200px', margin: '30px auto', }}>
+        <IonButton expand="block" onClick={handleSubmit} color="primary" style={{ marginTop: '16px', width: '200px', margin: '30px auto', }} disabled={!(pwdChecks.minLength && pwdChecks.hasNumber && pwdChecks.startsUpper && pwdChecks.hasSpecial && passwordsMatch())}>
           Registrarse
         </IonButton>
 
