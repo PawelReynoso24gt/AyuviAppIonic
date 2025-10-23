@@ -43,6 +43,36 @@ const Registro: React.FC = () => {
     talla: '',
   });
   const [confirmContrasenia, setConfirmContrasenia] = useState('');
+  // Estado derivado para validaciones en tiempo real
+  const [pwdChecks, setPwdChecks] = useState({
+    minLength: false,
+    hasNumber: false,
+    startsUpper: false,
+    hasSpecial: false,
+  });
+
+  // Valida la contraseña con las reglas solicitadas y actualiza pwdChecks
+  const validatePasswordRules = (pwd: string) => {
+    const checks = {
+      minLength: pwd.length >= 8,
+      hasNumber: /\d/.test(pwd),
+      startsUpper: /^[A-Z]/.test(pwd),
+      hasSpecial: /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(pwd),
+    };
+    setPwdChecks(checks);
+    return checks;
+  };
+
+  // Comprueba que contrasenia y confirmContrasenia coincidan
+  const passwordsMatch = () => {
+    return formData.contrasenia === confirmContrasenia && confirmContrasenia.length > 0;
+  };
+
+  // Actualizar checks en tiempo real cuando cambie la contraseña o la confirmación
+  useEffect(() => {
+    validatePasswordRules(formData.contrasenia || '');
+    // no hacemos set de passwordsMatch porque es una función derivada; el UI la lee directamente
+  }, [formData.contrasenia, confirmContrasenia]);
   const [municipios, setMunicipios] = useState([]); // Lista de municipios
   const [allMunicipios, setAllMunicipios] = useState([]);
   const [departamentos, setDepartamentos] = useState([]);
@@ -149,7 +179,7 @@ const Registro: React.FC = () => {
       },
     };
 
-    console.log("Payload que se enviará:", payload);
+    //console.log("Payload que se enviará:", payload);
 
     await axios.post('/personas/crear-completo', payload, {
       headers: { 'Content-Type': 'application/json' }
@@ -256,7 +286,11 @@ const Registro: React.FC = () => {
           <IonLabel position="floating"  >Contraseña</IonLabel>
           <IonInput
             value={formData.contrasenia}
-            onIonChange={(e) => handleInputChange('contrasenia', e.detail.value!)}
+            onIonChange={(e) => {
+              const v = e.detail.value!;
+              handleInputChange('contrasenia', v);
+              validatePasswordRules(v || '');
+            }}
             placeholder="Ingrese su contraseña"
             className="ion-padding-top"
             type="password"
@@ -285,6 +319,18 @@ const Registro: React.FC = () => {
             type="password"
           />
         </IonItem>
+
+        {/* Checklist de validaciones de contraseña */}
+        <div style={{ maxWidth: 320, margin: '4px auto 8px', color: '#fff' }}>
+          <p style={{ margin: '6px 0', fontWeight: 600 }}>La contraseña debe:</p>
+          <ul style={{ paddingLeft: 20, marginTop: 4 }}>
+            <li style={{ color: pwdChecks.minLength ? '#8ee08e' : '#ffb3b3' }}>Mínimo 8 caracteres</li>
+            <li style={{ color: pwdChecks.hasNumber ? '#8ee08e' : '#ffb3b3' }}>Incluir al menos un número</li>
+            <li style={{ color: pwdChecks.startsUpper ? '#8ee08e' : '#ffb3b3' }}>Iniciar con mayúscula</li>
+            <li style={{ color: pwdChecks.hasSpecial ? '#8ee08e' : '#ffb3b3' }}>Incluir un signo especial</li>
+            <li style={{ color: passwordsMatch() ? '#8ee08e' : '#ffb3b3' }}>Las contraseñas deben coincidir</li>
+          </ul>
+        </div>
 
         <IonItem
           style={{
@@ -554,7 +600,13 @@ const Registro: React.FC = () => {
           />
         </IonItem>
 
-        <IonButton expand="block" onClick={handleSubmit} color="primary" style={{ marginTop: '16px', width: '200px', margin: '30px auto', }}>
+        <IonButton
+          expand="block"
+          onClick={handleSubmit}
+          color="primary"
+          style={{ marginTop: '16px', width: '200px', margin: '30px auto' }}
+          disabled={!(pwdChecks.minLength && pwdChecks.hasNumber && pwdChecks.startsUpper && pwdChecks.hasSpecial && passwordsMatch())}
+        >
           Registrarse
         </IonButton>
 
@@ -565,7 +617,12 @@ const Registro: React.FC = () => {
             <IonText color="primary">
               <h4>¿Está seguro de registrarse?</h4>
             </IonText>
-            <IonButton expand="block" color="success" onClick={handleSubmit}>
+            <IonButton
+              expand="block"
+              color="success"
+              onClick={handleSubmit}
+              disabled={!(pwdChecks.minLength && pwdChecks.hasNumber && pwdChecks.startsUpper && pwdChecks.hasSpecial && passwordsMatch())}
+            >
               Confirmar
             </IonButton>
             <IonButton expand="block" color="danger" onClick={() => setShowConfirmModal(false)}>
