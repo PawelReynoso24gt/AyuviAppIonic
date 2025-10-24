@@ -17,7 +17,7 @@ import {
   IonDatetime,
   IonIcon,
 } from '@ionic/react';
-import { arrowBackOutline } from 'ionicons/icons';
+import { arrowBackOutline, eyeOff, eye } from 'ionicons/icons';
 import axios from '../services/axios';
 import { useHistory } from 'react-router-dom';
 import '../theme/variables.css';
@@ -42,6 +42,9 @@ const Registro: React.FC = () => {
     contrasenia: '',
     talla: '',
   });
+  // NUEVOS ESTADOS para el 'ojito'
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [confirmContrasenia, setConfirmContrasenia] = useState('');
   // Estado derivado para validaciones en tiempo real
   const [pwdChecks, setPwdChecks] = useState({
@@ -270,6 +273,7 @@ const Registro: React.FC = () => {
           />
         </IonItem>
 
+        {/* CAMPO DE CONTRASEÑA CON TOGGLE */}
         <IonItem
           style={{
             display: 'flex',
@@ -283,7 +287,7 @@ const Registro: React.FC = () => {
             borderRadius: '8px',
             backgroundColor: '#28C3F9',
           }}>
-          <IonLabel position="floating"  >Contraseña</IonLabel>
+          <IonLabel position="floating">Contraseña</IonLabel>
           <IonInput
             value={formData.contrasenia}
             onIonChange={(e) => {
@@ -293,10 +297,20 @@ const Registro: React.FC = () => {
             }}
             placeholder="Ingrese su contraseña"
             className="ion-padding-top"
-            type="password"
-          />
+            // Tipo de input dinámico: 'text' si se muestra, 'password' si se oculta
+            type={showPassword ? 'text' : 'password'}
+          >
+            {/* Ícono de 'ojito' al final del input */}
+            <IonIcon
+              icon={showPassword ? eyeOff : eye}
+              slot="end"
+              style={{ cursor: 'pointer', color: 'white' }}
+              onClick={() => setShowPassword(!showPassword)}
+            />
+          </IonInput>
         </IonItem>
 
+        {/* CAMPO DE CONFIRMAR CONTRASEÑA CON TOGGLE */}
         <IonItem
           style={{
             display: 'flex',
@@ -310,14 +324,23 @@ const Registro: React.FC = () => {
             borderRadius: '8px',
             backgroundColor: '#28C3F9',
           }}>
-          <IonLabel position="floating"  >Confirmar Contraseña</IonLabel>
+          <IonLabel position="floating">Confirmar Contraseña</IonLabel>
           <IonInput
             value={confirmContrasenia}
             onIonChange={(e) => setConfirmContrasenia(e.detail.value!)}
             placeholder="Confirme su contraseña"
             className="ion-padding-top"
-            type="password"
-          />
+            // Tipo de input dinámico: 'text' si se muestra, 'password' si se oculta
+            type={showConfirmPassword ? 'text' : 'password'}
+          >
+             {/* Ícono de 'ojito' al final del input */}
+            <IonIcon
+              icon={showConfirmPassword ? eyeOff : eye}
+              slot="end"
+              style={{ cursor: 'pointer', color: 'white' }}
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            />
+          </IonInput>
         </IonItem>
 
         {/* Checklist de validaciones de contraseña */}
